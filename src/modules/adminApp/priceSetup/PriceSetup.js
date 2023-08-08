@@ -68,21 +68,18 @@ export const PriceSetup = ({ navigation, route }) => {
         overflow: "hidden",
       }}
     >
-      <View style={{ width: "90%", flexDirection: "row", justifyContent: "center", alignItems: "center", alignSelf: "center" }}>
-        <View style={{ marginTop: RFPercentage(-12), width: "56%", justifyContent: "flex-start", alignItems: "flex-start" }}>
+      <View style={{ width: "90%", height: "100%", flexDirection: "row", justifyContent: "center", alignItems: "center", alignSelf: "center" }}>
+        <View style={{ marginTop: RFPercentage(4), width: "100%", height: "100%", justifyContent: "flex-start", alignItems: "flex-start" }}>
           <Text style={{ fontSize: RFPercentage(2.6), color: "#06143b", fontWeight: "bold" }}>{item.UNIT_CODE}</Text>
           <Text style={{ fontSize: RFPercentage(2), color: "#06143b", fontWeight: "bold", marginTop: RFPercentage(0.5) }}>{item.FLOOR_ID}</Text>
 
           <View style={{ marginTop: RFPercentage(2) }}>
             <Text style={{ fontSize: RFPercentage(1.7), color: "#455866", fontWeight: "bold" }}>Price Type - {item.PRICE_TYPE}</Text>
+            <Text style={{ fontSize: RFPercentage(1.7), color: "#455866", fontWeight: "bold", marginTop: RFPercentage(1.2) }}>Price - {item.PRICE_VALUE}</Text>
+            <Text style={{ fontSize: RFPercentage(1.7), color: "#455866", fontWeight: "bold", marginTop: RFPercentage(1.2) }}>Unit Specs Name - {item.UNIT_SPECS_NAME}</Text>
           </View>
-        </View>
-        <View style={{ marginTop: RFPercentage(5), width: "40%", justifyContent: "flex-end", alignItems: "flex-end", marginLeft: RFPercentage(2) }}>
-          <ImageBackground style={{ width: RFPercentage(16), height: RFPercentage(16), justifyContent: "center", alignItems: "center" }} source={require("../../../assets/images/progressBar.png")}>
-            <Text style={{ color: COLORS.green, fontSize: RFPercentage(1.8), fontWeight: "bold" }}>Price</Text>
-            <Text style={{ color: COLORS.green, fontSize: RFPercentage(1.6), fontWeight: "bold" }}>{Math.round(item.PRICE_VALUE)}</Text>
-          </ImageBackground>
-          <View style={{ marginTop: RFPercentage(3.2), right: RFPercentage(2), width: "100%", justifyContent: "flex-end", alignItems: "flex-end" }}>
+
+          <View style={{ position: "absolute", bottom: RFPercentage(4), right: RFPercentage(2), width: "100%", justifyContent: "flex-end", alignItems: "flex-end" }}>
             <TouchableOpacity onPress={() => handleViewDetail(item)} activeOpacity={0.8} style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
               <Text style={{ fontSize: RFPercentage(1.5), color: "#06143b", fontWeight: "bold" }}>Price Listing</Text>
               <Ionicons name="arrow-forward" style={{ fontSize: RFPercentage(2) }} color={"#06143b"} />
@@ -96,6 +93,7 @@ export const PriceSetup = ({ navigation, route }) => {
   const handleViewDetail = (item) => {
     navigation.navigate("PriceDetail", {
       unitID: item.UNIT_ID,
+      unitCode: item.UNIT_CODE,
     });
   };
 

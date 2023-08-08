@@ -7,11 +7,8 @@ import { COLORS } from "../../../constants";
 import { BackButton } from "../../../common/backButton";
 import DropDownPicker from "react-native-dropdown-picker";
 
-//components
-import InputField from "../../../common/InputField";
-
 export const PriceDetail = ({ navigation, route }) => {
-  const { unitID } = route.params;
+  const { unitID, unitCode } = route.params;
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
@@ -30,7 +27,11 @@ export const PriceDetail = ({ navigation, route }) => {
     <SafeAreaView style={styles.container}>
       <BackButton navigation={navigation} label="Price Listing" />
 
-      <View style={{ width: "90%", marginTop: RFPercentage(4), alignSelf: "center" }}>
+      <View style={{ marginTop: RFPercentage(3), width: "90%", justifyContent: "center", alignItems: "center", alignSelf: "center" }}>
+        <Text style={{ fontSize: RFPercentage(2.6), color: "#06143b", fontWeight: "bold" }}>{unitCode}</Text>
+      </View>
+
+      <View style={{ width: "90%", marginTop: RFPercentage(4.5), alignSelf: "center" }}>
         <TextInput placeholderTextColor={COLORS.normalText} placeholder="Price" style={styles.textInput} onChangeText={handleInputChange} value={inputValue} />
         {/* <Text>Value to pass to API: {inputValue}</Text> */}
       </View>
