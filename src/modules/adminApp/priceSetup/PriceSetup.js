@@ -5,6 +5,7 @@ import { BackButton } from "../../../common/backButton";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import axios from "axios";
+import { Url } from "../../../constants";
 
 //components
 import InputField from "../../../common/InputField";
@@ -26,7 +27,7 @@ export const PriceSetup = ({ navigation, route }) => {
   }, []);
 
   const fetchDataFromApi = async () => {
-    const apiUrl = "http://tvh.flexion.ae:9091/get_pricesetup_units_API";
+    const apiUrl = Url + "get_pricesetup_units_API";
     const queryParams = {
       prop_code: "",
       org: "33",
@@ -38,7 +39,7 @@ export const PriceSetup = ({ navigation, route }) => {
     try {
       const response = await axios.get(apiUrl, { params: queryParams });
       setData(response.data);
-      console.log(response.data);
+      // console.log(response.data);
     } catch (error) {
       console.error("Error fetching data from the API:", error);
     }
@@ -54,34 +55,23 @@ export const PriceSetup = ({ navigation, route }) => {
     setFilteredData(filteredData);
   }, [inputField[0].value, data]);
 
+  // Rendring of Carts
   const renderItem = ({ item }) => (
-    <ImageBackground
-      source={require("../../../assets/images/unitBG.png")}
-      style={{
-        alignItems: "center",
-        marginTop: RFPercentage(2),
-        width: RFPercentage(45),
-        height: RFPercentage(28),
-        borderRadius: RFPercentage(1.8),
-        borderColor: COLORS.borderColor,
-        borderWidth: RFPercentage(0.1),
-        overflow: "hidden",
-      }}
-    >
-      <View style={{ width: "90%", height: "100%", flexDirection: "row", justifyContent: "center", alignItems: "center", alignSelf: "center" }}>
-        <View style={{ marginTop: RFPercentage(4), width: "100%", height: "100%", justifyContent: "flex-start", alignItems: "flex-start" }}>
-          <Text style={{ fontSize: RFPercentage(2.6), color: "#06143b", fontWeight: "bold" }}>{item.UNIT_CODE}</Text>
-          <Text style={{ fontSize: RFPercentage(2), color: "#06143b", fontWeight: "bold", marginTop: RFPercentage(0.5) }}>{item.FLOOR_ID}</Text>
+    <ImageBackground source={require("../../../assets/images/unitBG.png")} style={styles.backgroundCartImage}>
+      <View style={styles.subContainerCart}>
+        <View style={styles.cartDetailsView}>
+          <Text style={styles.unitCodeStyle}>{item.UNIT_CODE}</Text>
+          <Text style={styles.floorIdText}>{item.FLOOR_ID}</Text>
 
           <View style={{ marginTop: RFPercentage(2) }}>
-            <Text style={{ fontSize: RFPercentage(1.7), color: "#455866", fontWeight: "bold" }}>Price Type - {item.PRICE_TYPE}</Text>
-            <Text style={{ fontSize: RFPercentage(1.7), color: "#455866", fontWeight: "bold", marginTop: RFPercentage(1.2) }}>Price - {item.PRICE_VALUE}</Text>
-            <Text style={{ fontSize: RFPercentage(1.7), color: "#455866", fontWeight: "bold", marginTop: RFPercentage(1.2) }}>Unit Specs Name - {item.UNIT_SPECS_NAME}</Text>
+            <Text style={styles.priceTypeText}>Price Type - {item.PRICE_TYPE}</Text>
+            <Text style={styles.priceAndUnitSpecsText}>Price - {item.PRICE_VALUE}</Text>
+            <Text style={styles.priceAndUnitSpecsText}>Unit Specs Name - {item.UNIT_SPECS_NAME}</Text>
           </View>
 
-          <View style={{ position: "absolute", bottom: RFPercentage(4), right: RFPercentage(2), width: "100%", justifyContent: "flex-end", alignItems: "flex-end" }}>
-            <TouchableOpacity onPress={() => handleViewDetail(item)} activeOpacity={0.8} style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-              <Text style={{ fontSize: RFPercentage(1.5), color: "#06143b", fontWeight: "bold" }}>Price Listing</Text>
+          <View style={styles.priceListingButtonContainer}>
+            <TouchableOpacity onPress={() => handleViewDetail(item)} activeOpacity={0.8} style={styles.priceListingButton}>
+              <Text style={styles.priceListingTextStyle}>Price Listing</Text>
               <Ionicons name="arrow-forward" style={{ fontSize: RFPercentage(2) }} color={"#06143b"} />
             </TouchableOpacity>
           </View>
@@ -125,12 +115,7 @@ export const PriceSetup = ({ navigation, route }) => {
 
       {/* Data Carts */}
       <View style={{ width: "100%" }}>
-        <FlatList
-          data={filteredData}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.UNIT_ID.toString()}
-          contentContainerStyle={{ justifyContent: "center", alignItems: "center", width: "100%" }}
-        />
+        <FlatList data={filteredData} renderItem={renderItem} keyExtractor={(item) => item.UNIT_ID.toString()} contentContainerStyle={styles.contentContainerStyle} />
       </View>
 
       <View style={{ marginBottom: RFPercentage(20) }} />
@@ -143,5 +128,75 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     backgroundColor: COLORS.secondry,
+  },
+  priceListingTextStyle: {
+    fontSize: RFPercentage(1.5),
+    color: "#06143b",
+    fontWeight: "bold",
+  },
+  backgroundCartImage: {
+    alignItems: "center",
+    marginTop: RFPercentage(2),
+    width: RFPercentage(45),
+    height: RFPercentage(28),
+    borderRadius: RFPercentage(1.8),
+    borderColor: COLORS.borderColor,
+    borderWidth: RFPercentage(0.1),
+    overflow: "hidden",
+  },
+  subContainerCart: {
+    width: "90%",
+    height: "100%",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+  },
+  cartDetailsView: {
+    marginTop: RFPercentage(4),
+    width: "100%",
+    height: "100%",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+  },
+  unitCodeStyle: {
+    fontSize: RFPercentage(2.6),
+    color: "#06143b",
+    fontWeight: "bold",
+  },
+  floorIdText: {
+    fontSize: RFPercentage(2),
+    color: "#06143b",
+    fontWeight: "bold",
+    marginTop: RFPercentage(0.5),
+  },
+  priceTypeText: {
+    fontSize: RFPercentage(1.7),
+    color: "#455866",
+    fontWeight: "bold",
+  },
+  priceAndUnitSpecsText: {
+    fontSize: RFPercentage(1.7),
+    color: "#455866",
+    fontWeight: "bold",
+    marginTop: RFPercentage(1.2),
+  },
+  priceListingButtonContainer: {
+    position: "absolute",
+    bottom: RFPercentage(4),
+    right: RFPercentage(2),
+    width: "100%",
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
+  },
+  priceListingButton: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  contentContainerStyle: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
   },
 });
