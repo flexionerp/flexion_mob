@@ -1,11 +1,11 @@
-import { View, Text, TouchableOpacity, StyleSheet, FlatList, SafeAreaView, ImageBackground, Image } from "react-native";
 import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, SafeAreaView, ImageBackground, Image } from "react-native";
 import { COLORS, FONTS } from "../../../constants";
 import { BackButton } from "../../../common/backButton";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import axios from "axios";
 import { Url } from "../../../constants";
+import axios from "axios";
 
 //components
 import InputField from "../../../common/InputField";
@@ -39,14 +39,13 @@ export const PriceSetup = ({ navigation, route }) => {
     try {
       const response = await axios.get(apiUrl, { params: queryParams });
       setData(response.data);
-      // console.log(response.data);
     } catch (error) {
       console.error("Error fetching data from the API:", error);
     }
   };
 
   useEffect(() => {
-    // Filter the data based on the entered text
+    // Filtering
     const searchTerm = inputField[0].value.toLowerCase();
     const filteredData = data.filter((item) => {
       return item.UNIT_CODE.toLowerCase().includes(searchTerm) || item.UNIT_NAME.toLowerCase().includes(searchTerm);
@@ -70,7 +69,7 @@ export const PriceSetup = ({ navigation, route }) => {
           </View>
 
           <View style={styles.priceListingButtonContainer}>
-            <TouchableOpacity onPress={() => handleViewDetail(item)} activeOpacity={0.8} style={styles.priceListingButton}>
+            <TouchableOpacity onPress={() => handlePriceListingButton(item)} activeOpacity={0.8} style={styles.priceListingButton}>
               <Text style={styles.priceListingTextStyle}>Price Listing</Text>
               <Ionicons name="arrow-forward" style={{ fontSize: RFPercentage(2) }} color={"#06143b"} />
             </TouchableOpacity>
@@ -80,7 +79,7 @@ export const PriceSetup = ({ navigation, route }) => {
     </ImageBackground>
   );
 
-  const handleViewDetail = (item) => {
+  const handlePriceListingButton = (item) => {
     navigation.navigate("PriceDetail", {
       unitID: item.UNIT_ID,
       unitCode: item.UNIT_CODE,

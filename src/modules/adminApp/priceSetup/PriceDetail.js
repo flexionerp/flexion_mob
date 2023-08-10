@@ -53,16 +53,16 @@ export const PriceDetail = ({ navigation, route }) => {
   return (
     <SafeAreaView style={styles.container}>
       <BackButton navigation={navigation} label="Price Listing" />
-      <View style={{ marginTop: RFPercentage(3), width: "90%", justifyContent: "center", alignItems: "center", alignSelf: "center" }}>
-        <Text style={{ fontSize: RFPercentage(2.6), color: "#06143b", fontWeight: "bold" }}>{unitCode}</Text>
+      <View style={styles.unitCodeContainer}>
+        <Text style={styles.unitCodeText}>{unitCode}</Text>
       </View>
 
-      <View style={{ width: "90%", marginTop: RFPercentage(4.5), alignSelf: "center" }}>
+      <View style={styles.priceInputText}>
         <TextInput keyboardType="numeric" placeholderTextColor={COLORS.normalText} placeholder="Price" style={styles.textInput} onChangeText={handleInputChange} value={inputValue} />
       </View>
 
       {/* Dropdown */}
-      <View style={{ width: "90%", marginTop: RFPercentage(4), alignSelf: "center" }}>
+      <View style={styles.dropDownView}>
         <DropDownPicker
           placeholder="Price Type"
           placeholderStyle={{ color: COLORS.normalText }}
@@ -80,22 +80,14 @@ export const PriceDetail = ({ navigation, route }) => {
         />
       </View>
 
-      <View style={{ position: "absolute", bottom: RFPercentage(15), alignSelf: "center", width: "90%", justifyContent: "center", alignItems: "center" }}>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => handleApiUpdateCall()}
-          style={{
-            backgroundColor: "#0873af",
-            width: RFPercentage(22),
-            height: RFPercentage(7),
-            borderRadius: RFPercentage(2),
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Text style={{ color: "#ffff", fontWeight: "bold", fontSize: RFPercentage(2.2) }}>Save</Text>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity activeOpacity={0.8} onPress={() => handleApiUpdateCall()} style={styles.buttonStyle}>
+          <Text style={styles.buttonText}>Save</Text>
         </TouchableOpacity>
+      </View>
+
+      <View style={{ marginTop: RFPercentage(5), width: "90%", justifyContent: "center", alignItems: "center", alignSelf: "center" }}>
+        <Text>Image uploading example</Text>
       </View>
     </SafeAreaView>
   );
@@ -113,5 +105,49 @@ const styles = StyleSheet.create({
     padding: RFPercentage(1.7),
     borderRadius: RFPercentage(1),
     fontSize: 16,
+  },
+  unitCodeContainer: {
+    marginTop: RFPercentage(3),
+    width: "90%",
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+  },
+  unitCodeText: {
+    fontSize: RFPercentage(2.6),
+    color: "#06143b",
+    fontWeight: "bold",
+  },
+  priceInputText: {
+    width: "90%",
+    marginTop: RFPercentage(4.5),
+    alignSelf: "center",
+  },
+  dropDownView: {
+    width: "90%",
+    marginTop: RFPercentage(4),
+    alignSelf: "center",
+  },
+  buttonContainer: {
+    position: "absolute",
+    bottom: RFPercentage(15),
+    alignSelf: "center",
+    width: "90%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonStyle: {
+    backgroundColor: "#0873af",
+    width: RFPercentage(22),
+    height: RFPercentage(7),
+    borderRadius: RFPercentage(2),
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#ffff",
+    fontWeight: "bold",
+    fontSize: RFPercentage(2.2),
   },
 });
