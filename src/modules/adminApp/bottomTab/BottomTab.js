@@ -46,6 +46,8 @@ import { CustomerReceivable } from "../payment/CustomerReceivable";
 import { ReceiveableByUnit } from "../payment/ReceiveableByUnit";
 import { PriceSetup } from "../priceSetup/PriceSetup";
 import { PriceDetail } from "../priceSetup/PriceDetail";
+import { TotalAvailable } from "../totalAvailable/TotalAvailable";
+import { TotalAvailableListings } from "../totalAvailable/TotalAvailableListings";
 import PowerBI from "../powerBI/PowerBI";
 import { StatsListing } from "../propertyStatsListing/StatsListing";
 import { HomeInProgress } from "../homeInprogress/HomeInProgress";
@@ -151,6 +153,20 @@ function HomeRoutes() {
       <Stack.Screen
         name="PriceSetup"
         component={PriceSetup}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="TotalAvailable"
+        component={TotalAvailable}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="TotalAvailableListings"
+        component={TotalAvailableListings}
         options={{
           headerShown: false,
         }}

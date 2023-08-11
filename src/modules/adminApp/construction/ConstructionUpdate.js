@@ -1,7 +1,5 @@
-import { ImageBackground, SafeAreaView, ScrollView, StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
-import { COLORS, ICONS, FONTS, SCREEN_WIDTH } from "../../../constants";
-import { ProgressBarCustom } from "../../../common/progressBarCustom";
+import { SafeAreaView, StyleSheet, View } from "react-native";
+import React from "react";
 import { WebView } from "react-native-webview";
 
 const ConstructionUpdate = () => {

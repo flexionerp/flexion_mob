@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Picker, TextInput, Alert } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Picker, TextInput, Alert, Button } from "react-native";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import { COLORS } from "../../../constants";
 import { BackButton } from "../../../common/backButton";
 import DropDownPicker from "react-native-dropdown-picker";
 import { Url } from "../../../constants";
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 
 export const PriceDetail = ({ navigation, route }) => {
   const { unitID, unitCode } = route.params;
@@ -84,10 +85,6 @@ export const PriceDetail = ({ navigation, route }) => {
         <TouchableOpacity activeOpacity={0.8} onPress={() => handleApiUpdateCall()} style={styles.buttonStyle}>
           <Text style={styles.buttonText}>Save</Text>
         </TouchableOpacity>
-      </View>
-
-      <View style={{ marginTop: RFPercentage(5), width: "90%", justifyContent: "center", alignItems: "center", alignSelf: "center" }}>
-        <Text>Image uploading example</Text>
       </View>
     </SafeAreaView>
   );

@@ -29,6 +29,8 @@ const SCREENS = {
   DELETEACCOUNT: "DeleteAccount",
   RECEIPTDETAIL: "ReceiptDetail",
   PRICESETUP: "PriceSetup",
+  TOTALAVAILABLE: "TotalAvailable",
+  TOTALAVAILABLELISTINGS: "TotalAvailableListings",
   PRICEDETAIL: "PriceDetail",
   POWERBI: "PowerBI",
   CREATECUSTOMER: "CreateCustomer",
