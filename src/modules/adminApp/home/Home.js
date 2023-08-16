@@ -54,6 +54,7 @@ const Home = ({ navigation, route }) => {
   return (
     <ImageBackground source={ICONS.bgImg} style={styles.container}>
       <SafeAreaView style={styles.main}>
+        {/* {console.log("Total available List is this====================>>>>>>>>>>", available.length)} */}
         {/* <Text>{token}</Text> */}
         <ScrollView style={{ width: "100%" }}>
           <View style={{ width: "100%", alignItems: "center" }}>

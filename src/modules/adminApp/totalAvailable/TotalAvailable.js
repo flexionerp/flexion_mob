@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, Image } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, Image, ImageBackground } from "react-native";
 import { COLORS, FONTS, ICONS, SCREEN_WIDTH } from "../../../constants";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -15,8 +15,8 @@ export const TotalAvailable = ({ navigation, route }) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
-    { label: "T1", value: "T1" },
-    { label: "T2", value: "T2" },
+    { label: "MG1", value: "MG1" },
+    { label: "MG2", value: "MG2" },
     { label: "All Towers", value: null },
   ]);
 
@@ -29,7 +29,7 @@ export const TotalAvailable = ({ navigation, route }) => {
       try {
         const response = await axios.get(apiUrl);
         setApiData(response.data.data);
-        console.log("Response Data of the API:", response.data);
+        console.log("Response Total Data of the API : ", response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -44,9 +44,9 @@ export const TotalAvailable = ({ navigation, route }) => {
     if (!unitCode) {
       return false; // Skip items with null UNIT_CODE
     }
-    if (value === "T1") {
+    if (value === "MG1") {
       return unitCode.includes("MG1");
-    } else if (value === "T2") {
+    } else if (value === "MG2") {
       return unitCode.includes("MG2");
     }
     return true;
@@ -56,89 +56,104 @@ export const TotalAvailable = ({ navigation, route }) => {
     return filteredApiData.filter((item) => item.UNIT_SPECS_NAME === unitName).length;
   };
 
-  const handlePriceListingButton = (item) => {
-    navigation.navigate("PriceDetail", {
-      unitID: item.UNIT_ID,
-      unitCode: item.UNIT_CODE,
-    });
-  };
-
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView nestedScrollEnabled showsVerticalScrollIndicator={false} style={{ width: "100%" }}>
-        <BackButton navigation={navigation} label="Total Available" />
+    <ImageBackground source={ICONS.bgImg} style={{ flex: 1 }}>
+      <SafeAreaView style={styles.container}>
+        {/* <Text>{userDetail.USER_INFO_ID}</Text> */}
+        <ScrollView nestedScrollEnabled showsVerticalScrollIndicator={false} style={{ width: "100%" }}>
+          <BackButton navigation={navigation} label="Total Available" />
 
-        {/* Dropdown */}
-        <View style={styles.dropDownView}>
-          <DropDownPicker
-            placeholder="All Towers"
-            placeholderStyle={{ color: COLORS.normalText }}
-            style={{ borderColor: COLORS.borderColor, borderWidth: RFPercentage(0.1) }}
-            open={open}
-            value={value}
-            items={items}
-            setOpen={setOpen}
-            setValue={setValue}
-            setItems={setItems}
-            labelStyle={{
-              fontWeight: "600",
-              color: COLORS.dark,
-            }}
-          />
-        </View>
-
-        <View style={[styles.allTowersContainer, { marginTop: open ? RFPercentage(18) : RFPercentage(6) }]}>
-          <View style={styles.subAllTowersContainer}>
-            {!value ? <Text style={styles.allTowersText}>All Towers </Text> : <Text style={styles.allTowersText}>In Tower {value}</Text>}
-
-            {/* 1 BHK */}
-            <TouchableOpacity activeOpacity={0.7} onPress={() => handlePriceListingButton(item)} style={styles.totalBhkTextView}>
-              <View style={{ width: "90%", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", alignSelf: "center" }}>
-                <Text style={{ color: "#204866", fontFamily: FONTS.Bold, fontSize: 24 }}>{countUnits("1 BHK")}</Text>
-                <Text style={{ width: "75%", marginHorizontal: 12, color: "#204866", fontFamily: FONTS.Medium, fontSize: 15 }}>Total 1 BHK</Text>
-                <View activeOpacity={0.8} style={styles.iconContainer}>
-                  <Image source={ICONS.nextArrow} style={{ width: 20, height: 20 }} resizeMode="contain" />
-                </View>
-              </View>
-            </TouchableOpacity>
-
-            {/* 2 BHK */}
-            <TouchableOpacity activeOpacity={0.7} style={styles.totalBhkTextView}>
-              <View style={{ width: "90%", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", alignSelf: "center" }}>
-                <Text style={{ color: "#204866", fontFamily: FONTS.Bold, fontSize: 24 }}>{countUnits("2 BHK")}</Text>
-                <Text style={{ width: "75%", marginHorizontal: 12, color: "#204866", fontFamily: FONTS.Medium, fontSize: 15 }}>Total 2 BHK</Text>
-                <View activeOpacity={0.8} style={styles.iconContainer}>
-                  <Image source={ICONS.nextArrow} style={{ width: 20, height: 20 }} resizeMode="contain" />
-                </View>
-              </View>
-            </TouchableOpacity>
-
-            {/* 3 BHK */}
-            <TouchableOpacity activeOpacity={0.7} style={styles.totalBhkTextView}>
-              <View style={{ width: "90%", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", alignSelf: "center" }}>
-                <Text style={{ color: "#204866", fontFamily: FONTS.Bold, fontSize: 24 }}>{countUnits("3 BHK")}</Text>
-                <Text style={{ width: "75%", marginHorizontal: 12, color: "#204866", fontFamily: FONTS.Medium, fontSize: 15 }}>Total 3 BHK</Text>
-                <View activeOpacity={0.8} style={styles.iconContainer}>
-                  <Image source={ICONS.nextArrow} style={{ width: 20, height: 20 }} resizeMode="contain" />
-                </View>
-              </View>
-            </TouchableOpacity>
-
-            {/* 4 BHK */}
-            <TouchableOpacity activeOpacity={0.7} style={styles.totalBhkTextView}>
-              <View style={{ width: "90%", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", alignSelf: "center" }}>
-                <Text style={{ color: "#204866", fontFamily: FONTS.Bold, fontSize: 24 }}>{countUnits("4 BHK")}</Text>
-                <Text style={{ width: "75%", marginHorizontal: 12, color: "#204866", fontFamily: FONTS.Medium, fontSize: 15 }}>Total 4 BHK</Text>
-                <View activeOpacity={0.8} style={styles.iconContainer}>
-                  <Image source={ICONS.nextArrow} style={{ width: 20, height: 20 }} resizeMode="contain" />
-                </View>
-              </View>
-            </TouchableOpacity>
+          {/* Dropdown */}
+          <View style={styles.dropDownView}>
+            <DropDownPicker
+              placeholder="All Towers"
+              placeholderStyle={{ color: COLORS.normalText }}
+              style={{ borderColor: COLORS.borderColor, borderWidth: RFPercentage(0.1) }}
+              containerStyle={{ backgroundColor: null }}
+              listMode="SCROLLVIEW"
+              dropDownContainerStyle={{ backgroundColor: "#0000", borderColor: COLORS.borderColor, borderWidth: RFPercentage(0.1) }}
+              open={open}
+              value={value}
+              items={items}
+              setOpen={setOpen}
+              setValue={setValue}
+              setItems={setItems}
+              labelStyle={{
+                fontWeight: "600",
+                color: COLORS.dark,
+              }}
+            />
           </View>
-        </View>
-        <View style={{ marginBottom: RFPercentage(10) }} />
-      </ScrollView>
-    </SafeAreaView>
+
+          <View style={[styles.allTowersContainer, { marginTop: open ? RFPercentage(18) : RFPercentage(6) }]}>
+            <View style={styles.subAllTowersContainer}>
+              {!value ? <Text style={styles.allTowersText}>All Towers </Text> : <Text style={styles.allTowersText}>In Tower {value}</Text>}
+
+              {/* 1 BHK */}
+              <TouchableOpacity
+                onPress={() => navigation.navigate("TotalAvailableListings", { unitType: "1 BHK", availableList: filteredApiData.filter((item) => item.UNIT_SPECS_NAME === "1 BHK") })}
+                activeOpacity={0.7}
+                style={styles.totalBhkTextView}
+              >
+                <View style={{ width: "90%", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", alignSelf: "center" }}>
+                  <Text style={{ color: "#204866", fontFamily: FONTS.Bold, fontSize: 24 }}>{countUnits("1 BHK")}</Text>
+                  <Text style={{ width: "75%", marginHorizontal: 12, color: "#204866", fontFamily: FONTS.Medium, fontSize: 15 }}>Total 1 BHK</Text>
+                  <View activeOpacity={0.8} style={styles.iconContainer}>
+                    <Image source={ICONS.nextArrow} style={{ width: 20, height: 20 }} resizeMode="contain" />
+                  </View>
+                </View>
+              </TouchableOpacity>
+
+              {/* 2 BHK */}
+              <TouchableOpacity
+                onPress={() => navigation.navigate("TotalAvailableListings", { unitType: "2 BHK", availableList: filteredApiData.filter((item) => item.UNIT_SPECS_NAME === "2 BHK") })}
+                activeOpacity={0.7}
+                style={styles.totalBhkTextView}
+              >
+                <View style={{ width: "90%", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", alignSelf: "center" }}>
+                  <Text style={{ color: "#204866", fontFamily: FONTS.Bold, fontSize: 24 }}>{countUnits("2 BHK")}</Text>
+                  <Text style={{ width: "75%", marginHorizontal: 12, color: "#204866", fontFamily: FONTS.Medium, fontSize: 15 }}>Total 2 BHK</Text>
+                  <View activeOpacity={0.8} style={styles.iconContainer}>
+                    <Image source={ICONS.nextArrow} style={{ width: 20, height: 20 }} resizeMode="contain" />
+                  </View>
+                </View>
+              </TouchableOpacity>
+
+              {/* 3 BHK */}
+              <TouchableOpacity
+                onPress={() => navigation.navigate("TotalAvailableListings", { unitType: "3 BHK", availableList: filteredApiData.filter((item) => item.UNIT_SPECS_NAME === "3 BHK") })}
+                activeOpacity={0.7}
+                style={styles.totalBhkTextView}
+              >
+                <View style={{ width: "90%", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", alignSelf: "center" }}>
+                  <Text style={{ color: "#204866", fontFamily: FONTS.Bold, fontSize: 24 }}>{countUnits("3 BHK")}</Text>
+                  <Text style={{ width: "75%", marginHorizontal: 12, color: "#204866", fontFamily: FONTS.Medium, fontSize: 15 }}>Total 3 BHK</Text>
+                  <View activeOpacity={0.8} style={styles.iconContainer}>
+                    <Image source={ICONS.nextArrow} style={{ width: 20, height: 20 }} resizeMode="contain" />
+                  </View>
+                </View>
+              </TouchableOpacity>
+
+              {/* 4 BHK */}
+              <TouchableOpacity
+                onPress={() => navigation.navigate("TotalAvailableListings", { unitType: "4 BHK", availableList: filteredApiData.filter((item) => item.UNIT_SPECS_NAME === "4 BHK") })}
+                activeOpacity={0.7}
+                style={styles.totalBhkTextView}
+              >
+                <View style={{ width: "90%", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", alignSelf: "center" }}>
+                  <Text style={{ color: "#204866", fontFamily: FONTS.Bold, fontSize: 24 }}>{countUnits("4 BHK")}</Text>
+                  <Text style={{ width: "75%", marginHorizontal: 12, color: "#204866", fontFamily: FONTS.Medium, fontSize: 15 }}>Total 4 BHK</Text>
+                  <View activeOpacity={0.8} style={styles.iconContainer}>
+                    <Image source={ICONS.nextArrow} style={{ width: 20, height: 20 }} resizeMode="contain" />
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={{ marginBottom: RFPercentage(10) }} />
+        </ScrollView>
+      </SafeAreaView>
+    </ImageBackground>
   );
 };
 
@@ -146,7 +161,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
-    backgroundColor: COLORS.secondry,
   },
   dropDownView: {
     width: "90%",

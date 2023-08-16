@@ -4,8 +4,9 @@ import { COLORS, FONTS } from "../../../constants";
 import { BackButton } from "../../../common/backButton";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { Url } from "../../../constants";
+// import { Url } from "../../../constants";
 import axios from "axios";
+// import { Url } from "../../../common/urlBase";
 
 //components
 import InputField from "../../../common/InputField";
@@ -27,7 +28,7 @@ export const PriceSetup = ({ navigation, route }) => {
   }, []);
 
   const fetchDataFromApi = async () => {
-    const apiUrl = Url + "get_pricesetup_units_API";
+    const apiUrl = "http://tvh.flexion.ae:9095/get_pricesetup_units_API";
     const queryParams = {
       prop_code: "",
       org: "33",
@@ -39,10 +40,72 @@ export const PriceSetup = ({ navigation, route }) => {
     try {
       const response = await axios.get(apiUrl, { params: queryParams });
       setData(response.data);
+      console.log("Price Setup APi Returned Data :", response.data);
     } catch (error) {
       console.error("Error fetching data from the API:", error);
     }
   };
+
+  useEffect(() => {
+    fetchDataFromApi();
+  }, []);
+
+  // const fetchDataFromApi = async () => {
+  //   const apiUrl = Url + "get_pricesetup_units_API";
+  //   const queryParams = {
+  //     prop_code: "",
+  //     org: "33",
+  //     floor_code: "",
+  //     unit_code: "",
+  //     unit_desc: "",
+  //   };
+  //   let headers = {
+  //     "Content-Type": "application/json",
+  //   };
+
+  //   try {
+  //     const response = await axios.get(apiUrl, { params: queryParams }, { headers: headers });
+
+  //     if (response.status === 200) {
+  //       setData(response.data);
+  //       console.log("Price Setup API Returned Data:", response.data);
+  //     } else {
+  //       console.error("Received non-200 status code:", response.status);
+  //       console.log("Response data:", response.data);
+  //     }
+  //   } catch (error) {
+  //     if (error.response) {
+  //       console.error("API responded with an error status:", error.response.status);
+  //       console.log("Error response data:", error.response.data);
+  //     } else if (error.request) {
+  //       console.error("No response received from the server:", error.request);
+  //     } else {
+  //       console.error("Error during API request:", error.message);
+  //     }
+  //   }
+  // };
+
+  // const [data, setData] = useState([]);
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
+
+  // const fetchData = async () => {
+  //   try {
+  //     const response = await axios.get("http://tvh.flexion.ae:9095/get_pricesetup_units_API", {
+  //       params: {
+  //         org: 33,
+  //         unit_desc: "", // Add other parameters if needed
+  //       },
+  //     });
+
+  //     console.log("Fetched data:", response.data); // Log the fetched data
+  //     setData(response.data); // Assuming the response data is an array, adjust accordingly
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // };
 
   useEffect(() => {
     // Filtering
