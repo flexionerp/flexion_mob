@@ -19,8 +19,6 @@ const PreReservedForm = ({ navigation, route }) => {
   const { customersList, unitDetail, paymentPlan, agent, broker } = useSelector((state) => state.property);
   const { loader } = useSelector((state) => state.loader);
   const { token } = useSelector((state) => state.user);
-  const [customer, setCustomer] = useState(null);
-  const [customerId, setCustomerId] = useState(null);
   const [payPlan, setPaymentPlan] = useState(null);
   const [payPlanId, setPaymentPlanId] = useState(null);
   const [agentName, setAgentName] = useState(null);
@@ -35,18 +33,51 @@ const PreReservedForm = ({ navigation, route }) => {
   const [percent, setPercent] = useState(100); // Initial value of percent state
   const [addCustomerClicked, setAddCustomerClicked] = useState(false);
 
-  const [customerData, setCustomerData] = useState([{ name: "", percentage: "" }]);
+  const [customerId, setCustomerId] = useState(null);
+
+  const [customer, setCustomer] = useState(null);
+
+  const [customerData, setCustomerData] = useState([{ name: "", percentage: 100 }]);
 
   const [primaryCustomerIndex, setPrimaryCustomerIndex] = useState(0);
 
-  const handleButtonPress = () => {
-    setLoader(true);
+  const [selectedCustomers, setSelectedCustomers] = useState([]);
+  const [selectedPercentages, setSelectedPercentages] = useState([]);
 
-    setTimeout(() => {
-      if (customerData.length >= 2) {
-        // Display an alert if maximum customer limit is reached
-        alert("Cannot Add More Than Two Customers.");
-      } else {
+  // const handleButtonPress = () => {
+  //   if (customerData.length >= 2) {
+  //     // Display an alert if maximum customer limit is reached
+  //     alert("Cannot Add More Than Two Customers.");
+  //   } else {
+  //     setLoader(true);
+
+  //     setTimeout(() => {
+  //       const numCustomers = customerData.length;
+  //       const newPercent = percent / (numCustomers + 1); // +1 for the new customer
+
+  //       const updatedData = customerData.map((customer) => ({
+  //         ...customer,
+  //         percentage: newPercent,
+  //       }));
+
+  //       const newData = [...updatedData, { name: "", percentage: newPercent }];
+
+  //       setCustomerData(newData);
+  //       setAddCustomerClicked(true);
+
+  //       setLoader(false);
+  //     }, 1000);
+  //   }
+  // };
+
+  const handleButtonPress = () => {
+    if (customerData.length >= 2) {
+      // Display an alert if maximum customer limit is reached
+      alert("Cannot Add More Than Two Customers.");
+    } else {
+      setLoader(true);
+
+      setTimeout(() => {
         const numCustomers = customerData.length;
         const newPercent = percent / (numCustomers + 1); // +1 for the new customer
 
@@ -55,14 +86,19 @@ const PreReservedForm = ({ navigation, route }) => {
           percentage: newPercent,
         }));
 
-        const newData = [...updatedData, { name: "", percentage: newPercent }];
+        const newCustomerId = null; // Modify this with the actual customer ID if available
+
+        const newData = [...updatedData, { name: "", percentage: newPercent, customerId: newCustomerId }];
 
         setCustomerData(newData);
         setAddCustomerClicked(true);
-      }
 
-      setLoader(false);
-    }, 1000);
+        const newCustomerIDs = newData.map((customer) => customer.customerId);
+        setSelectedCustomers(newCustomerIDs);
+
+        setLoader(false);
+      }, 1000);
+    }
   };
 
   const handleCustomInputChange = (index, value) => {
@@ -84,23 +120,45 @@ const PreReservedForm = ({ navigation, route }) => {
     setCustomerData(newData);
   };
 
-  const [selectedCustomers, setSelectedCustomers] = useState([]);
-  const [selectedPercentages, setSelectedPercentages] = useState([]);
+  // const handleCustomerChange = (index, value) => {
+  //   const newData = [...customerData];
+  //   newData[index].name = value;
+  //   setCustomerData(newData);
 
-  const handleCustomerChange = (index, value) => {
+  //   const updatedSelectedCustomers = [...selectedCustomers];
+  //   updatedSelectedCustomers[index] = value;
+  //   setSelectedCustomers(updatedSelectedCustomers);
+  // };
+
+  const handleCustomerChange = (index, value, customerId) => {
     const newData = [...customerData];
     newData[index].name = value;
+    newData[index].customerId = customerId; // Store the customer ID
     setCustomerData(newData);
 
     const updatedSelectedCustomers = [...selectedCustomers];
-    updatedSelectedCustomers[index] = value;
+    updatedSelectedCustomers[index] = customerId; // Store the customer ID
     setSelectedCustomers(updatedSelectedCustomers);
   };
 
   const handlePercentageChange = (index, value) => {
-    handleCustomInputChange(index, value);
-  };
+    const newValue = parseFloat(value) || 0;
 
+    if (newValue < 1 || newValue > 100) {
+      alert("Customer percentage should be within 1 to 100");
+      return;
+    }
+
+    const newCustomerData = customerData.map((customer, i) => {
+      if (i === index) {
+        return { ...customer, percentage: newValue };
+      } else {
+        return customer;
+      }
+    });
+
+    setCustomerData(newCustomerData);
+  };
   const handleRemoveCustomer = (index) => {
     const newData = [...customerData];
     newData.splice(index, 1); // Remove the customer at the specified index
@@ -162,48 +220,69 @@ const PreReservedForm = ({ navigation, route }) => {
   };
 
   const apiHit = () => {
-    for (let index = 0; index < selectedCustomers.length; index++) {
-      const customerId = selectedCustomers[index];
-      const customerPercentage = selectedPercentages[index];
+    const ptype = unitDetail.PRICE_TYPE.replace(/\s/g, "");
+    const result = calSaleValue(ptype);
+    // if (customerId == null) {
+    //   alert("Please select a customer");
+    //   return;
+    // }
+    // if (payPlan == null) {
+    //   alert("Please select a payment plan");
+    //   return;
+    // }
 
-      // Perform your checks and data preparation for each customer
-      if (customerId == null) {
-        alert("Please select customer");
-        return;
-      }
-      if (parseInt(customerPercentage) < 1 || parseInt(customerPercentage) > 100) {
-        alert("Customer percentage should be within 1 to 100");
-        return;
-      }
+    // Calculate the selected percentages and customer IDs
+    const selectedPercentages = customerData.map((customer) => customer.percentage);
+    const selectedCustomerIDs = selectedCustomers.slice(0, 2); // Use the first two selected customers
 
-      // Other data preparation and dispatching
-      // ...
+    if (selectedPercentages.length === 1) {
+      // Only one customer, set values for the first customer
+      let data = {
+        pre_res_dt: reserveDate,
+        sale_val: result.sale_val,
+        unit_id: unitDetail.UNIT_ID,
+        price: ptype == "SQFT" ? unitDetail.PRICE_VALUE : result.actual_price,
+        payment_plan: payPlanId,
+        agent: agentId,
+        broker: brokerId,
+        USER_INFO_ID: token,
+        PROPERTY_ID: unitDetail.PROPERTY_ID,
+        UNIT_SPECS_ID: unitDetail.UNIT_SPECS_ID,
+        PRICE_TYPE: unitDetail.PRICE_TYPE,
+        Per: selectedPercentages[0],
+        Customer_ID: selectedCustomerIDs[0], // Use the first selected customer ID
+        Customer_ID1: null,
+        Per1: null,
+        Customer_ID2: null,
+        Per2: null,
+      };
+      dispatch(setLoader(true));
+      dispatch(insertPreReservation(data, navigation));
+    } else if (selectedPercentages.length >= 2) {
+      // More than one customer, set values for the first two customers
+      let data = {
+        pre_res_dt: reserveDate,
+        sale_val: result.sale_val,
+        unit_id: unitDetail.UNIT_ID,
+        price: ptype == "SQFT" ? unitDetail.PRICE_VALUE : result.actual_price,
+        payment_plan: payPlanId,
+        agent: agentId,
+        broker: brokerId,
+        USER_INFO_ID: token,
+        PROPERTY_ID: unitDetail.PROPERTY_ID,
+        UNIT_SPECS_ID: unitDetail.UNIT_SPECS_ID,
+        PRICE_TYPE: unitDetail.PRICE_TYPE,
+        Per: null,
+        Customer_ID: null,
+        Customer_ID1: selectedCustomerIDs[0], // Use the first selected customer ID
+        Per1: selectedPercentages[0],
+        Customer_ID2: selectedCustomerIDs[1], // Use the second selected customer ID
+        Per2: selectedPercentages[1],
+      };
+      console.log("Here is the data apiHit", data);
+      dispatch(setLoader(true));
+      dispatch(insertPreReservation(data, navigation));
     }
-
-    if (payPlan == null) {
-      alert("Please select payment plan");
-      return;
-    }
-
-    let ptype = unitDetail.PRICE_TYPE.replace(/\s/g, "");
-    let result = calSaleValue(ptype);
-    let data = {
-      pre_res_dt: reserveDate,
-      sale_val: result.sale_val,
-      unit_id: unitDetail.UNIT_ID,
-      price: ptype == "SQFT" ? unitDetail.PRICE_VALUE : result.actual_price,
-      payment_plan: payPlanId,
-      agent: agentId,
-      broker: brokerId,
-      USER_INFO_ID: token,
-      Per: percent,
-      Customer_ID: customerId,
-      PROPERTY_ID: unitDetail.PROPERTY_ID,
-      UNIT_SPECS_ID: unitDetail.UNIT_SPECS_ID,
-      PRICE_TYPE: unitDetail.PRICE_TYPE,
-    };
-    dispatch(setLoader(true));
-    dispatch(insertPreReservation(data, navigation));
   };
 
   const calSaleValue = (ptype) => {
@@ -221,6 +300,61 @@ const PreReservedForm = ({ navigation, route }) => {
     };
     return data;
   };
+
+  // const apiHit = () => {
+  //   const ptype = unitDetail.PRICE_TYPE.replace(/\s/g, "");
+  //   const result = calSaleValue(ptype);
+
+  //   const data = {
+  //     pre_res_dt: reserveDate,
+  //     sale_val: result.sale_val,
+  //     unit_id: unitDetail.UNIT_ID,
+  //     price: ptype === "SQFT" ? unitDetail.PRICE_VALUE : result.actual_price,
+  //     payment_plan: payPlanId,
+  //     agent: agentId,
+  //     broker: brokerId,
+  //     USER_INFO_ID: token,
+  //     PROPERTY_ID: unitDetail.PROPERTY_ID,
+  //     UNIT_SPECS_ID: unitDetail.UNIT_SPECS_ID,
+  //     PRICE_TYPE: unitDetail.PRICE_TYPE,
+  //     Per: percent,
+  //   };
+
+  //   for (let index = 0; index < selectedCustomers.length; index++) {
+  //     const customerId = selectedCustomers[index];
+  //     const customerPercentage = selectedPercentages[index];
+
+  //     if (customerId == null) {
+  //       alert("Please select customer");
+  //       return;
+  //     }
+  //     if (parseInt(customerPercentage) < 1 || parseInt(customerPercentage) > 100) {
+  //       alert("Customer percentage should be within 1 to 100");
+  //       return;
+  //     }
+
+  //     if (index === primaryCustomerIndex) {
+  //       data.PrimaryCustomerOneSelected = 1;
+  //       data.PrimaryCustomerTwoSelected = 0;
+  //     } else if (index === primaryCustomerIndex + 1) {
+  //       data.PrimaryCustomerOneSelected = 0;
+  //       data.PrimaryCustomerTwoSelected = 1;
+  //     }
+
+  //     if (index === 0) {
+  //       data.Customer_ID = customerId;
+  //       data.Per = customerPercentage;
+  //     } else {
+  //       data[`Customer_ID${index + 1}`] = customerId;
+  //       data[`Per${index + 1}`] = customerPercentage;
+  //     }
+  //   }
+
+  //   console.log("Here is the data apiHit", data);
+  //   dispatch(setLoader(true));
+  //   dispatch(insertPreReservation(data, navigation));
+
+  // };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -362,12 +496,15 @@ const PreReservedForm = ({ navigation, route }) => {
                   }}
                 >
                   <View style={{ width: customerData.length > 1 ? "58%" : "70%" }}>
-                    <DropDownSingle name={customer.name || "Select Customer"} data={customersList} getValue={(value) => handleCustomerChange(index, value)} label="Customer" />
+                    <DropDownSingle name={customer.name || "Select Customer"} data={customersList} getValue={(value, customerId) => handleCustomerChange(index, value, customerId)} label="Customer" />
                   </View>
                   <View
                     style={{
                       width: customerData.length > 1 ? "24%" : "28%",
                       marginLeft: 8,
+                      position: customerData.length > 1 ? "absolute" : null,
+                      right: customerData.length > 1 ? 55 : null,
+                      top: customerData.length > 1 ? 0.1 : null,
                     }}
                   >
                     <CustomInput
@@ -382,7 +519,7 @@ const PreReservedForm = ({ navigation, route }) => {
                     />
                   </View>
                   {customerData.length > 1 && (
-                    <View style={{ flexDirection: "row", alignItems: "center", position: "absolute", right: 0 }}>
+                    <View style={{ flexDirection: "row", alignItems: "center", position: "absolute", right: 0, top: 15 }}>
                       {customerData.length === 2 && (
                         <TouchableOpacity onPress={() => handlePrimaryCustomerToggle(index)} style={{ flexDirection: "row", marginRight: 8 }}>
                           <View
@@ -429,6 +566,12 @@ const PreReservedForm = ({ navigation, route }) => {
                 <Icon name="plus" size={14} />
               </TouchableOpacity>
             )}
+            {console.log(
+              "selectedPercentages",
+              customerData.map((customer) => customer.percentage),
+            )}
+
+            {console.log("selectedCustomers", selectedCustomers)}
 
             <View style={{ height: 20 }} />
             {loader ? (

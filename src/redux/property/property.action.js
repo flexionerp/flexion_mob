@@ -230,7 +230,7 @@ export const getPropertyStats = () => {
       .then((resp) => {
         let response = resp.data;
         dispatch(setPropertyStats(response));
-        console.log("Total Units Count's API Res :", response);
+        // console.log("Total Units Count's API Res :", response);
       })
       .catch((error) => {
         const err = error;
@@ -1059,19 +1059,39 @@ export const getBrokerList = (data) => {
 };
 
 export const insertPreReservation = (data, navigation) => {
-  const { pre_res_dt, sale_val, unit_id, price, payment_plan, agent, broker, USER_INFO_ID, Per, Customer_ID, PROPERTY_ID, UNIT_SPECS_ID, PRICE_TYPE } = data;
+  const {
+    pre_res_dt,
+    sale_val,
+    unit_id,
+    price,
+    payment_plan,
+    agent,
+    broker,
+    USER_INFO_ID,
+    Per,
+    Customer_ID,
+    PROPERTY_ID,
+    UNIT_SPECS_ID,
+    PRICE_TYPE,
+    Customer_ID1,
+    Per1,
+    Customer_ID2,
+    Per2,
+    PrimaryCustomerOneSelected,
+    PrimaryCustomerTwoSelected,
+  } = data;
   return (dispatch) => {
     let headers = {
       "Content-Type": "application/json",
     };
     axios
       .get(
-        `${Url}insert_pre_reservation1_API?pre_res_dt=${pre_res_dt}&sale_val=${sale_val}&unit_id=${unit_id}&prop_id=${PROPERTY_ID}&unit_desc_id=${UNIT_SPECS_ID}&price=${price}&pricetype=${PRICE_TYPE}&payment_plan=${payment_plan}&agent=${agent}&broker=${broker}&USER_INFO_ID=${USER_INFO_ID}&Customer_ID=${Customer_ID}&Primary=1&Per=${Per}&org_id=33`,
+        `${Url}insert_pre_reservation1_API?pre_res_dt=${pre_res_dt}&sale_val=${sale_val}&unit_id=${unit_id}&prop_id=${PROPERTY_ID}&unit_desc_id=${UNIT_SPECS_ID}&price=${price}&pricetype=${PRICE_TYPE}&payment_plan=${payment_plan}&agent=${agent}&broker=${broker}&USER_INFO_ID=${USER_INFO_ID}&Customer_ID=${Customer_ID}&Primary=1&Per=${Per}&org_id=33&&Customer_ID1=${Customer_ID1}&Primary1=${PrimaryCustomerOneSelected}&Per1=${Per1}&Customer_ID2=${Customer_ID2}&Primary2=${PrimaryCustomerTwoSelected}&Per2=${Per2}`,
         { headers: headers },
       )
       .then((resp) => {
         let response = resp.data;
-        console.log("insertPreReservation: ", response);
+        console.warn("insertPreReservation is here===========> : ", response);
         alert("Pre Reserved Successfully!");
         navigation.goBack();
         dispatch(setLoader(false));
