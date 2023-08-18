@@ -44,32 +44,6 @@ const PreReservedForm = ({ navigation, route }) => {
   const [selectedCustomers, setSelectedCustomers] = useState([]);
   const [selectedPercentages, setSelectedPercentages] = useState([]);
 
-  // const handleButtonPress = () => {
-  //   if (customerData.length >= 2) {
-  //     // Display an alert if maximum customer limit is reached
-  //     alert("Cannot Add More Than Two Customers.");
-  //   } else {
-  //     setLoader(true);
-
-  //     setTimeout(() => {
-  //       const numCustomers = customerData.length;
-  //       const newPercent = percent / (numCustomers + 1); // +1 for the new customer
-
-  //       const updatedData = customerData.map((customer) => ({
-  //         ...customer,
-  //         percentage: newPercent,
-  //       }));
-
-  //       const newData = [...updatedData, { name: "", percentage: newPercent }];
-
-  //       setCustomerData(newData);
-  //       setAddCustomerClicked(true);
-
-  //       setLoader(false);
-  //     }, 1000);
-  //   }
-  // };
-
   const handleButtonPress = () => {
     if (customerData.length >= 2) {
       // Display an alert if maximum customer limit is reached
@@ -119,16 +93,6 @@ const PreReservedForm = ({ navigation, route }) => {
 
     setCustomerData(newData);
   };
-
-  // const handleCustomerChange = (index, value) => {
-  //   const newData = [...customerData];
-  //   newData[index].name = value;
-  //   setCustomerData(newData);
-
-  //   const updatedSelectedCustomers = [...selectedCustomers];
-  //   updatedSelectedCustomers[index] = value;
-  //   setSelectedCustomers(updatedSelectedCustomers);
-  // };
 
   const handleCustomerChange = (index, value, customerId) => {
     const newData = [...customerData];
@@ -255,6 +219,9 @@ const PreReservedForm = ({ navigation, route }) => {
         Per1: null,
         Customer_ID2: null,
         Per2: null,
+        Primary: 1,
+        Primary1: null,
+        Primary2: null,
       };
       dispatch(setLoader(true));
       dispatch(insertPreReservation(data, navigation));
@@ -278,7 +245,18 @@ const PreReservedForm = ({ navigation, route }) => {
         Per1: selectedPercentages[0],
         Customer_ID2: selectedCustomerIDs[1], // Use the second selected customer ID
         Per2: selectedPercentages[1],
+        Primary: null,
       };
+
+      for (let index = 0; index < selectedCustomers.length; index++) {
+        if (index === primaryCustomerIndex) {
+          data.Primary1 = 0;
+          data.Primary2 = 1;
+        } else if (index === primaryCustomerIndex + 1) {
+          data.Primary1 = 1;
+          data.Primary2 = 0;
+        }
+      }
       console.log("Here is the data apiHit", data);
       dispatch(setLoader(true));
       dispatch(insertPreReservation(data, navigation));

@@ -1021,7 +1021,7 @@ export const getBrokerList = (data) => {
       .then((resp) => {
         let response = resp.data;
         dispatch(setUnitDetail(response.result2[0]));
-        console.log("PP: ", response.result);
+        // console.log("PP Lists: ", response.result2[0]);
         let tempPlan = [];
         let tempBroker = [];
         let tempAgent = [];
@@ -1044,8 +1044,11 @@ export const getBrokerList = (data) => {
           });
         });
         dispatch(setPaymentPlan(tempPlan));
+        console.log("Payment Plan dispatcher :", tempPlan);
         dispatch(setBroker(tempBroker));
+        console.log("Broker List Data Dispatcher :", tempBroker);
         dispatch(setAgent(tempAgent));
+        console.log("Agen List Dispatcher :", tempAgent);
         dispatch(setLoader(false));
       })
       .catch((error) => {
@@ -1077,21 +1080,26 @@ export const insertPreReservation = (data, navigation) => {
     Per1,
     Customer_ID2,
     Per2,
-    PrimaryCustomerOneSelected,
-    PrimaryCustomerTwoSelected,
+    Primary1,
+    Primary2,
+    Primary,
   } = data;
+
   return (dispatch) => {
     let headers = {
       "Content-Type": "application/json",
     };
+
+    const apiUrl = `${Url}insert_pre_reservation1_API?pre_res_dt=${pre_res_dt}&sale_val=${sale_val}&unit_id=${unit_id}&prop_id=${PROPERTY_ID}&unit_desc_id=${UNIT_SPECS_ID}&price=${price}&pricetype=${PRICE_TYPE}&payment_plan=${payment_plan}&agent=${agent}&broker=${broker}&USER_INFO_ID=${USER_INFO_ID}&Customer_ID=${Customer_ID}&Primary=${Primary}&Per=${Per}&org_id=33&&Customer_ID1=${Customer_ID1}&Primary1=${Primary1}&Per1=${Per1}&Customer_ID2=${Customer_ID2}&Primary2=${Primary2}&Per2=${Per2}`;
+
+    console.log("API URL:", apiUrl); // Log the constructed API URL
+
     axios
-      .get(
-        `${Url}insert_pre_reservation1_API?pre_res_dt=${pre_res_dt}&sale_val=${sale_val}&unit_id=${unit_id}&prop_id=${PROPERTY_ID}&unit_desc_id=${UNIT_SPECS_ID}&price=${price}&pricetype=${PRICE_TYPE}&payment_plan=${payment_plan}&agent=${agent}&broker=${broker}&USER_INFO_ID=${USER_INFO_ID}&Customer_ID=${Customer_ID}&Primary=1&Per=${Per}&org_id=33&&Customer_ID1=${Customer_ID1}&Primary1=${PrimaryCustomerOneSelected}&Per1=${Per1}&Customer_ID2=${Customer_ID2}&Primary2=${PrimaryCustomerTwoSelected}&Per2=${Per2}`,
-        { headers: headers },
-      )
+      .get(apiUrl, { headers: headers })
       .then((resp) => {
         let response = resp.data;
         console.warn("insertPreReservation is here===========> : ", response);
+
         alert("Pre Reserved Successfully!");
         navigation.goBack();
         dispatch(setLoader(false));

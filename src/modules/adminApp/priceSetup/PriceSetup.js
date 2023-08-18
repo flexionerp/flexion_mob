@@ -40,7 +40,7 @@ export const PriceSetup = ({ navigation, route }) => {
     try {
       const response = await axios.get(apiUrl, { params: queryParams });
       setData(response.data);
-      console.log("Price Setup APi Returned Data :", response.data);
+      // console.log("Price Setup APi Returned Data :", response.data);
     } catch (error) {
       console.error("Error fetching data from the API:", error);
     }

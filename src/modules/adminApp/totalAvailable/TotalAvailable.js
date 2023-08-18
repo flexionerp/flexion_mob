@@ -29,7 +29,7 @@ export const TotalAvailable = ({ navigation, route }) => {
       try {
         const response = await axios.get(apiUrl);
         setApiData(response.data.data);
-        console.log("Response Total Data of the API : ", response.data);
+        // console.log("Response Total Data of the API : ", response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
