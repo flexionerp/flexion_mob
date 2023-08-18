@@ -1021,7 +1021,7 @@ export const getBrokerList = (data) => {
       .then((resp) => {
         let response = resp.data;
         dispatch(setUnitDetail(response.result2[0]));
-        // console.log("PP Lists: ", response.result2[0]);
+        console.log("PP Lists: ", resp.data);
         let tempPlan = [];
         let tempBroker = [];
         let tempAgent = [];

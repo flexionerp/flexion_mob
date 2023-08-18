@@ -186,20 +186,17 @@ const PreReservedForm = ({ navigation, route }) => {
   const apiHit = () => {
     const ptype = unitDetail.PRICE_TYPE.replace(/\s/g, "");
     const result = calSaleValue(ptype);
-    // if (customerId == null) {
-    //   alert("Please select a customer");
-    //   return;
-    // }
-    // if (payPlan == null) {
-    //   alert("Please select a payment plan");
-    //   return;
-    // }
 
     // Calculate the selected percentages and customer IDs
     const selectedPercentages = customerData.map((customer) => customer.percentage);
     const selectedCustomerIDs = selectedCustomers.slice(0, 2); // Use the first two selected customers
 
     if (selectedPercentages.length === 1) {
+      if (!agentId || !brokerId || !payPlanId || !selectedPercentages[0] || !selectedCustomerIDs[0]) {
+        // Show alert for missing fields
+        alert("Please Fill In All Required Fields.");
+        return;
+      }
       // Only one customer, set values for the first customer
       let data = {
         pre_res_dt: reserveDate,
@@ -226,6 +223,11 @@ const PreReservedForm = ({ navigation, route }) => {
       dispatch(setLoader(true));
       dispatch(insertPreReservation(data, navigation));
     } else if (selectedPercentages.length >= 2) {
+      if (!agentId || !brokerId || !payPlanId || !selectedPercentages[0] || !selectedCustomerIDs[0] || !selectedCustomerIDs[1] || !selectedPercentages[1]) {
+        // Show alert for missing fields
+        alert("Please Fill In All Required Fields.");
+        return;
+      }
       // More than one customer, set values for the first two customers
       let data = {
         pre_res_dt: reserveDate,
@@ -239,22 +241,24 @@ const PreReservedForm = ({ navigation, route }) => {
         PROPERTY_ID: unitDetail.PROPERTY_ID,
         UNIT_SPECS_ID: unitDetail.UNIT_SPECS_ID,
         PRICE_TYPE: unitDetail.PRICE_TYPE,
-        Per: null,
-        Customer_ID: null,
-        Customer_ID1: selectedCustomerIDs[0], // Use the first selected customer ID
-        Per1: selectedPercentages[0],
-        Customer_ID2: selectedCustomerIDs[1], // Use the second selected customer ID
-        Per2: selectedPercentages[1],
-        Primary: null,
+        Customer_ID: selectedCustomerIDs[0],
+        Per: selectedPercentages[0],
+        Customer_ID1: selectedCustomerIDs[1], // Use the first selected customer ID
+        Per1: selectedPercentages[1],
+        Customer_ID2: null, // Use the second selected customer ID
+        Per2: null,
+        // Primary: null,
       };
 
       for (let index = 0; index < selectedCustomers.length; index++) {
         if (index === primaryCustomerIndex) {
-          data.Primary1 = 0;
-          data.Primary2 = 1;
-        } else if (index === primaryCustomerIndex + 1) {
           data.Primary1 = 1;
-          data.Primary2 = 0;
+          data.Primary2 = null;
+          data.Primary = 0;
+        } else if (index === primaryCustomerIndex + 1) {
+          data.Primary1 = 0;
+          data.Primary2 = null;
+          data.Primary = 1;
         }
       }
       console.log("Here is the data apiHit", data);
@@ -461,6 +465,7 @@ const PreReservedForm = ({ navigation, route }) => {
                 </View>
               ))} */}
 
+              {/* Customer And Percentage Selection */}
               {customerData.map((customer, index) => (
                 <View
                   key={index}
@@ -480,9 +485,9 @@ const PreReservedForm = ({ navigation, route }) => {
                     style={{
                       width: customerData.length > 1 ? "24%" : "28%",
                       marginLeft: 8,
-                      position: customerData.length > 1 ? "absolute" : null,
-                      right: customerData.length > 1 ? 55 : null,
-                      top: customerData.length > 1 ? 0.1 : null,
+                      position: customerData.length > 1 ? "absolute" : "absolute",
+                      right: customerData.length > 1 ? 55 : 0,
+                      top: customerData.length > 1 ? 0.1 : 0.1,
                     }}
                   >
                     <CustomInput
