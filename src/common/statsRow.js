@@ -15,9 +15,11 @@ import {
   getDuesCount,
   getHomelist,
 } from "../redux/property/property.action";
+import { useFocusEffect } from "@react-navigation/native";
 
-export const StatsRow = ({ units, navigation }) => {
+export const StatsRow = ({ units, navigation, route, refreshCallback }) => {
   const dispatch = useDispatch();
+
   const {
     reservationList,
     customerReceivableList,
@@ -190,7 +192,7 @@ export const StatsRow = ({ units, navigation }) => {
             <Text style={styles.rightLabel}>TOTAL Pre-Reserved</Text>
           </TouchableOpacity>
         )}
-        {notReleased.length > 0 && booked.length > 200 && (
+        {/* {notReleased.length > 0 && booked.length > 200 && (
           <TouchableOpacity
             disabled={booked.length < 200 ? true : false}
             onPress={() => navigation.navigate(SCREENS.DASHBOARDLISTING, { label: "Not Released", list: notReleased })}
@@ -203,6 +205,16 @@ export const StatsRow = ({ units, navigation }) => {
             ) : (
               <Text style={styles.rightCount}>{notReleased.length}</Text>
             )}
+            <Text style={styles.rightLabel}>TOTAL Not-Released</Text>
+          </TouchableOpacity>
+        )} */}
+        {notReleased.length > 0 && booked.length > 200 && (
+          <TouchableOpacity
+            disabled={booked.length < 200 ? true : false}
+            onPress={() => navigation.navigate(SCREENS.DASHBOARDLISTING, { label: "Not Released", list: notReleased, refreshCallback, token })}
+            style={[styles.top]}
+          >
+            {booked.length < 200 ? <Text style={styles.rightCount}>0</Text> : <Text style={styles.rightCount}>{notReleased.length}</Text>}
             <Text style={styles.rightLabel}>TOTAL Not-Released</Text>
           </TouchableOpacity>
         )}

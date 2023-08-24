@@ -37,12 +37,14 @@ export const PriceDetail = ({ navigation, route }) => {
         return;
       }
 
-      const url = `${Url}update_pricesetup_API?unit_id=${unitID}&price_type='${value}'&price_value=${inputValue}&USER_INFO_ID=${userDetail.USER_INFO_ID}`;
+      const url = `${Url}update_pricesetup_API?unit_id=${unitID}&price_type=${value}&price_value=${inputValue}&USER_INFO_ID=${userDetail.USER_INFO_ID}`;
 
       const response = await fetch(url);
       if (response.ok) {
         console.log("API call successful");
         Alert.alert("Successfully Updated!");
+        navigation.goBack();
+        navigation.goBack();
       } else {
         console.log("API call failed");
       }
@@ -68,6 +70,7 @@ export const PriceDetail = ({ navigation, route }) => {
           placeholder="Price Type"
           placeholderStyle={{ color: COLORS.normalText }}
           style={{ borderColor: COLORS.borderColor, borderWidth: RFPercentage(0.1) }}
+          dropDownContainerStyle={{ backgroundColor: "#0000", borderColor: COLORS.borderColor, borderWidth: RFPercentage(0.1) }}
           open={open}
           value={value}
           items={items}
@@ -81,7 +84,7 @@ export const PriceDetail = ({ navigation, route }) => {
         />
       </View>
 
-      <View style={styles.buttonContainer}>
+      <View style={[styles.buttonContainer, { marginTop: open ? 140 : 30 }]}>
         <TouchableOpacity activeOpacity={0.8} onPress={() => handleApiUpdateCall()} style={styles.buttonStyle}>
           <Text style={styles.buttonText}>Save</Text>
         </TouchableOpacity>
@@ -126,8 +129,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   buttonContainer: {
-    position: "absolute",
-    bottom: RFPercentage(15),
     alignSelf: "center",
     width: "90%",
     justifyContent: "center",

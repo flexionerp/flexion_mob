@@ -5,9 +5,27 @@ import { Item } from "./components/Item";
 import { useSelector } from "react-redux";
 import { FONTS, ICONS } from "../../../constants";
 import { BackButton } from "../../../common/backButton";
+import { useFocusEffect } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import {
+  getReservationList,
+  getPropertyStats,
+  getCollections,
+  getMonthlyStats,
+  getCancellationStats,
+  getSaleSummeryStats,
+  getCustomerReceivable,
+  getSaleTowerAStats,
+  getSaleTowerBStats,
+  getDuesCount,
+  getHomelist,
+  getCountList,
+} from "../../../redux/property/property.action";
 
-export function DashboardListing({ navigation, route }) {
-  let { label, list } = route.params;
+export function DashboardListing({ navigation, route, refreshCallback }) {
+  const dispatch = useDispatch();
+
+  let { label, list, token } = route.params;
   const loader = useSelector((state) => state.loader.loader);
   const [propertyList, setList] = useState(list);
   const [search, setSearch] = useState("");
@@ -15,6 +33,27 @@ export function DashboardListing({ navigation, route }) {
   useEffect(() => {
     return () => {};
   }, []);
+
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const fetchData = () => {
+    setIsRefreshing(true);
+
+    // Dispatch your API calls here
+    dispatch(getReservationList(token));
+    dispatch(getPropertyStats());
+    dispatch(getCountList());
+    dispatch(getMonthlyStats());
+
+    setIsRefreshing(false);
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (route.params?.refreshing) {
+        fetchData();
+      }
+    }, [route.params?.refreshing]),
+  );
 
   const emputyComponent = () => <Text style={{ color: "#000000", fontSize: 13, fontFamily: FONTS.Bold, alignSelf: "center" }}>Empty Result</Text>;
 
@@ -50,7 +89,7 @@ export function DashboardListing({ navigation, route }) {
             data={propertyList}
             renderItem={({ item }) => (
               <View style={{ width: "100%", alignItems: "center" }}>
-                <Item navigation={navigation} data={item} label={label} />
+                <Item navigation={navigation} data={item} label={label} refreshCallback={fetchData} dispatch={dispatch} />
               </View>
             )}
             keyExtractor={(item) => item.ID}

@@ -6,6 +6,7 @@ import { BtnLI } from "../../../common/btnLI";
 import { BtnLIM } from "../../../common/btnLIM";
 import { useDispatch, useSelector } from "react-redux";
 import { getPropertyStats, getCountList, getReservationList, getMonthlyStats } from "../../../redux/property/property.action";
+import { useFocusEffect } from "@react-navigation/native";
 
 const CustomerDetail = () => {
   const { userDetail } = useSelector((state) => state.user);
@@ -32,6 +33,27 @@ const Home = ({ navigation, route }) => {
   const { token } = useSelector((state) => state.user);
   const { reservationList, totalUnitsCount } = useSelector((state) => state.property);
   const [available, setAvailable] = useState([]);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const fetchData = () => {
+    setIsRefreshing(true);
+
+    // Dispatch your API calls here
+    dispatch(getReservationList(token));
+    dispatch(getPropertyStats());
+    dispatch(getCountList());
+    dispatch(getMonthlyStats());
+
+    setIsRefreshing(false);
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (route.params?.refreshing) {
+        fetchData();
+      }
+    }, [route.params?.refreshing]),
+  );
 
   useEffect(() => {
     dispatch(getReservationList(token));
@@ -49,6 +71,7 @@ const Home = ({ navigation, route }) => {
   const setAvailableUnits = () => {
     let tempcount = totalUnitsCount.filter(({ STATUS }) => STATUS == "PRE_RESERVED" || STATUS == "AVAILABLE" || STATUS == "RELEASED");
     setAvailable(tempcount);
+    console.log("Find studio here", tempcount);
   };
 
   return (
@@ -61,9 +84,17 @@ const Home = ({ navigation, route }) => {
             <CustomerDetail />
             <UnitCount count={totalUnitsCount.length} label="Total Properties" disabled={true} />
             {/* <UnitCount count={available.length} label="Total Available" disabled={false} onClick={() => navigation.navigate("DashboardListing", { label: "Total Available", list: available })} /> */}
-            <UnitCount count={available.length} label="Total Available" disabled={false} onClick={() => navigation.navigate("TotalAvailable")} />
+            {/* <UnitCount count={available.length} label="Total Available" disabled={false} onClick={() => navigation.navigate("TotalAvailable")} /> */}
+            <UnitCount
+              count={available.length}
+              label="Total Available"
+              disabled={false}
+              onClick={() => {
+                navigation.navigate("TotalAvailable", { availableData: available });
+              }}
+            />
             <View style={{ height: 8 }} />
-            <StatsRow navigation={navigation} />
+            <StatsRow navigation={navigation} refreshCallback={fetchData} />
             <View style={{ width: "90%", flexDirection: "row", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", marginTop: 12 }}>
               <BtnLI lable={`Create\nCustomer`} size={"48%"} onClick={() => navigation.navigate("Customer")} icon={ICONS.createC} />
               <BtnLI lable={"Receipt"} size={"48%"} onClick={() => navigation.navigate("ReceiptListing")} icon={ICONS.unit} />

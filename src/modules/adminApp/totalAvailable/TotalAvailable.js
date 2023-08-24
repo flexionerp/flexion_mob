@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, Image, ImageBackground } from "react-native";
 import { COLORS, FONTS, ICONS, SCREEN_WIDTH } from "../../../constants";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import DropDownPicker from "react-native-dropdown-picker";
 import { BackButton } from "../../../common/backButton";
 import { useSelector } from "react-redux";
-import { Url } from "../../../constants";
-import axios from "axios";
 
 export const TotalAvailable = ({ navigation, route }) => {
   const { userDetail } = useSelector((state) => state.user);
@@ -15,51 +13,35 @@ export const TotalAvailable = ({ navigation, route }) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
-    { label: "MG1", value: "MG1" },
-    { label: "MG2", value: "MG2" },
+    { label: "MGT1", value: "MGT1" },
+    { label: "MGT2", value: "MGT2" },
     { label: "All Towers", value: null },
   ]);
 
-  // API
-  const [apiData, setApiData] = useState([]);
-  const apiUrl = `${Url}get_reservation_grid_api?user_info_id=${userDetail.USER_INFO_ID}`;
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(apiUrl);
-        setApiData(response.data.data);
-        // console.log("Response Total Data of the API : ", response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
+  // Get availableList from route params
+  const { availableData } = route.params;
 
   // Filtering for tower selection
-  const filteredApiData = apiData.filter((item) => {
+  const filteredAvailableList = availableData.filter((item) => {
     const unitCode = item.UNIT_CODE;
     if (!unitCode) {
-      return false; // Skip items with null UNIT_CODE
+      return false;
     }
-    if (value === "MG1") {
-      return unitCode.includes("MG1");
-    } else if (value === "MG2") {
-      return unitCode.includes("MG2");
+    if (value === "MGT1") {
+      return unitCode.includes("MGT1");
+    } else if (value === "MGT2") {
+      return unitCode.includes("MGT2");
     }
     return true;
   });
 
   const countUnits = (unitName) => {
-    return filteredApiData.filter((item) => item.UNIT_SPECS_NAME === unitName).length;
+    return filteredAvailableList.filter((item) => item.UNIT_SPECS_NAME === unitName).length;
   };
 
   return (
     <ImageBackground source={ICONS.bgImg} style={{ flex: 1 }}>
       <SafeAreaView style={styles.container}>
-        {/* <Text>{userDetail.USER_INFO_ID}</Text> */}
         <ScrollView nestedScrollEnabled showsVerticalScrollIndicator={false} style={{ width: "100%" }}>
           <BackButton navigation={navigation} label="Total Available" />
 
@@ -85,13 +67,13 @@ export const TotalAvailable = ({ navigation, route }) => {
             />
           </View>
 
-          <View style={[styles.allTowersContainer, { marginTop: open ? RFPercentage(18) : RFPercentage(6) }]}>
+          <View style={[styles.allTowersContainer, { marginTop: open ? RFPercentage(22) : RFPercentage(6) }]}>
             <View style={styles.subAllTowersContainer}>
               {!value ? <Text style={styles.allTowersText}>All Towers </Text> : <Text style={styles.allTowersText}>In Tower {value}</Text>}
 
               {/* 1 BHK */}
               <TouchableOpacity
-                onPress={() => navigation.navigate("TotalAvailableListings", { unitType: "1 BHK", availableList: filteredApiData.filter((item) => item.UNIT_SPECS_NAME === "1 BHK") })}
+                onPress={() => navigation.navigate("TotalAvailableListings", { unitType: "1 BHK", availableList: filteredAvailableList.filter((item) => item.UNIT_SPECS_NAME === "1 BHK") })}
                 activeOpacity={0.7}
                 style={styles.totalBhkTextView}
               >
@@ -106,7 +88,7 @@ export const TotalAvailable = ({ navigation, route }) => {
 
               {/* 2 BHK */}
               <TouchableOpacity
-                onPress={() => navigation.navigate("TotalAvailableListings", { unitType: "2 BHK", availableList: filteredApiData.filter((item) => item.UNIT_SPECS_NAME === "2 BHK") })}
+                onPress={() => navigation.navigate("TotalAvailableListings", { unitType: "2 BHK", availableList: filteredAvailableList.filter((item) => item.UNIT_SPECS_NAME === "2 BHK") })}
                 activeOpacity={0.7}
                 style={styles.totalBhkTextView}
               >
@@ -121,7 +103,7 @@ export const TotalAvailable = ({ navigation, route }) => {
 
               {/* 3 BHK */}
               <TouchableOpacity
-                onPress={() => navigation.navigate("TotalAvailableListings", { unitType: "3 BHK", availableList: filteredApiData.filter((item) => item.UNIT_SPECS_NAME === "3 BHK") })}
+                onPress={() => navigation.navigate("TotalAvailableListings", { unitType: "3 BHK", availableList: filteredAvailableList.filter((item) => item.UNIT_SPECS_NAME === "3 BHK") })}
                 activeOpacity={0.7}
                 style={styles.totalBhkTextView}
               >
@@ -136,13 +118,27 @@ export const TotalAvailable = ({ navigation, route }) => {
 
               {/* 4 BHK */}
               <TouchableOpacity
-                onPress={() => navigation.navigate("TotalAvailableListings", { unitType: "4 BHK", availableList: filteredApiData.filter((item) => item.UNIT_SPECS_NAME === "4 BHK") })}
+                onPress={() => navigation.navigate("TotalAvailableListings", { unitType: "4 BHK", availableList: filteredAvailableList.filter((item) => item.UNIT_SPECS_NAME === "4 BHK") })}
                 activeOpacity={0.7}
                 style={styles.totalBhkTextView}
               >
                 <View style={{ width: "90%", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", alignSelf: "center" }}>
                   <Text style={{ color: "#204866", fontFamily: FONTS.Bold, fontSize: 24 }}>{countUnits("4 BHK")}</Text>
                   <Text style={{ width: "75%", marginHorizontal: 12, color: "#204866", fontFamily: FONTS.Medium, fontSize: 15 }}>Total 4 BHK</Text>
+                  <View activeOpacity={0.8} style={styles.iconContainer}>
+                    <Image source={ICONS.nextArrow} style={{ width: 20, height: 20 }} resizeMode="contain" />
+                  </View>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => navigation.navigate("TotalAvailableListings", { unitType: "STUDIO", availableList: filteredAvailableList.filter((item) => item.UNIT_SPECS_NAME === "STUDIO") })}
+                activeOpacity={0.7}
+                style={styles.totalBhkTextView}
+              >
+                <View style={{ width: "90%", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", alignSelf: "center" }}>
+                  <Text style={{ color: "#204866", fontFamily: FONTS.Bold, fontSize: 24 }}>{countUnits("STUDIO")}</Text>
+                  <Text style={{ width: "75%", marginHorizontal: 12, color: "#204866", fontFamily: FONTS.Medium, fontSize: 15 }}>Total Studio</Text>
                   <View activeOpacity={0.8} style={styles.iconContainer}>
                     <Image source={ICONS.nextArrow} style={{ width: 20, height: 20 }} resizeMode="contain" />
                   </View>
