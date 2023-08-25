@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView, ScrollView, ActivityIndicator, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, ScrollView, ActivityIndicator, TouchableOpacity, KeyboardAvoidingView } from "react-native";
 import React, { useState, useEffect } from "react";
 import { COLORS, CUSTOMWIDTH, FONTS } from "../../../constants";
 import { DropDownSingle } from "../../../common/dropDownColoredSingle";
@@ -345,51 +345,52 @@ const PreReservedForm = ({ navigation, route }) => {
         <ActivityIndicator color={COLORS.primary} size="small" />
       ) : (
         <View style={{ flex: 1, width: "100%", alignItems: "center" }}>
-          <ScrollView style={{ width: "100%" }} contentContainerStyle={{ width: "100%", alignItems: "center" }}>
-            <View style={styles.bottom}>
-              <View style={{ height: 20 }} />
-              <View style={{ width: "100%", marginBottom: 16 }}>
-                <View style={styles.dateStyle}>
-                  <Text style={styles.valueStyle}>{moment(reserveDate).format("DD MMM, YYYY")}</Text>
+          <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : null} style={{ flex: 1, width: "100%" }}>
+            <ScrollView style={{ width: "100%" }} contentContainerStyle={{ width: "100%", alignItems: "center" }}>
+              <View style={styles.bottom}>
+                <View style={{ height: 20 }} />
+                <View style={{ width: "100%", marginBottom: 16 }}>
+                  <View style={styles.dateStyle}>
+                    <Text style={styles.valueStyle}>{moment(reserveDate).format("DD MMM, YYYY")}</Text>
+                  </View>
                 </View>
-              </View>
 
-              <View style={{ width: "100%", marginBottom: 16 }}>
-                <View style={styles.dateStyle}>
-                  <Text style={styles.valueStyle}>{unitDetail && unitDetail.UNIT_CODE.toString()}</Text>
+                <View style={{ width: "100%", marginBottom: 16 }}>
+                  <View style={styles.dateStyle}>
+                    <Text style={styles.valueStyle}>{unitDetail && unitDetail.UNIT_CODE.toString()}</Text>
+                  </View>
                 </View>
-              </View>
-              <View style={{ width: "100%", marginBottom: 16 }}>
-                <View style={styles.dateStyle}>
-                  <Text style={styles.valueStyle}>{unitDetail && unitDetail.GROSS_AREA.toString()}</Text>
+                <View style={{ width: "100%", marginBottom: 16 }}>
+                  <View style={styles.dateStyle}>
+                    <Text style={styles.valueStyle}>{unitDetail && unitDetail.GROSS_AREA.toString()}</Text>
+                  </View>
                 </View>
-              </View>
-              <View style={{ width: "100%", marginBottom: 16 }}>
-                <View style={styles.dateStyle}>
-                  <Text style={styles.valueStyle}>{unitDetail && unitDetail.PRICE_TYPE}</Text>
+                <View style={{ width: "100%", marginBottom: 16 }}>
+                  <View style={styles.dateStyle}>
+                    <Text style={styles.valueStyle}>{unitDetail && unitDetail.PRICE_TYPE}</Text>
+                  </View>
                 </View>
-              </View>
-              <View style={{ width: "100%", marginBottom: 16 }}>
-                <View style={styles.dateStyle}>
-                  <Text style={styles.valueStyle}>{price}</Text>
+                <View style={{ width: "100%", marginBottom: 16 }}>
+                  <View style={styles.dateStyle}>
+                    <Text style={styles.valueStyle}>{price}</Text>
+                  </View>
                 </View>
-              </View>
-              <View style={{ width: "100%", marginBottom: 16 }}>
-                <View style={styles.dateStyle}>
-                  <Text style={styles.valueStyle}>{saleValue}</Text>
+                <View style={{ width: "100%", marginBottom: 16 }}>
+                  <View style={styles.dateStyle}>
+                    <Text style={styles.valueStyle}>{saleValue}</Text>
+                  </View>
                 </View>
-              </View>
-              <View style={{ width: "100%", marginBottom: 16 }}>
-                <DropDownSingle name={payPlan} data={paymentPlan} getValue={getPaymentPlan.bind(this)} label="Payment Plan" />
-              </View>
-              <View style={{ width: "100%", marginBottom: 16 }}>
-                <DropDownSingle name={brokerName} data={broker} getValue={getBroker.bind(this)} label="Broker" />
-              </View>
-              <View style={{ width: "100%", marginBottom: 16 }}>
-                <DropDownSingle name={agentName} data={agent} getValue={getAgent.bind(this)} label="Agent" />
-              </View>
+                <View style={{ width: "100%", marginBottom: 16 }}>
+                  <DropDownSingle name={payPlan} data={paymentPlan} getValue={getPaymentPlan.bind(this)} label="Payment Plan" />
+                </View>
+                <View style={{ width: "100%", marginBottom: 16 }}>
+                  <DropDownSingle name={brokerName} data={broker} getValue={getBroker.bind(this)} label="Broker" />
+                </View>
+                <View style={{ width: "100%", marginBottom: 16 }}>
+                  <DropDownSingle name={agentName} data={agent} getValue={getAgent.bind(this)} label="Agent" />
+                </View>
 
-              {/* <View style={{ marginBottom: 16, width: "100%", flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
+                {/* <View style={{ marginBottom: 16, width: "100%", flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
                 <View style={{ width: "70%" }}>
                   <DropDownSingle name={customer} data={customersList} getValue={getCustomer.bind(this)} label="Customer" />
                 </View>
@@ -406,7 +407,7 @@ const PreReservedForm = ({ navigation, route }) => {
                 </View>
               </View> */}
 
-              {/* {customerData.map((customer, index) => (
+                {/* {customerData.map((customer, index) => (
                 <View key={index} style={{ marginBottom: 16, width: "100%", flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
                   <View style={{ width: "70%" }}>
                     <DropDownSingle name={customer.name || "Select Customer"} data={customersList} getValue={(value) => handleCustomerChange(index, value)} label="Customer" />
@@ -425,7 +426,7 @@ const PreReservedForm = ({ navigation, route }) => {
                   </View>
                 </View>
               ))} */}
-              {/* {customerData.map((customer, index) => (
+                {/* {customerData.map((customer, index) => (
                 <View
                   key={index}
                   style={{
@@ -465,108 +466,114 @@ const PreReservedForm = ({ navigation, route }) => {
                 </View>
               ))} */}
 
-              {/* Customer And Percentage Selection */}
-              {customerData.map((customer, index) => (
-                <View
-                  key={index}
-                  style={{
-                    marginBottom: 16,
-                    width: "100%",
-                    flexDirection: "row",
-                    justifyContent: "flex-start",
-                    alignItems: "center",
-                    alignSelf: "center",
-                  }}
-                >
-                  <View style={{ width: customerData.length > 1 ? "58%" : "70%" }}>
-                    <DropDownSingle name={customer.name || "Select Customer"} data={customersList} getValue={(value, customerId) => handleCustomerChange(index, value, customerId)} label="Customer" />
-                  </View>
+                {/* Customer And Percentage Selection */}
+                {customerData.map((customer, index) => (
                   <View
+                    key={index}
                     style={{
-                      width: customerData.length > 1 ? "24%" : "28%",
-                      marginLeft: 8,
-                      position: customerData.length > 1 ? "absolute" : "absolute",
-                      right: customerData.length > 1 ? 55 : 0,
-                      top: customerData.length > 1 ? 0.1 : 0.1,
+                      marginBottom: 16,
+                      width: "100%",
+                      flexDirection: "row",
+                      justifyContent: "flex-start",
+                      alignItems: "center",
+                      alignSelf: "center",
                     }}
                   >
-                    <CustomInput
-                      width={"100%"}
-                      marginFalse={true}
-                      label="Customer Percentage"
-                      placeholder="Enter Percentage"
-                      value={customer.percentage.toString() || "100"}
-                      onChangeText={(value) => handlePercentageChange(index, value)}
-                      keyboardType={"number-pad"}
-                      getValue={(value) => handleCustomInputChange(index, value)}
-                    />
-                  </View>
-                  {customerData.length > 1 && (
-                    <View style={{ flexDirection: "row", alignItems: "center", position: "absolute", right: 0, top: 15 }}>
-                      {customerData.length === 2 && (
-                        <TouchableOpacity onPress={() => handlePrimaryCustomerToggle(index)} style={{ flexDirection: "row", marginRight: 8 }}>
-                          <View
-                            style={{
-                              width: 20,
-                              height: 20,
-                              borderRadius: 10,
-                              borderWidth: 2,
-                              borderColor: primaryCustomerIndex === index ? COLORS.borderColor : "black",
-                              justifyContent: "center",
-                              alignItems: "center",
-                            }}
-                          >
-                            {primaryCustomerIndex === index && (
-                              <View
-                                style={{
-                                  width: 12,
-                                  height: 12,
-                                  borderRadius: 6,
-                                  backgroundColor: COLORS.borderColor,
-                                }}
-                              />
-                            )}
-                          </View>
-                        </TouchableOpacity>
-                      )}
-                      <TouchableOpacity onPress={() => handleRemoveCustomer(index)}>
-                        <Entypo name="circle-with-cross" size={20} color="black" />
-                      </TouchableOpacity>
+                    <View style={{ width: customerData.length > 1 ? "58%" : "70%" }}>
+                      <DropDownSingle
+                        name={customer.name || "Select Customer"}
+                        data={customersList}
+                        getValue={(value, customerId) => handleCustomerChange(index, value, customerId)}
+                        label="Customer"
+                      />
                     </View>
-                  )}
-                </View>
-              ))}
-              {customerData.length > 1 ? <Text style={[styles.btnText, { alignSelf: "flex-start" }]}>Kindly Check atleast one Primary Customer </Text> : null}
-              {/* {customerData.length > 1 ? <Text style={[styles.btnLabel, { alignSelf: "flex-start" }]}>Kindly Check the Primary Customer {primaryCustomerIndex}</Text> : null} */}
-            </View>
+                    <View
+                      style={{
+                        width: customerData.length > 1 ? "24%" : "28%",
+                        marginLeft: 8,
+                        position: customerData.length > 1 ? "absolute" : "absolute",
+                        right: customerData.length > 1 ? 55 : 0,
+                        top: customerData.length > 1 ? 0.1 : 0.1,
+                      }}
+                    >
+                      <CustomInput
+                        width={"100%"}
+                        marginFalse={true}
+                        label="Customer Percentage"
+                        placeholder="Enter Percentage"
+                        value={customer.percentage.toString() || "100"}
+                        onChangeText={(value) => handlePercentageChange(index, value)}
+                        keyboardType={"number-pad"}
+                        getValue={(value) => handleCustomInputChange(index, value)}
+                      />
+                    </View>
+                    {customerData.length > 1 && (
+                      <View style={{ flexDirection: "row", alignItems: "center", position: "absolute", right: 0, top: 15 }}>
+                        {customerData.length === 2 && (
+                          <TouchableOpacity onPress={() => handlePrimaryCustomerToggle(index)} style={{ flexDirection: "row", marginRight: 8 }}>
+                            <View
+                              style={{
+                                width: 20,
+                                height: 20,
+                                borderRadius: 10,
+                                borderWidth: 2,
+                                borderColor: primaryCustomerIndex === index ? COLORS.borderColor : "black",
+                                justifyContent: "center",
+                                alignItems: "center",
+                              }}
+                            >
+                              {primaryCustomerIndex === index && (
+                                <View
+                                  style={{
+                                    width: 12,
+                                    height: 12,
+                                    borderRadius: 6,
+                                    backgroundColor: COLORS.borderColor,
+                                  }}
+                                />
+                              )}
+                            </View>
+                          </TouchableOpacity>
+                        )}
+                        <TouchableOpacity onPress={() => handleRemoveCustomer(index)}>
+                          <Entypo name="circle-with-cross" size={20} color="black" />
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                  </View>
+                ))}
+                {customerData.length > 1 ? <Text style={[styles.btnText, { alignSelf: "flex-start" }]}>Kindly Check atleast one Primary Customer </Text> : null}
+                {/* {customerData.length > 1 ? <Text style={[styles.btnLabel, { alignSelf: "flex-start" }]}>Kindly Check the Primary Customer {primaryCustomerIndex}</Text> : null} */}
+              </View>
 
-            <View style={{ height: 10 }} />
-            {loader ? (
-              <ActivityIndicator color={COLORS.primary} size="small" />
-            ) : (
-              <TouchableOpacity onPress={handleButtonPress} style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start", width: "90%" }}>
-                <Text style={styles.btnLabel}>Add Customer</Text>
-                <Icon name="plus" size={14} />
-              </TouchableOpacity>
-            )}
-            {console.log(
-              "selectedPercentages",
-              customerData.map((customer) => customer.percentage),
-            )}
+              <View style={{ height: 10 }} />
+              {loader ? (
+                <ActivityIndicator color={COLORS.primary} size="small" />
+              ) : (
+                <TouchableOpacity onPress={handleButtonPress} style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start", width: "90%" }}>
+                  <Text style={styles.btnLabel}>Add Customer</Text>
+                  <Icon name="plus" size={14} />
+                </TouchableOpacity>
+              )}
+              {console.log(
+                "selectedPercentages",
+                customerData.map((customer) => customer.percentage),
+              )}
 
-            {console.log("selectedCustomers", selectedCustomers)}
+              {console.log("selectedCustomers", selectedCustomers)}
 
-            <View style={{ height: 20 }} />
-            {loader ? (
-              <ActivityIndicator color={COLORS.primary} size="small" />
-            ) : (
-              <TouchableOpacity onPress={() => apiHit()} style={{ flexDirection: "row", alignItems: "center" }}>
-                <Text style={styles.btnLabel}>Submit</Text>
-                <Icon name="arrow-right" size={14} />
-              </TouchableOpacity>
-            )}
-            <View style={{ height: 80 }} />
-          </ScrollView>
+              <View style={{ height: 25 }} />
+              {loader ? (
+                <ActivityIndicator color={COLORS.primary} size="small" />
+              ) : (
+                <TouchableOpacity onPress={() => apiHit()} style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Text style={styles.btnLabel}>Submit</Text>
+                  <Icon name="arrow-right" size={14} />
+                </TouchableOpacity>
+              )}
+              <View style={{ height: 100 }} />
+            </ScrollView>
+          </KeyboardAvoidingView>
         </View>
       )}
     </SafeAreaView>
