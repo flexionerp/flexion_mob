@@ -12,7 +12,7 @@ import InputField from "../../../common/InputField";
 export const PriceSetup = ({ navigation, route }) => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true); // Add isLoading state
+  const [isLoading, setIsLoading] = useState(true);
 
   const [inputField, setInputField] = useState([
     {
@@ -120,8 +120,8 @@ export const PriceSetup = ({ navigation, route }) => {
 
       {/* Data Carts */}
       <View style={{ width: "100%" }}>
-        {isLoading ? ( // Conditional rendering based on isLoading state
-          <Text style={{ fontSize: RFPercentage(2), textAlign: "center", marginTop: RFPercentage(2) }}>Loading...</Text>
+        {isLoading ? (
+          <Text style={{ fontSize: RFPercentage(2), textAlign: "center", marginTop: RFPercentage(2), color: "#06143b", fontWeight: "bold" }}>Loading...</Text>
         ) : (
           <FlatList data={filteredData} renderItem={renderItem} keyExtractor={(item) => item.UNIT_ID.toString()} contentContainerStyle={styles.contentContainerStyle} />
         )}

@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, Text, SafeAreaView, ScrollView, StyleSheet, ImageBackground, TouchableOpacity, Button } from "react-native";
-import { RFPercentage } from "react-native-responsive-fontsize";
-import { BackButton } from "../../../common/backButton";
-import InputField from "../../../common/InputField";
 import { COLORS, FONTS, ICONS, SCREEN_HEIGHT, SCREEN_WIDTH } from "../../../constants";
+import { RFPercentage } from "react-native-responsive-fontsize";
+import { setLoader } from "../../../redux/loader/loader.action";
+import { BackButton } from "../../../common/backButton";
 import { useSelector, useDispatch } from "react-redux";
 import Icon from "react-native-vector-icons/Feather";
-import { setLoader } from "../../../redux/loader/loader.action";
+import InputField from "../../../common/InputField";
 
 export const TotalAvailableListings = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -110,7 +110,7 @@ export const TotalAvailableListings = ({ navigation, route }) => {
                 </View>
               ))
             ) : (
-              <Text>No available listings for {unitType}</Text>
+              <Text style={{ alignSelf: "center", marginTop: 25 }}>No available listings for {unitType}</Text>
             )}
           </View>
           <View style={{ marginBottom: RFPercentage(10) }} />

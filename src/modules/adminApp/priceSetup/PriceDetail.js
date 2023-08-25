@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Picker, TextInput, Alert, Button } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Picker, TextInput, Alert, Button, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import { COLORS } from "../../../constants";
 import { BackButton } from "../../../common/backButton";
@@ -55,40 +55,44 @@ export const PriceDetail = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <BackButton navigation={navigation} label="Price Listing" />
-      <View style={styles.unitCodeContainer}>
-        <Text style={styles.unitCodeText}>{unitCode}</Text>
-      </View>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={{ flex: 1 }}>
+          <BackButton navigation={navigation} label="Price Listing" />
+          <View style={styles.unitCodeContainer}>
+            <Text style={styles.unitCodeText}>{unitCode}</Text>
+          </View>
 
-      <View style={styles.priceInputText}>
-        <TextInput keyboardType="numeric" placeholderTextColor={COLORS.normalText} placeholder="Price" style={styles.textInput} onChangeText={handleInputChange} value={inputValue} />
-      </View>
+          <View style={styles.priceInputText}>
+            <TextInput keyboardType="numeric" placeholderTextColor={COLORS.normalText} placeholder="Price" style={styles.textInput} onChangeText={handleInputChange} value={inputValue} />
+          </View>
 
-      {/* Dropdown */}
-      <View style={styles.dropDownView}>
-        <DropDownPicker
-          placeholder="Price Type"
-          placeholderStyle={{ color: COLORS.normalText }}
-          style={{ borderColor: COLORS.borderColor, borderWidth: RFPercentage(0.1) }}
-          dropDownContainerStyle={{ backgroundColor: "#0000", borderColor: COLORS.borderColor, borderWidth: RFPercentage(0.1) }}
-          open={open}
-          value={value}
-          items={items}
-          setOpen={setOpen}
-          setValue={setValue}
-          setItems={setItems}
-          labelStyle={{
-            fontWeight: "600",
-            color: COLORS.dark,
-          }}
-        />
-      </View>
+          {/* Dropdown */}
+          <View style={styles.dropDownView}>
+            <DropDownPicker
+              placeholder="Price Type"
+              placeholderStyle={{ color: COLORS.normalText }}
+              style={{ borderColor: COLORS.borderColor, borderWidth: RFPercentage(0.1) }}
+              dropDownContainerStyle={{ backgroundColor: "#0000", borderColor: COLORS.borderColor, borderWidth: RFPercentage(0.1) }}
+              open={open}
+              value={value}
+              items={items}
+              setOpen={setOpen}
+              setValue={setValue}
+              setItems={setItems}
+              labelStyle={{
+                fontWeight: "600",
+                color: COLORS.dark,
+              }}
+            />
+          </View>
 
-      <View style={[styles.buttonContainer, { marginTop: open ? 140 : 30 }]}>
-        <TouchableOpacity activeOpacity={0.8} onPress={() => handleApiUpdateCall()} style={styles.buttonStyle}>
-          <Text style={styles.buttonText}>Save</Text>
-        </TouchableOpacity>
-      </View>
+          <View style={[styles.buttonContainer, { marginTop: open ? 140 : 30 }]}>
+            <TouchableOpacity activeOpacity={0.8} onPress={() => handleApiUpdateCall()} style={styles.buttonStyle}>
+              <Text style={styles.buttonText}>Save</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 };

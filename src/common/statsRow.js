@@ -192,22 +192,6 @@ export const StatsRow = ({ units, navigation, route, refreshCallback }) => {
             <Text style={styles.rightLabel}>TOTAL Pre-Reserved</Text>
           </TouchableOpacity>
         )}
-        {/* {notReleased.length > 0 && booked.length > 200 && (
-          <TouchableOpacity
-            disabled={booked.length < 200 ? true : false}
-            onPress={() => navigation.navigate(SCREENS.DASHBOARDLISTING, { label: "Not Released", list: notReleased })}
-            style={[styles.top]}
-          >
-            {booked.length < 200 ? (
-              <Text Text style={styles.rightCount}>
-                0
-              </Text>
-            ) : (
-              <Text style={styles.rightCount}>{notReleased.length}</Text>
-            )}
-            <Text style={styles.rightLabel}>TOTAL Not-Released</Text>
-          </TouchableOpacity>
-        )} */}
         {notReleased.length > 0 && booked.length > 200 && (
           <TouchableOpacity
             disabled={booked.length < 200 ? true : false}

@@ -71,7 +71,7 @@ const Home = ({ navigation, route }) => {
   const setAvailableUnits = () => {
     let tempcount = totalUnitsCount.filter(({ STATUS }) => STATUS == "PRE_RESERVED" || STATUS == "AVAILABLE" || STATUS == "RELEASED");
     setAvailable(tempcount);
-    console.log("Find studio here", tempcount);
+    console.log("Find Retail here", tempcount);
   };
 
   return (

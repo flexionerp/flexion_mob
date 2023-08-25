@@ -15,6 +15,7 @@ export const TotalAvailable = ({ navigation, route }) => {
   const [items, setItems] = useState([
     { label: "MGT1", value: "MGT1" },
     { label: "MGT2", value: "MGT2" },
+    { label: "MGR", value: "MGR" },
     { label: "All Towers", value: null },
   ]);
 
@@ -31,6 +32,8 @@ export const TotalAvailable = ({ navigation, route }) => {
       return unitCode.includes("MGT1");
     } else if (value === "MGT2") {
       return unitCode.includes("MGT2");
+    } else if (value === "MGR") {
+      return unitCode.includes("MGR");
     }
     return true;
   });
@@ -144,9 +147,22 @@ export const TotalAvailable = ({ navigation, route }) => {
                   </View>
                 </View>
               </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("TotalAvailableListings", { unitType: "RETAIL", availableList: filteredAvailableList.filter((item) => item.UNIT_SPECS_NAME === "RETAIL") })}
+                activeOpacity={0.7}
+                style={styles.totalBhkTextView}
+              >
+                <View style={{ width: "90%", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", alignSelf: "center" }}>
+                  <Text style={{ color: "#204866", fontFamily: FONTS.Bold, fontSize: 24 }}>{countUnits("RETAIL")}</Text>
+                  <Text style={{ width: "75%", marginHorizontal: 12, color: "#204866", fontFamily: FONTS.Medium, fontSize: 15 }}>Total Retail</Text>
+                  <View activeOpacity={0.8} style={styles.iconContainer}>
+                    <Image source={ICONS.nextArrow} style={{ width: 20, height: 20 }} resizeMode="contain" />
+                  </View>
+                </View>
+              </TouchableOpacity>
             </View>
           </View>
-          <View style={{ marginBottom: RFPercentage(10) }} />
+          <View style={{ marginBottom: RFPercentage(15) }} />
         </ScrollView>
       </SafeAreaView>
     </ImageBackground>
