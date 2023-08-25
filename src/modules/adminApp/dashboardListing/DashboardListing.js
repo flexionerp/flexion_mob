@@ -76,7 +76,7 @@ export function DashboardListing({ navigation, route, refreshCallback }) {
   return (
     <ImageBackground source={ICONS.bgImg} style={styles.container}>
       <SafeAreaView style={styles.main}>
-        <SearchBar value={search} getInputValue={getSearch.bind(this)} />
+        <SearchBar value={search} pcolor={"#485578"} getInputValue={getSearch.bind(this)} />
         <View style={{ height: 8, width: "100%" }} />
         <BackButton navigation={navigation} />
         {loader ? (
