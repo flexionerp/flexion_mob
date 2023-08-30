@@ -230,7 +230,7 @@ export const getPropertyStats = () => {
       .then((resp) => {
         let response = resp.data;
         dispatch(setPropertyStats(response));
-        console.log("Total Units Count's API Res :", response);
+        // console.log("Total Units Count's API Res :", response);
       })
       .catch((error) => {
         const err = error;
@@ -250,7 +250,7 @@ export const getReservationList = (id) => {
       .get(`${Url}get_reservation_grid_api?user_info_id=${id}`, { headers: headers })
       .then((resp) => {
         let response = resp.data;
-        console.log("getReservationList here ==============>: ", response.data.length);
+        // console.log("getReservationList here ==============>: ", response.data.length);
         // console.log("Here is the total data response =========> ", resp.data);
         dispatch(setReservationList(response.data));
         dispatch(setLoader(false));

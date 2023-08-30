@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1026108304440",
+    "project_id": "flexion-847cf",
+    "storage_bucket": "flexion-847cf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1026108304440:android:c3493a7bc2d17546468acd",
+        "android_client_info": {
+          "package_name": "com.flexion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1026108304440-q59rj7hfcvuk9cgbqmggntvmob1stjo6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLO1QYx8Xo3D1HnWZJ7eUhrAdVLeEHtto"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1026108304440-q59rj7hfcvuk9cgbqmggntvmob1stjo6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
