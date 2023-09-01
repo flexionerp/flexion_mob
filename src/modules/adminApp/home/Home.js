@@ -9,6 +9,8 @@ import { getPropertyStats, getCountList, getReservationList, getMonthlyStats } f
 import { useFocusEffect } from "@react-navigation/native";
 // PushNotification Code starts from here
 import messaging, { firebase } from "@react-native-firebase/messaging";
+import notifee from "@notifee/react-native";
+
 // Till here
 
 const CustomerDetail = () => {
@@ -39,6 +41,8 @@ const Home = ({ navigation, route }) => {
   // useEffect(() => {
   //   registerAppWithFCM();
   // }, []);
+
+  // IOS Permissions
   async function requestUserPermission() {
     const authStatus = await messaging().requestPermission();
     const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED || authStatus === messaging.AuthorizationStatus.PROVISIONAL;
@@ -51,33 +55,49 @@ const Home = ({ navigation, route }) => {
     requestUserPermission();
   }, []);
 
-  const getDeviceToken = async () => {
-    try {
-      const token = await firebase.messaging().getToken();
-      if (token) {
-        console.log("FCM token:", token);
-      } else {
-        console.log("FCM token is null");
-      }
-    } catch (error) {
-      console.error("\n\n\n\n\n\n\n\nError while getting FCM token:", error);
-    }
-  };
+  // Android Permissions
+  async function requestNotificationPermission() {
+    await notifee.requestPermission();
+  }
 
   useEffect(() => {
-    getDeviceToken();
+    requestNotificationPermission();
   }, []);
-  useEffect(() => {
-    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-      Alert.alert("A new FCM message arrived in Forground State!", JSON.stringify(remoteMessage));
-      console.log("\n\n\n\n Message handled in the Forground State!", remoteMessage);
-    });
 
-    return unsubscribe;
-  }, []);
+  // const getDeviceToken = async () => {
+  //   try {
+  //     const token = await firebase.messaging().getToken();
+  //     if (token) {
+  //       console.log("FCM token:", token);
+  //     } else {
+  //       console.log("FCM token is null");
+  //     }
+  //   } catch (error) {
+  //     console.error("\n\n\n\n\n\n\n\nError while getting FCM token:", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   getDeviceToken();
+  // }, []);
+  // useEffect(() => {
+  //   const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+  //     Alert.alert("A new FCM message arrived in Forground State!", JSON.stringify(remoteMessage));
+  //     console.log("\n\n\n\n Message handled in the Forground State!", remoteMessage);
+  //   });
+
+  //   return unsubscribe;
+  // }, []);
 
   messaging().setBackgroundMessageHandler(async (remoteMessage) => {
     console.log("\n\n\n\n Message handled in the Background State!", remoteMessage);
+
+    // You can add code here to display a local notification using Notifee
+    await notifee.displayNotification({
+      title: remoteMessage.notification.title,
+      body: remoteMessage.notification.body,
+      // Add other notification options as needed
+    });
   });
 
   messaging().getInitialNotification(async (remoteMessage) => {
@@ -85,35 +105,50 @@ const Home = ({ navigation, route }) => {
   });
 
   // Function to send a test notification
-  // const sendTestNotification = async () => {
-  //   try {
-  //     const response = await fetch("https://fcm.googleapis.com/fcm/send", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: "key=AAAA7ujSLDg:APA91bFcIUpZb8Zpt89yfPE57i2rdhPSEBde57PpnPYSFJuA9ZZBEKXgaWS24IRjFU_mF1vbvblttaSWzn5aJOaDEZXq7ejXkdyNMTK3ek94au8xWkGoemoYo2V_Q4Fm5TKRcXf__El1", // Replace with your server key
-  //       },
-  //       body: JSON.stringify({
-  //         to: "e9m3-GkOTbGaexAgOx_Yh5:APA91bGQIqSpxDu44o3LcYcUQ-AhTA3p_zN1vOd6_zuQmtSXqC0c_CNePRDh7Kt4YniTjX6zzFhSCiUOi-UPH9LOYGh_4FSRCtiBai7V-n2KCH9cpf-Xi82le-mWSbFbCLGAHQFECG2E", // Replace with the device token you want to target
-  //         notification: {
-  //           title: "Test Notification",
-  //           body: "This is a test notification from your app.",
-  //         },
-  //         data: {
-  //           // You can add custom data here if needed
-  //         },
-  //       }),
-  //     });
+  const sendTestNotification = async () => {
+    try {
+      // Get the FCM token
+      const fcmToken = await firebase.messaging().getToken();
+      console.log("\n\n\n\n\nFecthed FCM Token", fcmToken);
 
-  //     if (response.status === 200) {
-  //       console.log("Test notification sent successfully");
-  //     } else {
-  //       console.error("Failed to send test notification");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error sending test notification:", error);
-  //   }
-  // };
+      if (fcmToken) {
+        // Send FCM notification using the obtained token
+        const response = await fetch("https://fcm.googleapis.com/fcm/send", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "key=AAAA7ujSLDg:APA91bFcIUpZb8Zpt89yfPE57i2rdhPSEBde57PpnPYSFJuA9ZZBEKXgaWS24IRjFU_mF1vbvblttaSWzn5aJOaDEZXq7ejXkdyNMTK3ek94au8xWkGoemoYo2V_Q4Fm5TKRcXf__El1",
+          },
+          body: JSON.stringify({
+            to: fcmToken, // Use the obtained FCM token here
+            notification: {
+              title: "Test Notification",
+              body: "This is a test notification from your app.",
+            },
+            data: {
+              // You can add custom data here if needed
+            },
+          }),
+        });
+
+        if (response.status === 200) {
+          console.log("Test notification sent successfully");
+
+          // Display local notification using Notifee
+          await notifee.displayNotification({
+            title: "Flexion",
+            body: "Your Ticket is Generated",
+          });
+        } else {
+          console.error("Failed to send test notification");
+        }
+      } else {
+        console.log("FCM token is null");
+      }
+    } catch (error) {
+      console.error("Error sending test notification:", error);
+    }
+  };
 
   // Till here
   const dispatch = useDispatch();
@@ -161,6 +196,31 @@ const Home = ({ navigation, route }) => {
     // console.log("Find Retail here", tempcount);
   };
 
+  // async function onDisplayNotification() {
+  //   // Request permissions (required for iOS)
+  //   await notifee.requestPermission();
+
+  //   // Create a channel (required for Android)
+  //   const channelId = await notifee.createChannel({
+  //     id: "default",
+  //     name: "Default Channel",
+  //   });
+
+  //   // Display a notification
+  //   await notifee.displayNotification({
+  //     title: "Flexion",
+  //     body: "Your Ticket is Generated",
+  //     android: {
+  //       channelId,
+  //       smallIcon: "name-of-a-small-icon", // optional, defaults to 'ic_launcher'.
+  //       // pressAction is needed if you want the notification to open the app when pressed
+  //       pressAction: {
+  //         id: "default",
+  //       },
+  //     },
+  //   });
+  // }
+
   return (
     <ImageBackground source={ICONS.bgImg} style={styles.container}>
       <SafeAreaView style={styles.main}>
@@ -170,8 +230,11 @@ const Home = ({ navigation, route }) => {
         <ScrollView style={{ width: "100%" }}>
           <View style={{ width: "100%", alignItems: "center" }}>
             <CustomerDetail />
-            {/* <View style={{ marginTop: 20 }}>
+            <View style={{ marginTop: 20 }}>
               <Button title="Send Test Notification" onPress={sendTestNotification} />
+            </View>
+            {/* <View>
+              <Button title="Display Notification" onPress={() => onDisplayNotification()} />
             </View> */}
             <UnitCount count={totalUnitsCount.length} label="Total Properties" disabled={true} />
             {/* <UnitCount count={available.length} label="Total Available" disabled={false} onClick={() => navigation.navigate("DashboardListing", { label: "Total Available", list: available })} /> */}
