@@ -230,9 +230,9 @@ const Home = ({ navigation, route }) => {
         <ScrollView style={{ width: "100%" }}>
           <View style={{ width: "100%", alignItems: "center" }}>
             <CustomerDetail />
-            <View style={{ marginTop: 20 }}>
+            {/* <View style={{ marginTop: 20 }}>
               <Button title="Send Test Notification" onPress={sendTestNotification} />
-            </View>
+            </View> */}
             {/* <View>
               <Button title="Display Notification" onPress={() => onDisplayNotification()} />
             </View> */}
@@ -245,6 +245,14 @@ const Home = ({ navigation, route }) => {
               disabled={false}
               onClick={() => {
                 navigation.navigate("TotalAvailable", { availableData: available });
+              }}
+            />
+            <UnitCount
+              count={5}
+              label="Total Assign Leads"
+              disabled={false}
+              onClick={() => {
+                navigation.navigate("TotalLeadListings");
               }}
             />
             <View style={{ height: 8 }} />

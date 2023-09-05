@@ -31,6 +31,8 @@ const SCREENS = {
   PRICESETUP: "PriceSetup",
   TOTALAVAILABLE: "TotalAvailable",
   TOTALAVAILABLELISTINGS: "TotalAvailableListings",
+  TOTALLEADLISTINGS: "TotalLeadListings",
+  TOTALLEADDETAILS: "TotalLeadDetails",
   PRICEDETAIL: "PriceDetail",
   POWERBI: "PowerBI",
   CREATECUSTOMER: "CreateCustomer",

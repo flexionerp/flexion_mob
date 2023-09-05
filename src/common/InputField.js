@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import { View, TextInput, TouchableOpacity, Image } from "react-native";
 import { RFPercentage } from "react-native-responsive-fontsize";
-// import { MaterialCommunityIcons } from "@expo/vector-icons";
-// import { MaterialIcons } from "@expo/vector-icons";
-// import { Ionicons, Feather } from "@expo/vector-icons";
 
 function InputField({
   onTouchStart = () => {},
@@ -21,6 +18,7 @@ function InputField({
   fontSize = RFPercentage(2.5),
   editIcon = false,
   dropdownIcon = false,
+  multiLine = false,
   width,
   value,
   height = RFPercentage(6.9),
@@ -29,6 +27,8 @@ function InputField({
   leftIconName = "",
   autoFocus = false,
   searchMarginLeft = null,
+  placeholderAtStart = false,
+  icon = true,
   color = "black",
   ...otherProps
 }) {
@@ -57,16 +57,28 @@ function InputField({
         onEndEditing={onTouchEnd}
         value={value}
         autoFocus={autoFocus}
+        multiline={multiLine}
         keyboardType={keyboardType}
         secureTextEntry={secure && !eyeIcon}
         textAlign={textCenter}
-        style={{ left: RFPercentage(1), fontWeight: "bold", color: color, alignSelf: "center", fontFamily: fontFamily, fontSize: fontSize, width: "90%" }}
+        style={{
+          left: icon ? RFPercentage(1) : RFPercentage(-0.7),
+          top: placeholderAtStart ? RFPercentage(-2) : null,
+          fontWeight: icon ? "bold" : null,
+          color: color,
+          alignSelf: "center",
+          fontFamily: fontFamily,
+          fontSize: fontSize,
+          width: "90%",
+        }}
         {...otherProps}
       ></TextInput>
 
-      <TouchableOpacity style={{ right: RFPercentage(2) }}>
-        <Image style={{ width: RFPercentage(2.5), height: RFPercentage(2.5) }} source={require("../assets/images/searchIcon.png")} />
-      </TouchableOpacity>
+      {icon ? (
+        <TouchableOpacity style={{ right: RFPercentage(2) }}>
+          <Image style={{ width: RFPercentage(2.5), height: RFPercentage(2.5) }} source={require("../assets/images/searchIcon.png")} />
+        </TouchableOpacity>
+      ) : null}
     </View>
   );
 }
