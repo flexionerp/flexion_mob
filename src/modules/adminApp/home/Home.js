@@ -8,11 +8,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { getPropertyStats, getCountList, getReservationList, getMonthlyStats } from "../../../redux/property/property.action";
 import { useFocusEffect } from "@react-navigation/native";
 // PushNotification Code starts from here
-import messaging, { firebase } from "@react-native-firebase/messaging";
-import notifee from "@notifee/react-native";
+// import messaging, { firebase } from "@react-native-firebase/messaging";
+// import notifee from "@notifee/react-native";
 
 // Till here
-
 const CustomerDetail = () => {
   const { userDetail } = useSelector((state) => state.user);
   return (
@@ -42,27 +41,27 @@ const Home = ({ navigation, route }) => {
   //   registerAppWithFCM();
   // }, []);
 
-  // IOS Permissions
-  async function requestUserPermission() {
-    const authStatus = await messaging().requestPermission();
-    const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED || authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+  // IOS Permissions Thissssss
+  // async function requestUserPermission() {
+  //   const authStatus = await messaging().requestPermission();
+  //   const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED || authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
-    if (enabled) {
-      console.log("Authorization status:", authStatus);
-    }
-  }
-  useEffect(() => {
-    requestUserPermission();
-  }, []);
+  //   if (enabled) {
+  //     console.log("Authorization status:", authStatus);
+  //   }
+  // }
+  // useEffect(() => {
+  //   requestUserPermission();
+  // }, []);
 
-  // Android Permissions
-  async function requestNotificationPermission() {
-    await notifee.requestPermission();
-  }
+  // // Android Permissions
+  // async function requestNotificationPermission() {
+  //   await notifee.requestPermission();
+  // }
 
-  useEffect(() => {
-    requestNotificationPermission();
-  }, []);
+  // useEffect(() => {
+  //   requestNotificationPermission();
+  // }, []);
 
   // const getDeviceToken = async () => {
   //   try {
@@ -89,66 +88,67 @@ const Home = ({ navigation, route }) => {
   //   return unsubscribe;
   // }, []);
 
-  messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-    console.log("\n\n\n\n Message handled in the Background State!", remoteMessage);
+  // Thisssssss
+  // messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+  //   console.log("\n\n\n\n Message handled in the Background State!", remoteMessage);
 
-    // You can add code here to display a local notification using Notifee
-    await notifee.displayNotification({
-      title: remoteMessage.notification.title,
-      body: remoteMessage.notification.body,
-      // Add other notification options as needed
-    });
-  });
+  //   // You can add code here to display a local notification using Notifee
+  //   await notifee.displayNotification({
+  //     title: remoteMessage.notification.title,
+  //     body: remoteMessage.notification.body,
+  //     // Add other notification options as needed
+  //   });
+  // });
 
-  messaging().getInitialNotification(async (remoteMessage) => {
-    console.log("\n\n\n\n Message handled in the Kill State!", remoteMessage);
-  });
+  // messaging().getInitialNotification(async (remoteMessage) => {
+  //   console.log("\n\n\n\n Message handled in the Kill State!", remoteMessage);
+  // });
 
-  // Function to send a test notification
-  const sendTestNotification = async () => {
-    try {
-      // Get the FCM token
-      const fcmToken = await firebase.messaging().getToken();
-      console.log("\n\n\n\n\nFecthed FCM Token", fcmToken);
+  // Function to send a test notification Thissss
+  // const sendTestNotification = async () => {
+  //   try {
+  //     // Get the FCM token
+  //     const fcmToken = await firebase.messaging().getToken();
+  //     console.log("\n\n\n\n\nFecthed FCM Token", fcmToken);
 
-      if (fcmToken) {
-        // Send FCM notification using the obtained token
-        const response = await fetch("https://fcm.googleapis.com/fcm/send", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "key=AAAA7ujSLDg:APA91bFcIUpZb8Zpt89yfPE57i2rdhPSEBde57PpnPYSFJuA9ZZBEKXgaWS24IRjFU_mF1vbvblttaSWzn5aJOaDEZXq7ejXkdyNMTK3ek94au8xWkGoemoYo2V_Q4Fm5TKRcXf__El1",
-          },
-          body: JSON.stringify({
-            to: fcmToken, // Use the obtained FCM token here
-            notification: {
-              title: "Test Notification",
-              body: "This is a test notification from your app.",
-            },
-            data: {
-              // You can add custom data here if needed
-            },
-          }),
-        });
+  //     if (fcmToken) {
+  //       // Send FCM notification using the obtained token
+  //       const response = await fetch("https://fcm.googleapis.com/fcm/send", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: "key=AAAA7ujSLDg:APA91bFcIUpZb8Zpt89yfPE57i2rdhPSEBde57PpnPYSFJuA9ZZBEKXgaWS24IRjFU_mF1vbvblttaSWzn5aJOaDEZXq7ejXkdyNMTK3ek94au8xWkGoemoYo2V_Q4Fm5TKRcXf__El1",
+  //         },
+  //         body: JSON.stringify({
+  //           to: fcmToken, // Use the obtained FCM token here
+  //           notification: {
+  //             title: "Test Notification",
+  //             body: "This is a test notification from your app.",
+  //           },
+  //           data: {
+  //             // You can add custom data here if needed
+  //           },
+  //         }),
+  //       });
 
-        if (response.status === 200) {
-          console.log("Test notification sent successfully");
+  //       if (response.status === 200) {
+  //         console.log("Test notification sent successfully");
 
-          // Display local notification using Notifee
-          await notifee.displayNotification({
-            title: "Flexion",
-            body: "Your Ticket is Generated",
-          });
-        } else {
-          console.error("Failed to send test notification");
-        }
-      } else {
-        console.log("FCM token is null");
-      }
-    } catch (error) {
-      console.error("Error sending test notification:", error);
-    }
-  };
+  //         // Display local notification using Notifee
+  //         await notifee.displayNotification({
+  //           title: "Flexion",
+  //           body: "Your Ticket is Generated",
+  //         });
+  //       } else {
+  //         console.error("Failed to send test notification");
+  //       }
+  //     } else {
+  //       console.log("FCM token is null");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error sending test notification:", error);
+  //   }
+  // };
 
   // Till here
   const dispatch = useDispatch();
@@ -247,14 +247,14 @@ const Home = ({ navigation, route }) => {
                 navigation.navigate("TotalAvailable", { availableData: available });
               }}
             />
-            <UnitCount
+            {/* <UnitCount
               count={5}
               label="Total Assign Leads"
               disabled={false}
               onClick={() => {
                 navigation.navigate("TotalLeadListings");
               }}
-            />
+            /> */}
             <View style={{ height: 8 }} />
             <StatsRow navigation={navigation} refreshCallback={fetchData} />
             <View style={{ width: "90%", flexDirection: "row", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", marginTop: 12 }}>

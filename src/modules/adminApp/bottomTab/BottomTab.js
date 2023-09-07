@@ -50,6 +50,8 @@ import { TotalAvailable } from "../totalAvailable/TotalAvailable";
 import { TotalAvailableListings } from "../totalAvailable/TotalAvailableListings";
 import { TotalLeadListings } from "../totalLead/TotalLeadListings";
 import { TotalLeadDetails } from "../totalLead/TotalLeadDetails";
+import { LeadNotes } from "../leadNotes/Notes";
+import { LeadEmail } from "../leadEmail/LeadEmail";
 import PowerBI from "../powerBI/PowerBI";
 import { StatsListing } from "../propertyStatsListing/StatsListing";
 import { HomeInProgress } from "../homeInprogress/HomeInProgress";
@@ -183,6 +185,20 @@ function HomeRoutes() {
       <Stack.Screen
         name="TotalLeadDetails"
         component={TotalLeadDetails}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="LeadNotes"
+        component={LeadNotes}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="LeadEmail"
+        component={LeadEmail}
         options={{
           headerShown: false,
         }}

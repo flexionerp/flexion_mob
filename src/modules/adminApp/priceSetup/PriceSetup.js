@@ -123,16 +123,19 @@ export const PriceSetup = ({ navigation, route }) => {
         {isLoading ? (
           <Text style={{ fontSize: RFPercentage(2), textAlign: "center", marginTop: RFPercentage(2), color: "#06143b", fontWeight: "bold" }}>Loading...</Text>
         ) : (
-          <FlatList data={filteredData} renderItem={renderItem} keyExtractor={(item) => item.UNIT_ID.toString()} contentContainerStyle={styles.contentContainerStyle} />
+          <View style={styles.containerF}>
+            <FlatList data={filteredData} renderItem={renderItem} keyExtractor={(item) => item.UNIT_ID.toString()} contentContainerStyle={styles.contentContainerStyle} />
+          </View>
         )}
       </View>
-
-      <View style={{ marginBottom: RFPercentage(20) }} />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  containerF: {
+    // bottom: RFPercentage(20), // Adjust the padding as needed
+  },
   container: {
     flex: 1,
     width: "100%",

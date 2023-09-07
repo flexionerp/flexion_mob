@@ -157,6 +157,7 @@ export const TotalLeadDetails = ({ navigation, route }) => {
           {showButton ? (
             <View style={{ marginTop: RFPercentage(3), width: "86%", flexDirection: "row", justifyContent: "space-between", alignItems: "center", alignSelf: "center" }}>
               <TouchableOpacity
+                onPress={() => navigation.navigate("LeadNotes")}
                 activeOpacity={0.8}
                 style={{ borderRadius: RFPercentage(1.5), backgroundColor: COLORS.primary, width: RFPercentage(14), height: RFPercentage(5.5), justifyContent: "center", alignItems: "center" }}
               >
@@ -169,6 +170,7 @@ export const TotalLeadDetails = ({ navigation, route }) => {
                 <Text style={{ color: COLORS.secondry, fontFamily: FONTS.Medium, fontSize: RFPercentage(2) }}>Reminder</Text>
               </TouchableOpacity>
               <TouchableOpacity
+                onPress={() => navigation.navigate("LeadEmail")}
                 activeOpacity={0.8}
                 style={{ borderRadius: RFPercentage(1.5), backgroundColor: COLORS.primary, width: RFPercentage(14), height: RFPercentage(5.5), justifyContent: "center", alignItems: "center" }}
               >
