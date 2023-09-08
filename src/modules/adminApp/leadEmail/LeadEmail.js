@@ -14,6 +14,7 @@ export const LeadEmail = ({ navigation, route }) => {
     setMenu(!menu);
   };
 
+  // const [menuSelect,setMunuSelect]
   return (
     <SafeAreaView style={styles.container}>
       <BackButton navigation={navigation} label="Email Details" />
@@ -21,10 +22,10 @@ export const LeadEmail = ({ navigation, route }) => {
         <View style={{ justifyContent: "center", alignItems: "center", width: "100%" }}>
           {/*Lead Name */}
           <TouchableOpacity activeOpacity={0.8} style={{ marginTop: RFPercentage(3), width: "90%", justifyContent: "center", alignItems: "center", flexDirection: "row", alignSelf: "center" }}>
-            <Text style={{ fontSize: RFPercentage(2.5), color: "#06143b", fontWeight: "bold" }}>Lead Name</Text>
+            <Text style={{ fontSize: RFPercentage(2.2), color: "#06143b", fontFamily: FONTS.Medium }}>Ibrahim Khalid</Text>
           </TouchableOpacity>
           <TouchableOpacity activeOpacity={0.8} style={{ marginTop: RFPercentage(1.5), width: "90%", justifyContent: "center", alignItems: "center", flexDirection: "row", alignSelf: "center" }}>
-            <Text style={{ fontSize: RFPercentage(2.5), color: "#06143b", fontWeight: "bold" }}>Lead Email</Text>
+            <Text style={{ fontSize: RFPercentage(2.2), color: "#06143b", fontFamily: FONTS.Medium }}>EmailIbrahim@gmail.com</Text>
           </TouchableOpacity>
 
           {/* Compose Button */}
@@ -39,7 +40,7 @@ export const LeadEmail = ({ navigation, route }) => {
           </View>
           {/* Menu */}
           {menu ? (
-            <View style={{ marginTop: RFPercentage(5), width: "80%", justifyContent: "flex-start", alignItems: "flex-start", alignSelf: "center" }}>
+            <View style={{ marginTop: RFPercentage(4.5), width: "80%", justifyContent: "flex-start", alignItems: "flex-start", alignSelf: "center" }}>
               <TouchableOpacity
                 activeOpacity={0.8}
                 style={{

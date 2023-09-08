@@ -11,7 +11,7 @@ const NOTES_PER_LOAD = 3;
 export const LeadNotes = ({ navigation, route }) => {
   const [notes, setNotes] = useState("");
   const [editMode, setEditMode] = useState({
-    address: false,
+    notes: false,
   });
 
   const fields = [

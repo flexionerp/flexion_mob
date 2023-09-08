@@ -41,6 +41,7 @@ export const TotalLeadListings = ({ navigation, route }) => {
             </View>
             <Text style={styles.floorIdText}>Agent</Text>
             <Text style={styles.floorIdText}>Tag</Text>
+            <Text style={styles.floorIdText}>Cold</Text>
 
             <View style={styles.priceListingButtonContainer}>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
@@ -69,6 +70,7 @@ export const TotalLeadListings = ({ navigation, route }) => {
             </View>
             <Text style={styles.floorIdText}>Agent</Text>
             <Text style={styles.floorIdText}>Tag</Text>
+            <Text style={styles.floorIdText}>Warm</Text>
 
             <View style={styles.priceListingButtonContainer}>
               <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
