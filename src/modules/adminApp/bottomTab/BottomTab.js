@@ -21,10 +21,7 @@ import CommissionDetail from "../brokerCommission/CommissionDetail";
 import { DetailDashbaord } from "../../customerApp/detailDashboard/detailDashbaord";
 import PaymentPlan from "../../customerApp/paymentPlan/PaymentPlan";
 import AddPayment from "../../customerApp/addPayment/AddPayment";
-import Blogs from "../../customerApp/blogs/Blogs";
-import ConstructionUpdate from "../../customerApp/construction/ConstructionUpdate";
 import { StatementOfAccount } from "../../customerApp/pdfReader/StatementOfAccount ";
-import { GraphsListing } from "../../customerApp/graphs/GraphsListing";
 import { Customer } from "../../customerApp/customer/Customer";
 import { CustomerDetail } from "../../customerApp/customer/CustomerDetail";
 import { CustomerContacts } from "../../customerApp/customer/CustomerContacts";
@@ -50,11 +47,22 @@ import { TotalAvailable } from "../totalAvailable/TotalAvailable";
 import { TotalAvailableListings } from "../totalAvailable/TotalAvailableListings";
 import { TotalLeadListings } from "../totalLead/TotalLeadListings";
 import { TotalLeadDetails } from "../totalLead/TotalLeadDetails";
+import { TotalLeadMainListings } from "../totalAvailable/TotalLeadMainListings";
+import { LabelWise } from "../totalAvailable/LabelWise";
+import { AgentWise } from "../totalAvailable/AgentWise";
 import { LeadNotes } from "../leadNotes/Notes";
-import { LeadEmail } from "../leadEmail/LeadEmail";
+import ToggleSwitch from "../reminder/ToggleSwitch";
+import { TimeLine } from "../totalAvailable/TimeLine";
+import { Reminder } from "../reminder/Reminder";
 import PowerBI from "../powerBI/PowerBI";
 import { StatsListing } from "../propertyStatsListing/StatsListing";
+import { MessagesBody } from "../messagesScreen/MessagesBody";
 import { HomeInProgress } from "../homeInprogress/HomeInProgress";
+import Attachments from "../totalLead/Attachments";
+import { InboxMessagesScreen } from "../messagesScreen/InboxMessagesScreen";
+import { SentMessagesScreen } from "../messagesScreen/SentMessagesScreen";
+import { LeadStatusChange } from "../totalLead/LeadStatusChange";
+import { ComposeMail } from "../messagesScreen/ComposeMail";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -105,6 +113,13 @@ function HomeRoutes() {
         }}
       />
       <Stack.Screen
+        name="MessagesBody"
+        component={MessagesBody}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
         name="ReceiptListing"
         component={ReceiptListing}
         options={{
@@ -128,6 +143,13 @@ function HomeRoutes() {
       <Stack.Screen
         name="CommissionDetail"
         component={CommissionDetail}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Attachments"
+        component={Attachments}
         options={{
           headerShown: false,
         }}
@@ -162,8 +184,65 @@ function HomeRoutes() {
         }}
       />
       <Stack.Screen
+        name="Reminder"
+        component={Reminder}
+        options={{
+          headerShown: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="TimeLine"
+        component={TimeLine}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="ToggleSwitch"
+        component={ToggleSwitch}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
         name="TotalAvailable"
         component={TotalAvailable}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="LeadStatusChange"
+        component={LeadStatusChange}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="SentMessagesScreen"
+        component={SentMessagesScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="LabelWise"
+        component={LabelWise}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="AgentWise"
+        component={AgentWise}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="ComposeMail"
+        component={ComposeMail}
         options={{
           headerShown: false,
         }}
@@ -190,6 +269,13 @@ function HomeRoutes() {
         }}
       />
       <Stack.Screen
+        name="TotalLeadMainListings"
+        component={TotalLeadMainListings}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
         name="LeadNotes"
         component={LeadNotes}
         options={{
@@ -197,8 +283,8 @@ function HomeRoutes() {
         }}
       />
       <Stack.Screen
-        name="LeadEmail"
-        component={LeadEmail}
+        name="InboxMessagesScreen"
+        component={InboxMessagesScreen}
         options={{
           headerShown: false,
         }}
@@ -698,3 +784,5 @@ const styles = StyleSheet.create({
     marginTop: 3,
   },
 });
+
+// Happy Coding :)

@@ -27,7 +27,7 @@ export const PriceSetup = ({ navigation, route }) => {
   }, []);
 
   const fetchDataFromApi = async () => {
-    const apiUrl = "http://tvh.flexion.ae:9095/get_pricesetup_units_API";
+    const apiUrl = "http://tvh.flexion.ae:9091/get_pricesetup_units_API";
     const queryParams = {
       prop_code: "",
       org: "33",
@@ -40,7 +40,7 @@ export const PriceSetup = ({ navigation, route }) => {
       const response = await axios.get(apiUrl, { params: queryParams });
       setData(response.data);
       setIsLoading(false);
-      console.log("Price Setup APi Returned Data :", response.data);
+      // console.log("Price Setup APi Returned Data :", response.data);
     } catch (error) {
       console.error("Error fetching data from the API:", error);
     }

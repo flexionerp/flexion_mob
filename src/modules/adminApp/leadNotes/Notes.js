@@ -1,14 +1,20 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ImageBackground, ScrollView, TextInput, Button } from "react-native";
-import { COLORS, FONTS } from "../../../constants";
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, TextInput, FlatList } from "react-native";
+import { COLORS, FONTS, Url } from "../../../constants";
 import { BackButton } from "../../../common/backButton";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import Icon from "react-native-vector-icons/FontAwesome";
-
-const MAX_LINES_TO_SHOW = 3;
-const NOTES_PER_LOAD = 3;
+import { useDispatch, useSelector } from "react-redux";
+import HTML from "react-native-render-html";
+import moment from "moment";
 
 export const LeadNotes = ({ navigation, route }) => {
+  const { token } = useSelector((state) => state.user);
+  const leadName = route.params?.leadName;
+  const leadID = route.params?.leadID;
+  const [apiResult, setApiResult] = useState(null);
+  const [noteTypes, setNoteTypes] = useState([]);
+
   const [notes, setNotes] = useState("");
   const [editMode, setEditMode] = useState({
     notes: false,
@@ -46,51 +52,66 @@ export const LeadNotes = ({ navigation, route }) => {
     if (field === "notes") setNotes("");
   };
 
-  // Notes
-  const notesData = [
-    {
-      name: "Rana",
-      timestamp: "02-Jan-2023 1:00 PM",
-      noteText: "This is the test note that is being added at the time of development once the development phase is over we will replace this text with the original one.",
-    },
-    {
-      name: "Ahmad",
-      timestamp: "02-March-2023 2:00 PM",
-      noteText:
-        "This is the test note that is being added at the time of development once the development phase is over we will replace this text with the original one. Now this is the line to test weather the read more option is enabled now or not because if its not I will have to go thorugh the whole process again to make sure it works as expected.",
-    },
-    {
-      name: "Usman",
-      timestamp: "03-Jan-2023 2:00 PM",
-      noteText:
-        "This is the test note that is being added at the time of development once the development phase is over we will replace this text with the original one. Now this is the line to test weather the read more option is enabled now or not because if its not I will have to go thorugh the whole process again to make sure it works as expected.",
-    },
-    {
-      name: "Saim",
-      timestamp: "01-April-2023 2:00 PM",
-      noteText:
-        "This is the test note that is being added at the time of development once the development phase is over we will replace this text with the original one. Now this is the line to test weather the read more option is enabled now or not because if its not I will have to go thorugh the whole process again to make sure it works as expected.",
-    },
-    {
-      name: "Tayyab",
-      timestamp: "02-April-2023 2:00 PM",
-      noteText:
-        "This is the test note that is being added at the time of development once the development phase is over we will replace this text with the original one. Now this is the line to test weather the read more option is enabled now or not because if its not I will have to go thorugh the whole process again to make sure it works as expected.",
-    },
-  ];
+  const fetchApiData = async () => {
+    try {
+      const response = await fetch(`${Url}get_notes_forlead_api?user_id=${token}&form_id=116&ref_id=${leadID}`, {
+        method: "GET",
+      });
 
-  const [expandedNotes, setExpandedNotes] = useState({});
-  const [visibleNotes, setVisibleNotes] = useState(NOTES_PER_LOAD);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
 
-  const handleReadMoreClick = (index) => {
-    setExpandedNotes((prevState) => ({
-      ...prevState,
-      [index]: !prevState[index],
-    }));
+      const data = await response.json();
+      setApiResult(data);
+      console.log("\n\n\n\n\n\nNotes API Data here ", data);
+    } catch (error) {
+      console.error("Error fetching API data:", error);
+    }
   };
-  const handleLoadMoreClick = () => {
-    setVisibleNotes((prevVisibleNotes) => prevVisibleNotes + NOTES_PER_LOAD);
+
+  useEffect(() => {
+    fetchApiData();
+  }, []);
+
+  useEffect(() => {
+    if (apiResult && apiResult.length > 1) {
+      setNoteTypes(apiResult[1]);
+    }
+  }, [apiResult]);
+
+  const [showFullNote, setShowFullNote] = useState(false);
+  const maxLines = 3;
+
+  const toggleNote = () => {
+    setShowFullNote(!showFullNote);
   };
+
+  const renderNoteTypeItem = ({ item }) => {
+    const noteHtml = showFullNote ? item.NOTE : item.NOTE.substring(0, 300);
+    const shouldShowReadMore = item.NOTE.length > 300;
+    const formattedDateTime = moment(item.CREATED_ON).format("DD-MM-YYYY hh:mm A");
+
+    return (
+      <View style={{ marginTop: RFPercentage(5), width: "100%", justifyContent: "flex-start", alignItems: "flex-start" }}>
+        {/* Added by and at */}
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Text style={{ fontFamily: FONTS.Medium, fontSize: RFPercentage(1.8), color: "black" }}>{item.CREATED_USER}</Text>
+          <Text style={{ marginLeft: 10, fontFamily: FONTS.Medium, fontSize: RFPercentage(1.8), color: "grey" }}>{formattedDateTime}</Text>
+        </View>
+        {/* Notes Text */}
+        <View style={{ marginTop: RFPercentage(1), width: "100%", justifyContent: "flex-start", alignItems: "flex-start" }}>
+          <HTML style={{ lineHeight: RFPercentage(5) }} source={{ html: noteHtml }} />
+        </View>
+        {shouldShowReadMore && (
+          <TouchableOpacity activeOpacity={0.8} style={{ marginTop: RFPercentage(0.1) }} onPress={toggleNote}>
+            <Text style={{ color: "#CDA349", fontSize: RFPercentage(1.8), fontFamily: FONTS.Medium }}>{showFullNote ? "Read Less" : "Read More"}</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <BackButton navigation={navigation} label="Note Details" />
@@ -98,7 +119,7 @@ export const LeadNotes = ({ navigation, route }) => {
         <View style={{ justifyContent: "center", alignItems: "center", width: "100%" }}>
           {/*Lead Name */}
           <TouchableOpacity activeOpacity={0.8} style={{ marginTop: RFPercentage(3), width: "90%", justifyContent: "center", alignItems: "center", flexDirection: "row", alignSelf: "center" }}>
-            <Text style={{ fontSize: RFPercentage(2.6), color: "#06143b", fontWeight: "bold" }}>Lead Name</Text>
+            <Text style={{ fontSize: RFPercentage(2.6), color: "#06143b", fontWeight: "bold" }}>{leadName}</Text>
           </TouchableOpacity>
 
           {/*  Notes input field*/}
@@ -122,7 +143,11 @@ export const LeadNotes = ({ navigation, route }) => {
                     multiline={item.decs ? true : null}
                     placeholder={item.label}
                     placeholderTextColor={"#9CBBD2"}
-                    style={{ width: "100%", color: "#9CBBD2", fontFamily: FONTS.Regular }}
+                    style={{
+                      width: editMode[item.name] ? "90%" : "100%",
+                      color: "#9CBBD2",
+                      fontFamily: FONTS.Regular,
+                    }}
                     value={item.value}
                     onChangeText={item.setter}
                     editable={editMode[item.name]}
@@ -130,8 +155,6 @@ export const LeadNotes = ({ navigation, route }) => {
                   {editMode[item.name] ? (
                     <View
                       style={{
-                        // position: "absolute",
-                        // right: RFPercentage(0.8),
                         flexDirection: "row",
                         justifyContent: "center",
                         alignItems: "center",
@@ -156,43 +179,12 @@ export const LeadNotes = ({ navigation, route }) => {
             ))}
           </View>
 
-          {/* Notes Cart */}
-          {notesData.slice(0, visibleNotes).map((note, index) => (
-            <View key={index} style={{ marginTop: RFPercentage(5), width: "90%", justifyContent: "flex-start", alignItems: "flex-start" }}>
-              {/* Added by and at */}
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Text style={{ fontFamily: FONTS.Medium, fontSize: RFPercentage(1.8), color: "black" }}>{note.name}</Text>
-                <Text style={{ marginLeft: 10, fontFamily: FONTS.Medium, fontSize: RFPercentage(1.8), color: "grey" }}>{note.timestamp}</Text>
-              </View>
-              {/* Notes Text */}
-              <View style={{ marginTop: RFPercentage(1), width: "100%", justifyContent: "flex-start", alignItems: "flex-start" }}>
-                <Text numberOfLines={expandedNotes[index] ? undefined : MAX_LINES_TO_SHOW} style={{ textAlign: "justify", lineHeight: RFPercentage(2.8) }}>
-                  {note.noteText}
-                </Text>
-                {note.noteText.length > MAX_LINES_TO_SHOW * 40 && (
-                  <TouchableOpacity onPress={() => handleReadMoreClick(index)}>
-                    <Text style={{ color: "#CDA349", marginTop: 5, fontFamily: FONTS.Bold }}>{expandedNotes[index] ? "Read Less" : "Read More"}</Text>
-                  </TouchableOpacity>
-                )}
-              </View>
+          {noteTypes && noteTypes.length > 0 ? (
+            <View style={{ width: "90%", justifyContent: "center", alignItems: "center" }}>
+              <FlatList data={noteTypes} keyExtractor={(item) => item.NOTE_TYPE_ID.toString()} renderItem={renderNoteTypeItem} />
             </View>
-          ))}
-          {notesData.length > visibleNotes && (
-            <TouchableOpacity
-              onPress={handleLoadMoreClick}
-              activeOpacity={0.8}
-              style={{
-                marginTop: RFPercentage(5),
-                borderRadius: RFPercentage(1.5),
-                backgroundColor: COLORS.primary,
-                width: RFPercentage(16),
-                height: RFPercentage(5.5),
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text style={{ color: COLORS.secondry, fontFamily: FONTS.Medium, fontSize: RFPercentage(2) }}>Load More</Text>
-            </TouchableOpacity>
+          ) : (
+            <Text style={{ fontSize: RFPercentage(2), color: "grey", marginTop: RFPercentage(5) }}>No Notes Added Yet</Text>
           )}
         </View>
         <View style={{ marginBottom: RFPercentage(20) }} />
@@ -206,6 +198,18 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     backgroundColor: COLORS.secondry,
+  },
+  noteTypeItem: {
+    borderColor: "#CDA349",
+    borderWidth: 1,
+    borderRadius: RFPercentage(1.6),
+    marginVertical: RFPercentage(1),
+    padding: RFPercentage(1.7),
+    alignItems: "center",
+  },
+  noteTypeText: {
+    color: "#9CBBD2",
+    fontFamily: FONTS.Regular,
   },
   priceListingTextStyle: {
     fontSize: RFPercentage(1.5),
