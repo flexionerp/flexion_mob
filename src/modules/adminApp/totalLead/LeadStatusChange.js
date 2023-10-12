@@ -80,7 +80,7 @@ export const LeadStatusChange = ({ navigation, route }) => {
 
           {/* Picker to change status */}
           <View style={{ marginTop: RFPercentage(4), width: "90%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
-            <Text style={{ fontSize: RFPercentage(2), color: "#06143b", fontFamily: FONTS.Medium }}>Change Status: {currentStatus}</Text>
+            <Text style={{ fontSize: RFPercentage(2), color: "#06143b", fontFamily: FONTS.Medium }}>Current Status: {currentStatus}</Text>
           </View>
 
           {/* Dropdown */}
@@ -163,10 +163,13 @@ export const LeadStatusChange = ({ navigation, route }) => {
                 </View>
               ) : null}
 
+              <View style={{ width: "90%", marginTop: RFPercentage(4), alignSelf: "center", justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
+                <Text style={{ fontSize: RFPercentage(1.8), color: "#06143b", fontFamily: FONTS.Medium }}>Decision Making Date</Text>
+              </View>
               {/* Date Picker */}
               <View style={styles.container1}>
                 <TouchableOpacity onPress={showDatePicker} style={styles.inputContainer}>
-                  <Text style={[styles.inputText, selectedDate ? styles.selectedText : styles.placeholderText]}>{selectedDate ? formatDateTime(selectedDate) : "Select Date"}</Text>
+                  <Text style={[styles.inputText, selectedDate ? styles.selectedText : styles.placeholderText]}>{selectedDate ? formatDateTime(selectedDate) : "Decision Making Date"}</Text>
                   <AntDesign name="calendar" style={{ fontSize: RFPercentage(2.2) }} color="#06143b" />
                 </TouchableOpacity>
 
@@ -188,26 +191,48 @@ export const LeadStatusChange = ({ navigation, route }) => {
               </View>
             </View>
           ) : null}
+
+          {value == "WARM" || value == "HOT" || value == "LOST" ? null : (
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={{
+                marginTop: open ? RFPercentage(30) : RFPercentage(10),
+                width: RFPercentage(17),
+                height: RFPercentage(7),
+                backgroundColor: COLORS.primary,
+                borderRadius: RFPercentage(1.8),
+                justifyContent: "center",
+                alignItems: "center",
+                alignSelf: "center",
+              }}
+            >
+              <Text style={{ color: COLORS.secondry, fontFamily: FONTS.Bold, fontSize: RFPercentage(2.1) }}>Save</Text>
+            </TouchableOpacity>
+          )}
         </View>
         <View style={{ marginBottom: RFPercentage(20) }} />
       </ScrollView>
+
       {/* Save Button */}
-      <TouchableOpacity
-        activeOpacity={0.8}
-        style={{
-          position: "absolute",
-          bottom: RFPercentage(15),
-          width: RFPercentage(17),
-          height: RFPercentage(7),
-          backgroundColor: COLORS.primary,
-          borderRadius: RFPercentage(1.8),
-          justifyContent: "center",
-          alignItems: "center",
-          alignSelf: "center",
-        }}
-      >
-        <Text style={{ color: COLORS.secondry, fontFamily: FONTS.Bold, fontSize: RFPercentage(2.1) }}>Save</Text>
-      </TouchableOpacity>
+      {value == "WARM" || value == "HOT" || value == "LOST" ? (
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={{
+            position: "absolute",
+            bottom: RFPercentage(15),
+            marginTop: RFPercentage(10),
+            width: RFPercentage(17),
+            height: RFPercentage(7),
+            backgroundColor: COLORS.primary,
+            borderRadius: RFPercentage(1.8),
+            justifyContent: "center",
+            alignItems: "center",
+            alignSelf: "center",
+          }}
+        >
+          <Text style={{ color: COLORS.secondry, fontFamily: FONTS.Bold, fontSize: RFPercentage(2.1) }}>Save</Text>
+        </TouchableOpacity>
+      ) : null}
     </SafeAreaView>
   );
 };
@@ -239,7 +264,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderColor: "#CDA349",
     borderWidth: 1,
-    marginTop: RFPercentage(3),
+    marginTop: RFPercentage(1.6),
     borderRadius: RFPercentage(0.8),
     alignSelf: "center",
   },

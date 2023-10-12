@@ -36,8 +36,8 @@ export const TimeLine = ({ navigation, route }) => {
       <ScrollView nestedScrollEnabled showsVerticalScrollIndicator={false} style={{ width: "100%" }}>
         {/* Body */}
         {isLoading ? (
-          <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            <ActivityIndicator size="large" color={COLORS.primary} />
+          <View style={{ marginTop: RFPercentage(2), flex: 1, justifyContent: "center", alignItems: "center" }}>
+            <ActivityIndicator size="large" color={"#06143b"} />
           </View>
         ) : leadHistory === null ? (
           <View style={{ justifyContent: "center", alignItems: "center", width: "100%", marginTop: RFPercentage(3) }}>

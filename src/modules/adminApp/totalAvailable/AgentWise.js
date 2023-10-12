@@ -6,8 +6,8 @@ import { RFPercentage } from "react-native-responsive-fontsize";
 
 export const AgentWise = ({ navigation, route }) => {
   const { apiResponse } = route.params;
-  const [isLoading, setIsLoading] = useState(true); // Loading state
-  const [isNavigating, setIsNavigating] = useState(false); // Navigation state
+  const [isLoading, setIsLoading] = useState(true);
+  const [isNavigating, setIsNavigating] = useState(false);
 
   const getCategoryColor = (agentName) => {
     switch (agentName) {
@@ -26,25 +26,24 @@ export const AgentWise = ({ navigation, route }) => {
       case "Aldrin":
         return "#F4A460";
       default:
-        return "lightgrey"; // Default color for unknown agents
+        return "lightgrey";
     }
   };
 
   const agentCounts = {};
   if (apiResponse) {
     apiResponse.forEach((lead) => {
-      const agentName = lead.AGENT || "None"; // Assuming "None" if AGENT is falsy
+      const agentName = lead.AGENT || "None";
       agentCounts[agentName] = (agentCounts[agentName] || 0) + 1;
     });
   }
 
   delete agentCounts["None"];
 
-  // Convert agentCounts object to an array of objects for rendering
   const categories = Object.entries(agentCounts).map(([agentName, count]) => ({
     name: agentName,
     count: count,
-    color: getCategoryColor(agentName), // Define a function to map agent names to colors
+    color: getCategoryColor(agentName),
   }));
 
   // Function to chunk an array into rows
@@ -55,7 +54,7 @@ export const AgentWise = ({ navigation, route }) => {
     }
     return chunkedArray;
   }
-  // Function to filter leads for a specific agent
+
   const getLeadsForAgent = (agentName) => {
     return apiResponse.filter((lead) => lead.AGENT === agentName);
   };
@@ -63,31 +62,28 @@ export const AgentWise = ({ navigation, route }) => {
   const chunkedCategories = chunkArray(categories, 3);
 
   const fetchAgentLeadsData = () => {
-    // Simulate an API request delay (Remove this in your actual code)
     setTimeout(() => {
-      setIsLoading(false); // Set loading to false after fetching data (simulated delay)
-    }, 2000); // Simulated delay of 2 seconds (adjust as needed)
+      setIsLoading(false);
+    }, 2000);
   };
 
   useEffect(() => {
-    // Fetch agent leads data when the component mounts
     fetchAgentLeadsData();
-  }, []); // Empty dependency array ensures this runs only once
+  }, []);
 
   const handleAgentCategoryPress = (agentName) => {
-    setIsNavigating(true); // Set isNavigating to true when navigating
-    navigation.navigate("TotalLeadMainListings", { category: agentName, leads: getLeadsForAgent(agentName) });
+    setIsNavigating(true);
+    navigation.navigate("TotalLeadMainListings", { agentName: agentName, leads: getLeadsForAgent(agentName) });
 
-    // Set isNavigating back to false when navigation is complete
     setTimeout(() => {
       setIsNavigating(false);
-    }, 500); // You can adjust the delay as needed
+    }, 500);
   };
   return (
     <SafeAreaView style={styles.container}>
       <BackButton navigation={navigation} label="Agent Wise" />
 
-      {isLoading ? ( // Show loader while loading
+      {isLoading ? (
         <View style={styles.loaderContainer}>
           <ActivityIndicator size="large" color={"#06143b"} />
           <Text style={{ marginTop: RFPercentage(1), color: "#06143b", fontFamily: FONTS.Medium }}>Loading...</Text>

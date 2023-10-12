@@ -63,6 +63,8 @@ import { InboxMessagesScreen } from "../messagesScreen/InboxMessagesScreen";
 import { SentMessagesScreen } from "../messagesScreen/SentMessagesScreen";
 import { LeadStatusChange } from "../totalLead/LeadStatusChange";
 import { ComposeMail } from "../messagesScreen/ComposeMail";
+import { LeadAgentChange } from "../totalLead/LeadAgentChange";
+import { LeadTagChange } from "../totalLead/LeadTagChange";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -150,6 +152,13 @@ function HomeRoutes() {
       <Stack.Screen
         name="Attachments"
         component={Attachments}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="LeadAgentChange"
+        component={LeadAgentChange}
         options={{
           headerShown: false,
         }}
@@ -285,6 +294,13 @@ function HomeRoutes() {
       <Stack.Screen
         name="InboxMessagesScreen"
         component={InboxMessagesScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="LeadTagChange"
+        component={LeadTagChange}
         options={{
           headerShown: false,
         }}

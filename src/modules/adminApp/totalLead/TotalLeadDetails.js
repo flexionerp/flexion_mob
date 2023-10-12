@@ -587,6 +587,7 @@ export const TotalLeadDetails = ({ navigation, route }) => {
               <FontAwesome name="send-o" style={{ fontSize: RFPercentage(3) }} color={"#06143b"} />
               <Text style={{ marginLeft: RFPercentage(1.2), color: "#06143b", fontFamily: FONTS.Medium, fontSize: RFPercentage(2.1) }}>Sent</Text>
             </TouchableOpacity>
+
             {/* Close */}
             <TouchableOpacity
               activeOpacity={0.8}

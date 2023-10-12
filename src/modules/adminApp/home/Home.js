@@ -46,7 +46,7 @@ const Home = ({ navigation, route }) => {
   const makeApiRequest = async () => {
     try {
       const response = await axios.get(`${Url}leads_list_api?userid=${token}`);
-      console.log("API Response is here lead:", response.data.data);
+      // console.log("API Response is here lead:", response.data.data);
 
       const firstObject = response.data.data[0];
       const leadCount = firstObject ? firstObject.length : 0;
@@ -109,7 +109,6 @@ const Home = ({ navigation, route }) => {
         <ScrollView style={{ width: "100%" }}>
           <View style={{ width: "100%", alignItems: "center" }}>
             <CustomerDetail />
-
             <UnitCount count={totalUnitsCount.length} label="Total Properties" disabled={true} />
             {/* <UnitCount count={available.length} label="Total Available" disabled={false} onClick={() => navigation.navigate("DashboardListing", { label: "Total Available", list: available })} /> */}
             {/* <UnitCount count={available.length} label="Total Available" disabled={false} onClick={() => navigation.navigate("TotalAvailable")} /> */}
@@ -164,8 +163,6 @@ const styles = StyleSheet.create({
   customerContainer: {
     width: "90%",
     height: 70,
-    // borderWidth: 1,
-    // borderColor: '#CDA349',
     borderRadius: 15,
     justifyContent: "center",
     paddingHorizontal: 12,

@@ -92,7 +92,7 @@ export const LabelWise = ({ navigation, route }) => {
   const handleLabelCategoryPress = (labelType) => {
     setIsNavigating(true);
     navigation.navigate("TotalLeadMainListings", {
-      category: labelType,
+      labelType: labelType,
       leads: apiResponse.filter((lead) => lead.LEAD_TYPE === labelType),
     });
 

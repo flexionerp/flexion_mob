@@ -29,11 +29,11 @@ export const TotalLeadListings = ({ navigation, route }) => {
   const makeApiRequest = async () => {
     try {
       const response = await axios.get(`${Url}leads_list_api?userid=${token}`);
-      console.log("From Cold Screen", response.data.data);
+      // console.log("From Cold Screen", response.data.data);
 
       const firstObject = response.data.data[0];
       const leadCount = firstObject ? firstObject.length : 0;
-      console.log("Latest count cold screen", leadCount);
+      // console.log("Latest count cold screen", leadCount);
 
       // Initialize counts for each lead status
       let coldCount = 0;
@@ -101,14 +101,15 @@ export const TotalLeadListings = ({ navigation, route }) => {
       value: "",
     },
   ]);
+
   const categories = [
-    { name: "Cold", color: "#87CEEB", count: coldCount },
-    { name: "Warm", color: "#FF7F50", count: warmCount },
-    { name: "Hot", color: "#ff533f", count: hotCount },
-    { name: "Lost", color: "grey", count: lostCount },
-    { name: "Assigned", color: "lightgrey", count: assignedCount },
-    { name: "Deal", color: "#68C668", count: dealCount },
-    { name: "Junk", color: "#BC8F8F", count: junkCount },
+    { name: "COLD", color: "#87CEEB", count: coldCount },
+    { name: "WARM", color: "#FF7F50", count: warmCount },
+    { name: "HOT", color: "#ff533f", count: hotCount },
+    { name: "LOST", color: "grey", count: lostCount },
+    { name: "ASSIGNED", color: "lightgrey", count: assignedCount },
+    { name: "DEAL", color: "#68C668", count: dealCount },
+    { name: "JUNK", color: "#BC8F8F", count: junkCount },
   ];
 
   function chunkArray(array, chunkSize) {
@@ -185,7 +186,7 @@ export const TotalLeadListings = ({ navigation, route }) => {
           <TouchableOpacity
             onPress={() => {
               const filteredLeads = apiResponse.filter((lead) => lead.IS_READ === "0");
-              navigation.navigate("TotalLeadMainListings", { leads: filteredLeads });
+              navigation.navigate("TotalLeadMainListings", { unreadOnly: true, leads: filteredLeads });
             }}
             activeOpacity={0.8}
             style={{ marginTop: RFPercentage(2), backgroundColor: "#B0C4DE", width: "90%", height: RFPercentage(8), borderRadius: RFPercentage(2), justifyContent: "center", alignItems: "center" }}
@@ -195,7 +196,7 @@ export const TotalLeadListings = ({ navigation, route }) => {
           <TouchableOpacity
             onPress={() => {
               const filteredLeads = apiResponse.filter((lead) => lead.IS_EMAIL_SENT_AGENT === "1");
-              navigation.navigate("TotalLeadMainListings", { leads: filteredLeads });
+              navigation.navigate("TotalLeadMainListings", { leads: filteredLeads, noAction: true });
             }}
             activeOpacity={0.8}
             style={{ marginTop: RFPercentage(2), backgroundColor: "lightgreen", width: "90%", height: RFPercentage(8), borderRadius: RFPercentage(2), justifyContent: "center", alignItems: "center" }}
@@ -205,7 +206,7 @@ export const TotalLeadListings = ({ navigation, route }) => {
           <TouchableOpacity
             onPress={() => {
               const filteredLeads = apiResponse.filter((lead) => lead.IS_EMAIL_SENT === "1");
-              navigation.navigate("TotalLeadMainListings", { leads: filteredLeads });
+              navigation.navigate("TotalLeadMainListings", { leads: filteredLeads, hours: true });
             }}
             activeOpacity={0.8}
             style={{ marginTop: RFPercentage(2), backgroundColor: "#F4A460", width: "90%", height: RFPercentage(8), borderRadius: RFPercentage(2), justifyContent: "center", alignItems: "center" }}
