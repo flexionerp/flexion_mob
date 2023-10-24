@@ -8,68 +8,68 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Entypo from "react-native-vector-icons/Entypo";
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
-import DocumentPicker from "react-native-document-picker";
-import PDFView from "react-native-pdf";
+// import DocumentPicker from "react-native-document-picker";
+// import PDFView from "react-native-pdf";
 
 export const ComposeMail = ({ navigation, route }) => {
   const [pickedImages, setPickedImages] = useState([]);
   const [pickedPDFs, setPickedPDFs] = useState([]);
   const [pdfPicked, setPdfPicked] = useState(false);
 
-  const openImagePicker = () => {
-    const options = {
-      title: "Select Image",
-      storageOptions: {
-        skipBackup: true,
-        path: "images",
-      },
-    };
+  // const openImagePicker = () => {
+  //   const options = {
+  //     title: "Select Image",
+  //     storageOptions: {
+  //       skipBackup: true,
+  //       path: "images",
+  //     },
+  //   };
 
-    launchImageLibrary(options, (response) => {
-      if (!response.didCancel && !response.error) {
-        setPickedImages([...pickedImages, response.assets[0]]);
-      }
-    });
-  };
+  //   launchImageLibrary(options, (response) => {
+  //     if (!response.didCancel && !response.error) {
+  //       setPickedImages([...pickedImages, response.assets[0]]);
+  //     }
+  //   });
+  // };
 
-  const openPDFPicker = async () => {
-    try {
-      const results = await DocumentPicker.pickMultiple({
-        type: [DocumentPicker.types.pdf],
-      });
+  // const openPDFPicker = async () => {
+  //   try {
+  //     const results = await DocumentPicker.pickMultiple({
+  //       type: [DocumentPicker.types.pdf],
+  //     });
 
-      // Concatenate the newly picked PDFs with the existing ones
-      setPickedPDFs([...pickedPDFs, ...results]);
+  //     // Concatenate the newly picked PDFs with the existing ones
+  //     setPickedPDFs([...pickedPDFs, ...results]);
 
-      // Set pdfPicked to true if there are picked PDFs
-      setPdfPicked(results.length > 0);
+  //     // Set pdfPicked to true if there are picked PDFs
+  //     setPdfPicked(results.length > 0);
 
-      console.log("Picked PDF Results", results);
-    } catch (error) {
-      console.log("Error:", error);
-    }
-  };
-  const openCamera = () => {
-    const options = {
-      title: "Take a Photo",
-      storageOptions: {
-        skipBackup: true,
-        path: "images",
-      },
-    };
+  //     console.log("Picked PDF Results", results);
+  //   } catch (error) {
+  //     console.log("Error:", error);
+  //   }
+  // };
+  // const openCamera = () => {
+  //   const options = {
+  //     title: "Take a Photo",
+  //     storageOptions: {
+  //       skipBackup: true,
+  //       path: "images",
+  //     },
+  //   };
 
-    launchCamera(options, (response) => {
-      if (response.didCancel) {
-      } else if (response.error) {
-      } else {
-      }
-      console.log("Cemra Picked Image Result", response);
-    });
-  };
-  const [showButton, setShowButton] = useState(false);
-  const toggleShowButton = () => {
-    setShowButton(!showButton);
-  };
+  //   launchCamera(options, (response) => {
+  //     if (response.didCancel) {
+  //     } else if (response.error) {
+  //     } else {
+  //     }
+  //     console.log("Cemra Picked Image Result", response);
+  //   });
+  // };
+  // const [showButton, setShowButton] = useState(false);
+  // const toggleShowButton = () => {
+  //   setShowButton(!showButton);
+  // };
 
   // Menu
   const [isMenuVisible, setIsMenuVisible] = useState(false);
@@ -94,16 +94,16 @@ export const ComposeMail = ({ navigation, route }) => {
     setMessage(text);
   };
 
-  const removePickedImage = (indexToRemove) => {
-    const updatedImages = pickedImages.filter((_, index) => index !== indexToRemove);
-    setPickedImages(updatedImages);
-  };
+  // const removePickedImage = (indexToRemove) => {
+  //   const updatedImages = pickedImages.filter((_, index) => index !== indexToRemove);
+  //   setPickedImages(updatedImages);
+  // };
 
-  const removePickedPDF = (indexToRemove) => {
-    const updatedPDFs = pickedPDFs.filter((_, index) => index !== indexToRemove);
-    setPickedPDFs(updatedPDFs);
-    setPdfPicked(false);
-  };
+  // const removePickedPDF = (indexToRemove) => {
+  //   const updatedPDFs = pickedPDFs.filter((_, index) => index !== indexToRemove);
+  //   setPickedPDFs(updatedPDFs);
+  //   setPdfPicked(false);
+  // };
   return (
     <SafeAreaView style={styles.container}>
       <BackButton navigation={navigation} label="Lead Details" />
@@ -178,7 +178,7 @@ export const ComposeMail = ({ navigation, route }) => {
             style={{ width: 100, height: 100, marginRight: 10 }}
           />
         ))} */}
-        {pickedPDFs.map((pdf, index) => (
+        {/* {pickedPDFs.map((pdf, index) => (
           <View
             key={index}
             style={{
@@ -200,11 +200,11 @@ export const ComposeMail = ({ navigation, route }) => {
             </TouchableOpacity>
             <Text style={{ fontSize: RFPercentage(2), color: "red", fontFamily: FONTS.Medium }}>PDF Picked</Text>
           </View>
-        ))}
+        ))} */}
       </ScrollView>
       {/* Bottom Actions */}
       <View style={{ width: "86%", position: "absolute", bottom: RFPercentage(15), justifyContent: "flex-start", alignItems: "center", flexDirection: "row", alignSelf: "center" }}>
-        <TouchableOpacity activeOpacity={0.8} onPress={toggleMenu3}>
+        <TouchableOpacity activeOpacity={0.8}>
           <Entypo name="attachment" style={{ fontSize: RFPercentage(3.4) }} color={"#06143b"} />
         </TouchableOpacity>
 

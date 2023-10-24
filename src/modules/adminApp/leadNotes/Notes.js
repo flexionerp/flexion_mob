@@ -3,10 +3,12 @@ import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, Tex
 import { COLORS, FONTS, Url } from "../../../constants";
 import { BackButton } from "../../../common/backButton";
 import { RFPercentage } from "react-native-responsive-fontsize";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useDispatch, useSelector } from "react-redux";
 import HTML from "react-native-render-html";
 import moment from "moment";
+import DocumentPicker from "react-native-document-picker";
 
 export const LeadNotes = ({ navigation, route }) => {
   const { token } = useSelector((state) => state.user);
@@ -112,6 +114,53 @@ export const LeadNotes = ({ navigation, route }) => {
     );
   };
 
+  const [attachmentPicked, setAttachmentPicked] = useState(false);
+  const [selectedFileURI, setSelectedFileURI] = useState("");
+
+  const handlePickDocument = async () => {
+    try {
+      const result = await DocumentPicker.pick({
+        type: [DocumentPicker.types.allFiles],
+        allowMultiSelection: true,
+      });
+
+      if (result.length > 0) {
+        const selectedURIs = result.map((file) => file.uri);
+
+        setAttachmentPicked(true);
+
+        setSelectedFileURI(selectedURIs);
+      }
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+      } else {
+        throw err;
+      }
+    }
+  };
+
+  const insertNote = async () => {
+    try {
+      const url = `${Url}Insert_Common_Notes_api?notes="Hey this is THE note"&note_type=1&hdr_id=${ID}&org_id=33&user_id=${token}`;
+      const response = await fetch(url, {
+        method: "POST",
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log("\n\n\n\n\n\n\n\n\n\n\nNotes Insert API Response:", data);
+    } catch (error) {
+      console.error("\n\n\n\n\n\n\n\n\n\nError calling the API:", error);
+    }
+  };
+
+  useEffect(() => {
+    insertNote();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <BackButton navigation={navigation} label="Note Details" />
@@ -178,6 +227,26 @@ export const LeadNotes = ({ navigation, route }) => {
               </View>
             ))}
           </View>
+
+          {/* Attachment Icon */}
+          <View style={{ width: "90%", justifyContent: "flex-start", alignItems: "center", alignSelf: "center", flexDirection: "row", marginTop: RFPercentage(1.2) }}>
+            <TouchableOpacity activeOpacity={0.8} onPress={handlePickDocument}>
+              <MaterialCommunityIcons name="attachment" style={{ fontSize: RFPercentage(3.5) }} color={"#06143b"} />
+            </TouchableOpacity>
+            {attachmentPicked && <Text style={{ marginLeft: RFPercentage(1), color: "green", fontSize: RFPercentage(1.8), fontFamily: FONTS.Medium }}>Attachment Picked</Text>}
+          </View>
+
+          {/* Display the selected file's URI */}
+          {/* {selectedFileURI.length > 0 && (
+            <View style={{ margin: RFPercentage(1) }}>
+              <Text style={{ fontSize: RFPercentage(1.8), fontFamily: FONTS.Regular, fontWeight: "bold" }}>Selected File URIs:</Text>
+              {selectedFileURI.map((uri, index) => (
+                <Text key={index.toString()} style={{ fontSize: RFPercentage(1.8), fontFamily: FONTS.Regular }}>
+                  {uri}
+                </Text>
+              ))}
+            </View>
+          )} */}
 
           {noteTypes && noteTypes.length > 0 ? (
             <View style={{ width: "90%", justifyContent: "center", alignItems: "center" }}>

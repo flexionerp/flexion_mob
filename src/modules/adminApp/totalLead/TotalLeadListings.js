@@ -88,7 +88,7 @@ export const TotalLeadListings = ({ navigation, route }) => {
 
       setApiResponse(response.data.data[0]);
     } catch (error) {
-      console.error("API Error:", error);
+      console.error("API Error :", error);
     }
   };
   useEffect(() => {
@@ -195,6 +195,24 @@ export const TotalLeadListings = ({ navigation, route }) => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
+              navigation.navigate("LabelWise", { apiResponse: apiResponse });
+            }}
+            activeOpacity={0.8}
+            style={{ marginTop: RFPercentage(2), backgroundColor: "lightgrey", width: "90%", height: RFPercentage(8), borderRadius: RFPercentage(2), justifyContent: "center", alignItems: "center" }}
+          >
+            <Text style={{ color: "#fff", fontSize: RFPercentage(2.2), fontFamily: FONTS.Medium }}>Label Wise</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("AgentWise", { apiResponse: apiResponse });
+            }}
+            activeOpacity={0.8}
+            style={{ marginTop: RFPercentage(2), backgroundColor: "#BC8F8F", width: "90%", height: RFPercentage(8), borderRadius: RFPercentage(2), justifyContent: "center", alignItems: "center" }}
+          >
+            <Text style={{ color: "#fff", fontSize: RFPercentage(2.2), fontFamily: FONTS.Medium }}>Agent Wise</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
               const filteredLeads = apiResponse.filter((lead) => lead.IS_EMAIL_SENT_AGENT === "1");
               navigation.navigate("TotalLeadMainListings", { leads: filteredLeads, noAction: true });
             }}
@@ -212,24 +230,6 @@ export const TotalLeadListings = ({ navigation, route }) => {
             style={{ marginTop: RFPercentage(2), backgroundColor: "#F4A460", width: "90%", height: RFPercentage(8), borderRadius: RFPercentage(2), justifyContent: "center", alignItems: "center" }}
           >
             <Text style={{ color: "#fff", fontSize: RFPercentage(2.2), fontFamily: FONTS.Medium }}>48 Hours No Action</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("LabelWise", { apiResponse: apiResponse });
-            }}
-            activeOpacity={0.8}
-            style={{ marginTop: RFPercentage(2), backgroundColor: "lightgrey", width: "90%", height: RFPercentage(8), borderRadius: RFPercentage(2), justifyContent: "center", alignItems: "center" }}
-          >
-            <Text style={{ color: "#fff", fontSize: RFPercentage(2.2), fontFamily: FONTS.Medium }}>Label Wise</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("AgentWise", { apiResponse: apiResponse });
-            }}
-            activeOpacity={0.8}
-            style={{ marginTop: RFPercentage(2), backgroundColor: "#BC8F8F", width: "90%", height: RFPercentage(8), borderRadius: RFPercentage(2), justifyContent: "center", alignItems: "center" }}
-          >
-            <Text style={{ color: "#fff", fontSize: RFPercentage(2.2), fontFamily: FONTS.Medium }}>Agent Wise</Text>
           </TouchableOpacity>
         </View>
         <View style={{ marginBottom: RFPercentage(14) }} />

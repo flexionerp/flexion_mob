@@ -12,10 +12,10 @@ import com.facebook.soloader.SoLoader;
 import com.flexion.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import com.github.wuxudong.rncharts.RNPdfView;
+// import com.github.wuxudong.rncharts.RNPdfView;
 import com.reactcommunity.rndatetimepicker.RNDateTimePickerPackage;
-import com.reactnativepdf.PDFViewPackage;
-import com.reactnativedocumentpicker.DocumentPickerPackage;
+// import com.reactnativepdf.PDFViewPackage;
+// import com.reactnativedocumentpicker.DocumentPickerPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -43,10 +43,10 @@ protected List<ReactPackage> getPackages() {
     List<ReactPackage> packages = new PackageList(this).getPackages();
     // Packages that cannot be autolinked yet can be added manually here, for example:
     // packages.add(new MyReactNativePackage());
-    packages.add(new RNPdfView()); // Add this line
-    packages.add(new RNDateTimePickerPackage()); // Add this line
-    packages.add(new PDFViewPackage());
-    packages.add(new DocumentPickerPackage());
+    // packages.add(new RNPdfView()); // Add this line
+    // packages.add(new RNDateTimePickerPackage()); // Add this line
+    // packages.add(new PDFViewPackage());
+    // packages.add(new DocumentPickerPackage());
 
     return packages;
 }

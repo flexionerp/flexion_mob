@@ -149,7 +149,7 @@ export const InboxMessagesScreen = ({ navigation, route }) => {
           {/* Buttons */}
           <View style={{ marginTop: RFPercentage(3), width: "90%", justifyContent: "flex-start", alignItems: "flex-start", alignSelf: "center" }}>
             <TouchableOpacity
-              onPress={() => navigation.navigate("ComposeMail")}
+              // onPress={() => navigation.navigate("ComposeMail")}
               activeOpacity={0.8}
               style={{ borderRadius: RFPercentage(1.5), justifyContent: "center", alignItems: "center", width: RFPercentage(14), height: RFPercentage(5), backgroundColor: "grey" }}
             >
@@ -161,8 +161,8 @@ export const InboxMessagesScreen = ({ navigation, route }) => {
                 navigation.navigate("SentMessagesScreen", {
                   title: "Send",
                   heading: "Recent Messages",
-                  Lead_Email: leadData.EMAIL,
-                  Lead_ID: leadData.ID,
+                  Lead_Email: Lead_Email,
+                  Lead_ID: Lead_ID,
                   type: "send",
                 }),
               ]}

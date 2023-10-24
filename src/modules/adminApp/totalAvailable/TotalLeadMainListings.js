@@ -9,6 +9,7 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import DropDownPicker from "react-native-dropdown-picker";
 import Axios from "axios";
 import { useSelector } from "react-redux";
+import { useFocusEffect } from "@react-navigation/native";
 
 // components
 import InputField from "../../../common/InputField";
@@ -65,161 +66,81 @@ export const TotalLeadMainListings = ({ navigation, route }) => {
     fetchMainListingData();
   }, []);
 
-  const handleViewButton = (leadData) => {
-    navigation.navigate("TotalLeadDetails", {
-      leadData: {
-        LAST_NAME: leadData.LAST_NAME,
-        ID: leadData.ID,
-        MOBILE: leadData.MOBILE?.toString() || "",
-        EMAIL: leadData.EMAIL,
-        BUDGET: leadData.BUDGET,
-        COUNTRY: leadData.COUNTRY,
-        CITY: leadData.CITY,
-        ADDRESS: leadData.ADDRESS,
-        LEAD_STATUS: leadData.LEAD_STATUS,
-        LEAD_SOURCE: leadData.LEAD_SOURCE,
-        COMPANY: leadData.COMPANY,
-        BROKER: leadData.BROKER,
-        POBOX: leadData.POBOX,
-        FIRST_NAME: leadData.FIRST_NAME,
-        BUDGET_MAX: leadData.BUDGET_MAX,
-      },
-    });
+  const refreshMainListing = () => {
+    // You can put any code here that needs to be executed on a full refresh.
+    // For example, you can refetch data from the server.
+    fetchMainListingData();
   };
 
-  // const renderItem = () => {
-  //   const filteredData = agentListingData.filter((item) => {
-  //     if (unreadOnly) {
-  //       return (
-  //         item.IS_READ === "0" &&
-  //         ((item.FIRST_NAME?.toLowerCase() || "").includes(searchText.toLowerCase()) ||
-  //           (item.AGENT?.toLowerCase() || "").includes(searchText.toLowerCase()) ||
-  //           (item.LEAD_STATUS?.toLowerCase() || "").includes(searchText.toLowerCase()))
-  //       );
-  //     }
-
-  //     if (noAction) {
-  //       return (
-  //         item.IS_EMAIL_SENT_AGENT === "1" &&
-  //         ((item.FIRST_NAME?.toLowerCase() || "").includes(searchText.toLowerCase()) ||
-  //           (item.AGENT?.toLowerCase() || "").includes(searchText.toLowerCase()) ||
-  //           (item.LEAD_STATUS?.toLowerCase() || "").includes(searchText.toLowerCase()))
-  //       );
-  //     }
-  //     if (hours) {
-  //       return (
-  //         item.IS_EMAIL_SENT === "1" &&
-  //         ((item.FIRST_NAME?.toLowerCase() || "").includes(searchText.toLowerCase()) ||
-  //           (item.AGENT?.toLowerCase() || "").includes(searchText.toLowerCase()) ||
-  //           (item.LEAD_STATUS?.toLowerCase() || "").includes(searchText.toLowerCase()))
-  //       );
-  //     }
-  //     if (labelType) {
-  //       return (
-  //         item.LEAD_TYPE === labelType &&
-  //         ((item.FIRST_NAME?.toLowerCase() || "").includes(searchText.toLowerCase()) ||
-  //           (item.AGENT?.toLowerCase() || "").includes(searchText.toLowerCase()) ||
-  //           (item.LEAD_STATUS?.toLowerCase() || "").includes(searchText.toLowerCase()))
-  //       );
-  //     }
-  //     if (agentName) {
-  //       return (
-  //         item.AGENT === agentName &&
-  //         ((item.FIRST_NAME?.toLowerCase() || "").includes(searchText.toLowerCase()) ||
-  //           (item.AGENT?.toLowerCase() || "").includes(searchText.toLowerCase()) ||
-  //           (item.LEAD_STATUS?.toLowerCase() || "").includes(searchText.toLowerCase()))
-  //       );
-  //     }
-
-  //     return (
-  //       item.LEAD_STATUS === category &&
-  //       ((item.FIRST_NAME?.toLowerCase() || "").includes(searchText.toLowerCase()) ||
-  //         (item.AGENT?.toLowerCase() || "").includes(searchText.toLowerCase()) ||
-  //         (item.LEAD_STATUS?.toLowerCase() || "").includes(searchText.toLowerCase()))
-  //     );
+  // const handleViewButton = (leadData) => {
+  //   navigation.navigate("TotalLeadDetails", {
+  //     leadData: {
+  //       LAST_NAME: filterData.LAST_NAME,
+  //       ID: filterData.ID,
+  //       MOBILE: filterData.MOBILE?.toString() || "",
+  //       EMAIL: filterData.EMAIL,
+  //       BUDGET: filterData.BUDGET,
+  //       COUNTRY: filterData.COUNTRY,
+  //       CITY: filterData.CITY,
+  //       ADDRESS: filterData.ADDRESS,
+  //       LEAD_STATUS: filterData.LEAD_STATUS,
+  //       LEAD_SOURCE: filterData.LEAD_SOURCE,
+  //       COMPANY: filterData.COMPANY,
+  //       BROKER: filterData.BROKER,
+  //       POBOX: filterData.POBOX,
+  //       FIRST_NAME: filterData.FIRST_NAME,
+  //       BUDGET_MAX: filterData.BUDGET_MAX,
+  //     },
   //   });
+  // };
 
-  //   if (mainListingLoading) {
-  //     return <ActivityIndicator style={{ marginTop: RFPercentage(4) }} size="large" color={"#06143b"} />;
-  //   }
+  const handleViewButton = (leadData) => {
+    navigation.navigate(
+      "TotalLeadDetails",
+      {
+        FIRST_NAME: leadData.FIRST_NAME || undefined,
+        ID: leadData.ID || undefined,
+        MOBILE: leadData.MOBILE?.toString() || "",
+        EMAIL: leadData.EMAIL || undefined,
+        BUDGET: leadData.BUDGET || undefined,
+        COUNTRY: leadData.COUNTRY || undefined,
+        CITY: leadData.CITY || undefined,
+        ADDRESS: leadData.ADDRESS || undefined,
+        LEAD_STATUS: leadData.LEAD_STATUS || undefined,
+        PCOUNTRY_ID: leadData.PCOUNTRY_ID?.toString() || "",
+        LEAD_SOURCE: leadData.LEAD_SOURCE || undefined,
+        COMPANY: leadData.COMPANY || undefined,
+        BROKER: leadData.BROKER || undefined,
+        POBOX: leadData.POBOX || undefined,
+        LAST_NAME: leadData.LAST_NAME || undefined,
+        BUDGET_MAX: leadData.BUDGET_MAX?.toString() || "",
+        BUDGET_MIN: leadData.BUDGET_MIN?.toString() || "",
+        BHK1: leadData.BHK1?.toString() || "",
+        BHK2: leadData.BHK2?.toString() || "",
+        BHK3: leadData.BHK3?.toString() || "",
+        OFFICE: leadData.OFFICE?.toString() || "",
+        RETAIL: leadData.RETAIL?.toString() || "",
+        STUDIO: leadData.STUDIO?.toString() || "",
+      },
+      {
+        unmountOnBlur: true,
+      },
+    );
+  };
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={refreshMainListing} activeOpacity={0.5}>
+          <Text style={styles.refreshButtonText}>Refresh</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, []);
 
   const handleTimeLineButton = (leadId, userName, createDate) => {
     navigation.navigate("TimeLine", { leadId, userName, createDate });
   };
-
-  //   return filteredData.map((item, index) => (
-  //     <ImageBackground key={index} source={require("../../../assets/images/unitBG.png")} style={[styles.backgroundCartImage, { marginTop: index == 0 ? RFPercentage(2) : RFPercentage(2) }]}>
-  //       <View style={styles.subContainerCart}>
-  //         <View style={styles.cartDetailsView}>
-  //           <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", width: "100%", alignSelf: "center" }}>
-  //             <Text style={styles.unitCodeStyle}>
-  //               {item.FIRST_NAME && item.FIRST_NAME.length > 0 ? (item.FIRST_NAME.length > 15 ? item.FIRST_NAME.substring(0, 15) + "..." : item.FIRST_NAME) : "Null"}
-  //             </Text>
-  //             <View style={{ justifyContent: "center", alignItems: "center", flexDirection: "row", position: "absolute", right: 0 }}>
-  //               <TouchableOpacity activeOpacity={0.8} onPress={() => handleTimeLineButton(item.ID, item.USER_NAME, item.CREATE_DATE)}>
-  //                 <MaterialCommunityIcons name="timeline-text-outline" style={{ fontSize: RFPercentage(3.2), marginRight: RFPercentage(-0.4) }} color={"#06143b"} />
-  //               </TouchableOpacity>
-  //               <Text style={{ marginLeft: RFPercentage(1), fontSize: RFPercentage(1.7), color: "#06143b", fontWeight: "bold" }}>
-  //                 {item.LEAD_AGE === null ? `${item.DIFF / 60} Hours ${item.DIFF % 60} Minutes` : `${item.LEAD_AGE} day(s)`}
-  //               </Text>
-  //             </View>
-  //           </View>
-  //           <TouchableOpacity
-  //             activeOpacity={0.8}
-  //             onPress={() => {
-  //               handleLeadIDLeadStatusID(item.ID, item.LEAD_STATUS_ID);
-  //               toggleMenu3();
-  //             }}
-  //           >
-  //             <Text style={{ fontSize: RFPercentage(1.8), color: "#06143b", fontFamily: FONTS.Medium, marginTop: RFPercentage(2) }}>{item.AGENT || "Null"}</Text>
-  //           </TouchableOpacity>
-  //           <TouchableOpacity
-  //             activeOpacity={0.8}
-  //             onPress={() => {
-  //               handleLeadID(item.ID);
-  //               toggleMenu4();
-  //             }}
-  //           >
-  //             <Text style={{ fontSize: RFPercentage(1.8), color: "#06143b", fontFamily: FONTS.Medium, marginTop: RFPercentage(1) }}>{item.LEAD_TYPE || "Null"}</Text>
-  //           </TouchableOpacity>
-  //           <TouchableOpacity
-  //             activeOpacity={0.8}
-  //             style={{ marginTop: RFPercentage(1), flexDirection: "row", justifyContent: "center", alignItems: "center" }}
-  //             onPress={() => {
-  //               if (item.LEAD_STATUS !== "JUNK") {
-  //                 navigation.navigate("LeadStatusChange", { currentStatus: item.LEAD_STATUS });
-  //               }
-  //             }}
-  //           >
-  //             <MaterialCommunityIcons name="label-multiple-outline" style={{ fontSize: RFPercentage(3.2), marginRight: 3 }} color={"#06143b"} />
-  //             <Text style={{ fontSize: RFPercentage(1.8), color: "#06143b", fontFamily: FONTS.Medium }}>{item.LEAD_STATUS}</Text>
-  //             {/* <Text style={{ marginLeft: RFPercentage(1), fontSize: RFPercentage(1.8), color: "#06143b", fontFamily: FONTS.Medium }}>{item.ID}</Text> */}
-  //           </TouchableOpacity>
-
-  //           <View style={styles.priceListingButtonContainer}>
-  //             <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-  //               {item.LEAD_SOURCE === "Email" ? (
-  //                 <TouchableOpacity activeOpacity={0.8}>
-  //                   <MaterialCommunityIcons name="email-outline" style={{ fontSize: RFPercentage(2.5), marginRight: 5 }} color={"#06143b"} />
-  //                 </TouchableOpacity>
-  //               ) : item.LEAD_SOURCE === "Whatsapp" ? (
-  //                 <TouchableOpacity activeOpacity={0.8}>
-  //                   <MaterialCommunityIcons name="whatsapp" style={{ fontSize: RFPercentage(2.5), marginRight: 5 }} color={"#06143b"} />
-  //                 </TouchableOpacity>
-  //               ) : (
-  //                 <Text style={{ fontSize: RFPercentage(1.8), color: "#06143b", fontFamily: FONTS.Medium }}>{item.LEAD_SOURCE}</Text>
-  //               )}
-  //             </View>
-  //             <TouchableOpacity onPress={() => handleViewButton(item)} activeOpacity={0.5} style={styles.priceListingButton}>
-  //               <MaterialCommunityIcons name="label-multiple" style={{ fontSize: RFPercentage(2.2), marginRight: 5 }} color={"#06143b"} />
-  //               <Text style={styles.priceListingTextStyle}>View</Text>
-  //             </TouchableOpacity>
-  //           </View>
-  //         </View>
-  //       </View>
-  //     </ImageBackground>
-  //   ));
-  // };
 
   const filterData = () => {
     return agentListingData.filter((item) => {
@@ -368,7 +289,7 @@ export const TotalLeadMainListings = ({ navigation, route }) => {
   const fetchLeadTypes = async () => {
     try {
       const response = await Axios.get(`${Url}get_all_leadTypes`);
-      console.log("Tag API Response:", response.data);
+      // console.log("Tag API Response:", response.data);
       setLeadTypes(response.data);
       setFilteredTagData(response.data);
       // Set the leadTypes state with the data
@@ -427,20 +348,16 @@ export const TotalLeadMainListings = ({ navigation, route }) => {
     }
   };
 
-  const [data, setData] = useState([]); // Your data state
-
-  useEffect(() => {
-    // Simulate a network request (you should replace this with your actual data fetching code)
-    setTimeout(() => {
-      const fetchedData = fetchData(); // Replace with your data fetching logic
-      setData(fetchedData);
-      setLoading(false); // Data is loaded, so set loading to false
-    }, 2000); // Simulating a 2-second delay for data fetching
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchMainListingData();
+      fetchData();
+    }, []),
+  );
 
   return (
     <SafeAreaView style={styles.container}>
-      <BackButton navigation={navigation} label="Total Assign Leads" />
+      <BackButton navigation={navigation} label="Dashboard" />
       {/* Input field */}
       <View style={{ marginTop: RFPercentage(1), justifyContent: "center", alignItems: "center", width: "100%" }}>
         {inputField.map((item, i) => (
@@ -464,8 +381,8 @@ export const TotalLeadMainListings = ({ navigation, route }) => {
           </View>
         ))}
       </View>
-      {/* FlatList Data Listing */}
 
+      {/* FlatList Data Listing */}
       {mainListingLoading ? (
         <ActivityIndicator style={{ marginTop: RFPercentage(3) }} size="large" color={"#06143b"} />
       ) : (
@@ -494,12 +411,15 @@ export const TotalLeadMainListings = ({ navigation, route }) => {
                       </View>
                       <TouchableOpacity
                         activeOpacity={0.8}
+                        style={{
+                          marginTop: RFPercentage(1.5),
+                        }}
                         onPress={() => {
                           handleLeadIDLeadStatusID(item.ID, item.LEAD_STATUS_ID);
                           toggleMenu3();
                         }}
                       >
-                        <Text style={{ fontSize: RFPercentage(1.8), color: "#06143b", fontFamily: FONTS.Medium, marginTop: RFPercentage(2) }}>{item.AGENT || "Null"}</Text>
+                        <Text style={{ textDecorationLine: "underline", fontSize: RFPercentage(1.8), color: "#06143b", fontFamily: FONTS.Medium }}>{item.AGENT || "Null"}</Text>
                       </TouchableOpacity>
                       <TouchableOpacity
                         activeOpacity={0.8}
@@ -508,11 +428,14 @@ export const TotalLeadMainListings = ({ navigation, route }) => {
                           toggleMenu4();
                         }}
                       >
-                        <Text style={{ fontSize: RFPercentage(1.8), color: "#06143b", fontFamily: FONTS.Medium, marginTop: RFPercentage(1) }}>{item.LEAD_TYPE || "Null"}</Text>
+                        <Text style={{ textDecorationLine: "underline", fontSize: RFPercentage(1.8), color: "#06143b", fontFamily: FONTS.Medium, marginTop: RFPercentage(1.5) }}>
+                          {item.LEAD_TYPE || "Null"}
+                        </Text>
                       </TouchableOpacity>
+
                       <TouchableOpacity
                         activeOpacity={0.8}
-                        style={{ marginTop: RFPercentage(1), flexDirection: "row", justifyContent: "center", alignItems: "center" }}
+                        style={{ marginTop: RFPercentage(1.5), flexDirection: "row", justifyContent: "center", alignItems: "center" }}
                         onPress={() => {
                           if (item.LEAD_STATUS !== "JUNK") {
                             navigation.navigate("LeadStatusChange", { currentStatus: item.LEAD_STATUS });
@@ -521,7 +444,9 @@ export const TotalLeadMainListings = ({ navigation, route }) => {
                       >
                         <MaterialCommunityIcons name="label-multiple-outline" style={{ fontSize: RFPercentage(3.2), marginRight: 3 }} color={"#06143b"} />
                         <Text style={{ fontSize: RFPercentage(1.8), color: "#06143b", fontFamily: FONTS.Medium }}>{item.LEAD_STATUS}</Text>
-                        {/* <Text style={{ marginLeft: RFPercentage(1), fontSize: RFPercentage(1.8), color: "#06143b", fontFamily: FONTS.Medium }}>{item.ID}</Text> */}
+                        <Text style={{ fontSize: RFPercentage(1.8), color: "#06143b", fontFamily: FONTS.Medium }}>{item.ID || "Null"}</Text>
+                        {/* <Text style={{ fontSize: RFPercentage(1.8), color: "#06143b", fontFamily: FONTS.Medium }}>{item.PCOUNTRY_ID || "Null"}</Text> */}
+                        {/* <Text style={{ fontSize: RFPercentage(1.8), color: "#06143b", fontFamily: FONTS.Medium }}>{item.CITY || "Null"}</Text> */}
                       </TouchableOpacity>
 
                       <View style={styles.priceListingButtonContainer}>
@@ -584,7 +509,7 @@ export const TotalLeadMainListings = ({ navigation, route }) => {
                 borderColor: COLORS.borderColor,
                 borderWidth: RFPercentage(0.1),
                 borderRadius: RFPercentage(1.2),
-                padding: RFPercentage(2),
+                padding: RFPercentage(1.6),
                 justifyContent: "flex-start",
                 alignItems: "center",
                 flexDirection: "row",
@@ -691,7 +616,7 @@ export const TotalLeadMainListings = ({ navigation, route }) => {
                 borderColor: COLORS.borderColor,
                 borderWidth: RFPercentage(0.1),
                 borderRadius: RFPercentage(1.2),
-                padding: RFPercentage(2),
+                padding: RFPercentage(1.6),
                 justifyContent: "flex-start",
                 alignItems: "center",
                 flexDirection: "row",

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, SafeAreaView, ImageBackground, Image } from "react-native";
-import { COLORS, FONTS } from "../../../constants";
+import { COLORS, FONTS, Url } from "../../../constants";
 import { BackButton } from "../../../common/backButton";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -27,7 +27,7 @@ export const PriceSetup = ({ navigation, route }) => {
   }, []);
 
   const fetchDataFromApi = async () => {
-    const apiUrl = "http://tvh.flexion.ae:9091/get_pricesetup_units_API";
+    const apiUrl = `${Url}get_pricesetup_units_API`;
     const queryParams = {
       prop_code: "",
       org: "33",
