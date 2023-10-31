@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, TextInput, Modal, Image, Alert, ActivityIndicator } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, TextInput, Modal, Image, Alert, ActivityIndicator, Platform } from "react-native";
 import { COLORS, FONTS, Url } from "../../../constants";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -397,6 +397,10 @@ export const TotalLeadDetails = ({ navigation, route }) => {
       setPOBox(pobox);
       updateLeadPOBOX();
     }
+    if (field === "company") {
+      setCompany(company);
+      updateLeadCompany();
+    }
   };
 
   const handleCancel = (field) => {
@@ -585,6 +589,28 @@ export const TotalLeadDetails = ({ navigation, route }) => {
     }
   };
 
+  // Company
+  const updateLeadCompany = async () => {
+    try {
+      const response = await fetch(`${Url}updatecompanyforlead_api?company=${company}&id=${ID}`);
+      const data = await response.json();
+      console.log("\n\n\n\n\n\n\n\n\n\n\n\n\nLead Address Successfully Updated");
+    } catch (error) {
+      console.error("\n\n\n\n\n\n\n\n\n\n\n\n\nLead Address Update Error:", error);
+    }
+  };
+
+  // Decision making date
+  // const updateLeadDMD = async () => {
+  //   try {
+  //     const response = await fetch(`${Url}update_ex_date_for_lead_api?ex_date=${selectedDate}&id=${ID}`);
+  //     const data = await response.json();
+  //     console.log("\n\n\n\n\n\n\n\n\n\n\n\n\nLead Address Successfully Updated");
+  //   } catch (error) {
+  //     console.error("\n\n\n\n\n\n\n\n\n\n\n\n\nLead Address Update Error:", error);
+  //   }
+  // };
+
   // PCountry
   const [loadingPSave, setLoadingPSave] = useState(false);
   const [open4, setOpen4] = useState(false);
@@ -753,6 +779,7 @@ export const TotalLeadDetails = ({ navigation, route }) => {
         <Text>{OFFICE}</Text>
         <Text>{RETAIL}</Text>
         <Text>{STUDIO}</Text> */}
+        {/* <Text>{FIRST_NAME}</Text> */}
         <View style={{ justifyContent: "center", alignItems: "center", width: "100%" }}>
           <View style={{ marginTop: RFPercentage(3), width: "86%", flexDirection: "row", justifyContent: "space-between", alignItems: "center", alignSelf: "center" }}>
             <TouchableOpacity
@@ -809,6 +836,27 @@ export const TotalLeadDetails = ({ navigation, route }) => {
                     alignSelf: "center",
                   }}
                 >
+                  {/* {Platform.OS == 'android' ? 
+                 <>
+                    {
+                      item.value === "" && (
+                    <Text
+                      style={{
+                        position: "absolute",
+                        left: RFPercentage(2),
+                        color: "#9CBBD2",
+                        fontFamily: FONTS.Regular,
+                      }}
+                    >
+                      {item.label}
+                    </Text>
+                    )
+                      }
+                      </>
+                    :
+                    null
+                }
+                  */}
                   <TextInput
                     multiline={item.decs ? true : null}
                     placeholder={item.label}
@@ -907,11 +955,7 @@ export const TotalLeadDetails = ({ navigation, route }) => {
                               <Text style={{ fontSize: RFPercentage(2), color: "#06143b", fontFamily: FONTS.Medium }}>3 BHK</Text>
                             </View>
                             <View style={{ marginTop: RFPercentage(2), flexDirection: "row", alignItems: "center" }}>
-                              <CheckBox
-                                style={{ transform: [{ scale: 0.8 }] }} // Adjust scale value to control checkbox size
-                                value={checkbox5}
-                                onValueChange={(value) => handleCheckboxChange(5, value)}
-                              />
+                              <CheckBox style={{ transform: [{ scale: 0.8 }] }} value={checkbox5} onValueChange={(value) => handleCheckboxChange(5, value)} />
                               <Text style={{ fontSize: RFPercentage(2), color: "#06143b", fontFamily: FONTS.Medium }}>OFFICE</Text>
                               <CheckBox style={{ transform: [{ scale: 0.8 }], marginLeft: RFPercentage(1.8) }} value={checkbox6} onValueChange={(value) => handleCheckboxChange(6, value)} />
                               <Text style={{ fontSize: RFPercentage(2), color: "#06143b", fontFamily: FONTS.Medium }}>Retail</Text>
@@ -950,7 +994,7 @@ export const TotalLeadDetails = ({ navigation, route }) => {
                       <View style={{ width: "86%", alignSelf: "center", marginTop: RFPercentage(3) }}>
                         <DropDownPicker
                           placeholder="Country"
-                          loading={loading} // Use the loading prop to show the loading indicator
+                          loading={loading}
                           placeholderStyle={{ color: COLORS.normalText }}
                           style={{
                             marginBottom: open2 ? RFPercentage(25) : 0,
@@ -1028,8 +1072,8 @@ export const TotalLeadDetails = ({ navigation, route }) => {
                     {i === 16 ? (
                       <View style={{ width: "86%", alignSelf: "center", marginTop: RFPercentage(3) }}>
                         <DropDownPicker
-                          placeholder={value4} // Set the placeholder dynamically
-                          loading={loading} // Use the loading prop to show the loading indicator
+                          placeholder={value4}
+                          loading={loading}
                           placeholderStyle={{ color: COLORS.normalText }}
                           style={{
                             marginBottom: open4 ? RFPercentage(25) : 0,

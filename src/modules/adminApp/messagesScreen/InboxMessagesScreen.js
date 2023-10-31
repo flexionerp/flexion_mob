@@ -20,7 +20,6 @@ export const InboxMessagesScreen = ({ navigation, route }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const messagesPerPage = 6;
 
-  // Calculate the index range for the current page
   const startIndex = (currentPage - 1) * messagesPerPage;
   const endIndex = startIndex + messagesPerPage;
 
@@ -33,13 +32,10 @@ export const InboxMessagesScreen = ({ navigation, route }) => {
     const apiUrl = `${Url}mailbox_api?type=${type}&rid=0&E=${Lead_Email}&LEAD_ID=${Lead_ID}`;
     setLoading(true);
 
-    // Make a GET request to the API
     fetch(apiUrl)
       .then((response) => response.json())
       .then((data) => {
-        // Set the inbox data in state
         setInboxData(data);
-        // Log the result to the console
         setLoading(false);
 
         console.log("Mail API Response", data);
@@ -56,11 +52,9 @@ export const InboxMessagesScreen = ({ navigation, route }) => {
     const randomIndex = Math.floor(Math.random() * colors.length);
     return colors[randomIndex];
   };
-  // Render the inbox messages
 
   const renderInboxMessages = () => {
     if (loading) {
-      // Render a loader while loading
       return (
         <View style={{ justifyContent: "center", alignItems: "center", marginTop: RFPercentage(4) }}>
           <ActivityIndicator size="large" color={COLORS.boldText} />
@@ -68,7 +62,6 @@ export const InboxMessagesScreen = ({ navigation, route }) => {
       );
     }
     if (inboxData.length === 0) {
-      // If the inboxData is empty, display a message
       return (
         <View style={{ justifyContent: "center", alignItems: "center", marginTop: RFPercentage(4) }}>
           <Text style={{ fontSize: 16, color: "grey" }}>No Data To Show</Text>
@@ -149,7 +142,7 @@ export const InboxMessagesScreen = ({ navigation, route }) => {
           {/* Buttons */}
           <View style={{ marginTop: RFPercentage(3), width: "90%", justifyContent: "flex-start", alignItems: "flex-start", alignSelf: "center" }}>
             <TouchableOpacity
-              // onPress={() => navigation.navigate("ComposeMail")}
+              onPress={() => navigation.navigate("ComposeMail", { lead_email: Lead_Email, lead_id: Lead_ID })}
               activeOpacity={0.8}
               style={{ borderRadius: RFPercentage(1.5), justifyContent: "center", alignItems: "center", width: RFPercentage(14), height: RFPercentage(5), backgroundColor: "grey" }}
             >

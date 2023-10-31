@@ -67,8 +67,6 @@ export const TotalLeadMainListings = ({ navigation, route }) => {
   }, []);
 
   const refreshMainListing = () => {
-    // You can put any code here that needs to be executed on a full refresh.
-    // For example, you can refetch data from the server.
     fetchMainListingData();
   };
 
@@ -437,14 +435,14 @@ export const TotalLeadMainListings = ({ navigation, route }) => {
                         activeOpacity={0.8}
                         style={{ marginTop: RFPercentage(1.5), flexDirection: "row", justifyContent: "center", alignItems: "center" }}
                         onPress={() => {
-                          if (item.LEAD_STATUS !== "JUNK") {
-                            navigation.navigate("LeadStatusChange", { currentStatus: item.LEAD_STATUS });
+                          if (item.LEAD_STATUS !== "JUNK" && item.LEAD_STATUS !== "DEAL") {
+                            navigation.navigate("LeadStatusChange", { currentStatus: item.LEAD_STATUS, leadID: item.ID });
                           }
                         }}
                       >
                         <MaterialCommunityIcons name="label-multiple-outline" style={{ fontSize: RFPercentage(3.2), marginRight: 3 }} color={"#06143b"} />
                         <Text style={{ fontSize: RFPercentage(1.8), color: "#06143b", fontFamily: FONTS.Medium }}>{item.LEAD_STATUS}</Text>
-                        <Text style={{ fontSize: RFPercentage(1.8), color: "#06143b", fontFamily: FONTS.Medium }}>{item.ID || "Null"}</Text>
+                        {/* <Text style={{ fontSize: RFPercentage(1.8), color: "#06143b", fontFamily: FONTS.Medium }}>{item.ID || "Null"}</Text> */}
                         {/* <Text style={{ fontSize: RFPercentage(1.8), color: "#06143b", fontFamily: FONTS.Medium }}>{item.PCOUNTRY_ID || "Null"}</Text> */}
                         {/* <Text style={{ fontSize: RFPercentage(1.8), color: "#06143b", fontFamily: FONTS.Medium }}>{item.CITY || "Null"}</Text> */}
                       </TouchableOpacity>

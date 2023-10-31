@@ -6,13 +6,14 @@ import { RFPercentage } from "react-native-responsive-fontsize";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { Url } from "../../../constants";
+import { useFocusEffect } from "@react-navigation/native";
 
 // components
 import InputField from "../../../common/InputField";
 
 export const TotalLeadListings = ({ navigation, route }) => {
   const { token } = useSelector((state) => state.user);
-  const [firstObject, setFirstObject] = useState(null); // Initialize with null
+  const [firstObject, setFirstObject] = useState(null);
 
   const [apiResponse, setApiResponse] = useState([]);
 
@@ -24,7 +25,7 @@ export const TotalLeadListings = ({ navigation, route }) => {
   const [lostCount, setLostCount] = useState(0);
   const [hotCount, setHotCount] = useState(0);
 
-  const [totalLeadCount, setTotalLeadCount] = useState(0); // Initialize with 0
+  const [totalLeadCount, setTotalLeadCount] = useState(0);
 
   const makeApiRequest = async () => {
     try {
@@ -68,15 +69,12 @@ export const TotalLeadListings = ({ navigation, route }) => {
             case "HOT":
               hotCount++;
               break;
-            // Add more cases for other lead statuses as needed
           }
         });
       }
 
-      // Set the total lead count in state
       setTotalLeadCount(leadCount);
 
-      // Set the counts for each lead status in state
       setColdCount(coldCount);
       setWarmCount(warmCount);
       setJunkCount(junkCount);
@@ -121,6 +119,26 @@ export const TotalLeadListings = ({ navigation, route }) => {
   }
 
   const chunkedCategories = chunkArray(categories, 3);
+
+  // const refreshMainListing = () => {
+  //   makeApiRequest();
+  // };
+
+  // useEffect(() => {
+  //   navigation.setOptions({
+  //     headerRight: () => (
+  //       <TouchableOpacity onPress={refreshMainListing} activeOpacity={0.5}>
+  //         <Text style={styles.refreshButtonText}>Refresh</Text>
+  //       </TouchableOpacity>
+  //     ),
+  //   });
+  // }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      makeApiRequest();
+    }, []),
+  );
   return (
     <SafeAreaView style={styles.container}>
       <BackButton navigation={navigation} label="Total Assign Leads" />

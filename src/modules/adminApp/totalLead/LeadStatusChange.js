@@ -1,15 +1,24 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, TextInput, FlatList } from "react-native";
-import { COLORS, FONTS, Url } from "../../../constants";
-import { BackButton } from "../../../common/backButton";
+import React, { useState } from "react";
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, TextInput, Alert } from "react-native";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import DropDownPicker from "react-native-dropdown-picker";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { COLORS, FONTS, Url } from "../../../constants";
+import { BackButton } from "../../../common/backButton";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import moment from "moment";
 
 export const LeadStatusChange = ({ navigation, route }) => {
   const currentStatus = route.params?.currentStatus;
+  const leadID = route.params?.leadID;
+  const { token } = useSelector((state) => state.user);
+  const [reasonForLost, setReasonForLost] = useState("");
+  const [budgetMaxValue, setBudgetMaxValue] = useState("");
+  const [isSimpleLeadStatusSaving, setSimpleLeadStatusSaving] = useState(false);
+  const [isChecklistLeadStatusSaving, setChecklistLeadStatusSaving] = useState(false);
 
   // Dropdown
   const [open, setOpen] = useState(false);
@@ -17,13 +26,14 @@ export const LeadStatusChange = ({ navigation, route }) => {
   const [isCleared, setIsCleared] = useState(false);
 
   const [items, setItems] = useState([
-    { label: "COLD", value: "COLD" },
-    { label: "WARM", value: "WARM" },
-    { label: "HOT", value: "HOT" },
-    { label: "LOST", value: "LOST" },
-    { label: "JUNK", value: "JUNK" },
+    { label: "COLD", value: 2 },
+    { label: "WARM", value: 3 },
+    { label: "HOT", value: 4 },
+    { label: "LOST", value: 6 },
+    { label: "JUNK", value: 5 },
+    { label: "DEAL", value: 7 },
   ]);
-  const filteredItems = items.filter((item) => item.value !== currentStatus);
+  const filteredItems = items.filter((item) => item.label !== currentStatus).filter((item) => !(["ASSIGNED", "LOST"].includes(currentStatus) && item.value === 7));
 
   // Checks
   const [isChecked1, setIsChecked1] = useState(false);
@@ -67,6 +77,105 @@ export const LeadStatusChange = ({ navigation, route }) => {
     return date.toLocaleDateString(undefined, options);
   };
 
+  const calculateMaxDate = () => {
+    const currentDate = new Date();
+    if (value === 4) {
+      return moment(currentDate).add(15, "days").toDate();
+    }
+    if (value === 3) {
+      return moment(currentDate).add(30, "days").toDate();
+    }
+    return moment(currentDate).toDate();
+  };
+
+  // Simple API
+  const updateSimpleLeadStatus = async () => {
+    try {
+      const response = await axios.get(`${Url}update_lead_status_api`, {
+        params: {
+          pk: leadID,
+          status: value,
+          user_id: token,
+        },
+      });
+
+      console.log("\n\n\n\n\n\n\n\n\nSuccessfully Status Updated", response.data);
+      Alert.alert("Status Updated Successfully", "Success!", [
+        {
+          text: "OK",
+          onPress: () => {
+            navigation.goBack();
+          },
+        },
+      ]);
+    } catch (error) {
+      console.error("API Error:", error);
+    }
+  };
+
+  // Simple API
+  const updateLostLeadStatus = async () => {
+    try {
+      const response = await axios.get(`${Url}lead_lost_manually_api`, {
+        params: {
+          lead_id: leadID,
+          user_id: token,
+          comments: reasonForLost,
+        },
+      });
+
+      console.log("\n\n\n\n\n\n\n\n\nSuccessfully Lost Status Updated", response.data);
+      Alert.alert("Status Updated Successfully", "Success!", [
+        {
+          text: "OK",
+          onPress: () => {
+            navigation.goBack();
+          },
+        },
+      ]);
+    } catch (error) {
+      console.error("API Error:", error);
+    }
+  };
+
+  // Chec List
+  const updateChecklistLeadStatus = async () => {
+    if (!selectedDate) {
+      Alert.alert("Please select a Decision Making Date", "Kindly pick a date.");
+      return;
+    }
+
+    if (isChecked2 && !budgetMaxValue) {
+      Alert.alert("Please enter a value for Budget Matching", "Kindly input a value.");
+      return;
+    }
+    try {
+      const response = await axios.get(`${Url}lead_change_statusWARM_api`, {
+        params: {
+          dur_date: selectedDate,
+          budget_max: budgetMaxValue,
+          to_status: value,
+          funding: isChecked1 ? 1 : 0,
+          budget: isChecked2 ? 1 : 0,
+          id: leadID,
+          user_id: token,
+        },
+      });
+
+      console.log("\n\n\n\n\n\n\n\n\nStatus Updated Successfully", response.data);
+      Alert.alert("Status Updated Successfully", "Success!", [
+        {
+          text: "OK",
+          onPress: () => {
+            navigation.goBack();
+          },
+        },
+      ]);
+    } catch (error) {
+      console.error("API Error:", error);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <BackButton navigation={navigation} label="Lead Listing" />
@@ -104,7 +213,7 @@ export const LeadStatusChange = ({ navigation, route }) => {
           </View>
 
           {/* Reason for lost */}
-          {value == "LOST" ? (
+          {value == 6 ? (
             <View
               style={{
                 width: "90%",
@@ -121,13 +230,15 @@ export const LeadStatusChange = ({ navigation, route }) => {
                 maxHeight={RFPercentage(14)}
                 scrollEnabled={true}
                 multiline={true}
+                value={reasonForLost}
+                onChangeText={(text) => setReasonForLost(text)}
                 style={{ height: "100%", fontSize: RFPercentage(2), width: "96%", position: "absolute", left: RFPercentage(1.5), top: RFPercentage(0.5) }}
               />
             </View>
           ) : null}
 
           {/* CheckList */}
-          {(value == "WARM" || value == "HOT") && currentStatus !== "HOT" ? (
+          {(value == 3 || value == 4) && currentStatus !== 4 ? (
             <View style={{ width: "100%", marginTop: open ? RFPercentage(30) : RFPercentage(4), justifyContent: "center", alignItems: "center", alignSelf: "center" }}>
               <Text style={{ fontSize: RFPercentage(2.2), color: "#06143b", fontFamily: FONTS.Medium }}>CheckList</Text>
 
@@ -159,7 +270,19 @@ export const LeadStatusChange = ({ navigation, route }) => {
                     alignItems: "center",
                   }}
                 >
-                  <TextInput placeholder="0" placeholderTextColor={"grey"} keyboardType="numeric" style={{ width: "90%", fontWeight: "600", fontSize: RFPercentage(1.9), color: COLORS.dark }} />
+                  <TextInput
+                    placeholder="0"
+                    placeholderTextColor={"grey"}
+                    keyboardType="numeric"
+                    style={{
+                      width: "90%",
+                      fontWeight: "600",
+                      fontSize: RFPercentage(1.9),
+                      color: COLORS.dark,
+                    }}
+                    value={budgetMaxValue}
+                    onChangeText={(text) => setBudgetMaxValue(text)}
+                  />
                 </View>
               ) : null}
 
@@ -185,18 +308,37 @@ export const LeadStatusChange = ({ navigation, route }) => {
                   onConfirm={handleConfirm}
                   onCancel={hideDatePicker}
                   headerTextIOS="Select Date"
+                  maximumDate={calculateMaxDate()}
                   pickerContainerStyleIOS={{ backgroundColor: "#C4C4C4" }}
                   textColor={COLORS.black}
                 />
               </View>
+              <View style={{ marginTop: RFPercentage(1.5), width: "90%", justifyContent: "flex-start", alignItems: "flex-start", alignSelf: "center" }}>
+                {value == 4 ? (
+                  <Text style={{ color: "#06143b", fontFamily: FONTS.Regular, fontSize: RFPercentage(1.8) }}>You can select date upto next 15 Days</Text>
+                ) : (
+                  <Text style={{ color: "#06143b", fontFamily: FONTS.Regular, fontSize: RFPercentage(1.8) }}>You can select date upto next 30 Days</Text>
+                )}
+              </View>
             </View>
           ) : null}
 
-          {value == "WARM" || value == "HOT" || value == "LOST" ? null : (
+          {value == 3 || value == 4 || value == 6 ? null : (
+            // Simple Save Button
             <TouchableOpacity
-              activeOpacity={0.8}
+              activeOpacity={0.6}
+              onPress={() => {
+                setSimpleLeadStatusSaving(true); // Set loading state to true
+                updateSimpleLeadStatus()
+                  .then(() => {
+                    setSimpleLeadStatusSaving(false); // Set loading state to false on success
+                  })
+                  .catch(() => {
+                    setSimpleLeadStatusSaving(false); // Set loading state to false on failure
+                  });
+              }}
               style={{
-                marginTop: open ? RFPercentage(30) : RFPercentage(10),
+                marginTop: open ? RFPercentage(30) : RFPercentage(6),
                 width: RFPercentage(17),
                 height: RFPercentage(7),
                 backgroundColor: COLORS.primary,
@@ -206,17 +348,27 @@ export const LeadStatusChange = ({ navigation, route }) => {
                 alignSelf: "center",
               }}
             >
-              <Text style={{ color: COLORS.secondry, fontFamily: FONTS.Bold, fontSize: RFPercentage(2.1) }}>Save</Text>
+              <Text style={{ color: COLORS.secondry, fontFamily: FONTS.Bold, fontSize: RFPercentage(2.1) }}> {isSimpleLeadStatusSaving ? "Saving..." : "Save"}</Text>
             </TouchableOpacity>
           )}
         </View>
         <View style={{ marginBottom: RFPercentage(20) }} />
       </ScrollView>
 
-      {/* Save Button */}
-      {value == "WARM" || value == "HOT" || value == "LOST" ? (
+      {/* Checklist Save Button */}
+      {/* {value == 3 || value == 4 || value == 6 ? (
         <TouchableOpacity
-          activeOpacity={0.8}
+          activeOpacity={0.6}
+          onPress={() => {
+            setChecklistLeadStatusSaving(true);
+            updateChecklistLeadStatus()
+              .then(() => {
+                setChecklistLeadStatusSaving(false);
+              })
+              .catch(() => {
+                setChecklistLeadStatusSaving(false);
+              });
+          }}
           style={{
             position: "absolute",
             bottom: RFPercentage(15),
@@ -230,7 +382,64 @@ export const LeadStatusChange = ({ navigation, route }) => {
             alignSelf: "center",
           }}
         >
-          <Text style={{ color: COLORS.secondry, fontFamily: FONTS.Bold, fontSize: RFPercentage(2.1) }}>Save</Text>
+          <Text style={{ color: COLORS.secondry, fontFamily: FONTS.Bold, fontSize: RFPercentage(2.1) }}> {isChecklistLeadStatusSaving ? "Saving..." : "Save"}</Text>
+        </TouchableOpacity>
+      ) : null} */}
+      {value === 6 ? (
+        <TouchableOpacity
+          activeOpacity={0.6}
+          onPress={() => {
+            setChecklistLeadStatusSaving(true);
+            updateLostLeadStatus()
+              .then(() => {
+                setChecklistLeadStatusSaving(false);
+              })
+              .catch(() => {
+                setChecklistLeadStatusSaving(false);
+              });
+          }}
+          style={{
+            position: "absolute",
+            bottom: RFPercentage(15),
+            marginTop: RFPercentage(10),
+            width: RFPercentage(17),
+            height: RFPercentage(7),
+            backgroundColor: COLORS.primary,
+            borderRadius: RFPercentage(1.8),
+            justifyContent: "center",
+            alignItems: "center",
+            alignSelf: "center",
+          }}
+        >
+          <Text style={{ color: "white", fontFamily: FONTS.Bold, fontSize: RFPercentage(2.1) }}>{isChecklistLeadStatusSaving ? "Saving..." : "Save"}</Text>
+        </TouchableOpacity>
+      ) : value === 3 || value === 4 ? (
+        <TouchableOpacity
+          activeOpacity={0.6}
+          onPress={() => {
+            setChecklistLeadStatusSaving(true);
+            updateChecklistLeadStatus()
+              .then(() => {
+                setChecklistLeadStatusSaving(false);
+              })
+              .catch(() => {
+                setChecklistLeadStatusSaving(false);
+              });
+          }}
+          style={{
+            position: "absolute",
+            bottom: RFPercentage(15),
+            marginTop: RFPercentage(10),
+            width: RFPercentage(17),
+            height: RFPercentage(7),
+            backgroundColor: COLORS.primary,
+            borderRadius: RFPercentage(1.8),
+            justifyContent: "center",
+            alignItems: "center",
+            alignSelf: "center",
+          }}
+        >
+          <Text style={{ color: "white", fontFamily: FONTS.Bold, fontSize: RFPercentage(2.1) }}>{isChecklistLeadStatusSaving ? "Saving..." : "Save"}</Text>
         </TouchableOpacity>
       ) : null}
     </SafeAreaView>
