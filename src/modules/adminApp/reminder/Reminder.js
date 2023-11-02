@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, TextInput, Switch } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, TextInput, Switch, Alert, ActivityIndicator } from "react-native";
 import { COLORS, FONTS, Url } from "../../../constants";
 import { BackButton } from "../../../common/backButton";
 import { RFPercentage } from "react-native-responsive-fontsize";
@@ -7,16 +7,22 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useDispatch, useSelector } from "react-redux";
+import moment from "moment";
 
 export const Reminder = ({ navigation, route }) => {
   const { token } = useSelector((state) => state.user);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSwitchOn, setIsSwitchOn] = useState(false);
 
-  const leadID = route.params?.leadID;
-
+  const toggleSwitch = () => {
+    setIsSwitchOn((previousState) => !previousState);
+  };
   const [isStatusOn, setStatusOn] = useState(false);
+  const leadID = route.params?.leadID;
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [message, setMessage] = useState("");
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -27,6 +33,8 @@ export const Reminder = ({ navigation, route }) => {
   const handleConfirm = (date) => {
     setSelectedDate(date);
     hideDatePicker();
+    const formattedDate = formatDateTime(date);
+    console.log("Formatted Date:", formattedDate);
   };
   const clearDate = () => {
     setSelectedDate(null);
@@ -46,24 +54,58 @@ export const Reminder = ({ navigation, route }) => {
 
   const [reminders, setReminders] = useState([]);
 
-  useEffect(() => {
-    // Function to fetch reminders from the API
-    const fetchReminders = async () => {
-      try {
-        const response = await fetch(`${Url}get_reminders_api?ref_id=${leadID}&ref_code=LEAD_REMINDER&org_id=33&USER_INFO_ID=${token}`);
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        setReminders(data);
-        console.log("Fetched reminders:", data);
-      } catch (error) {
-        console.error("Error fetching reminders:", error);
+  const fetchReminders = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(`${Url}get_reminders_api?ref_id=${leadID}&ref_code=lead_reminder&org_id=33&user_id=${token}`);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
       }
-    };
+      const data = await response.json();
+      setReminders(data);
+      setIsLoading(false);
+      console.log("Fetched reminders:", data);
+    } catch (error) {
+      setIsLoading(false);
+      console.error("Error fetching reminders:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchReminders();
   }, []);
+
+  // Insert Reminder API
+  const sendReminder = async () => {
+    console.log("Message Typed:", message);
+    const formattedDate = selectedDate ? formatDateTime(selectedDate) : null;
+    const is_active = isSwitchOn ? 1 : 0;
+    console.log("\n\n\n\n\n\n\n\n\n\n\nFormat date time", formattedDate);
+    const apiUrl = `${Url}insert_reminder_api?remin_date=08-FEB-2023,03:58:00 PM&form_id=116&ref_code=lead_reminder&ref_id=${leadID}&is_sms=0&is_email=1&is_whatsapp=0&message=${message}&org_id=33&ref_table=lead_overview&user_id=${token}&ref_name=lead_reminder&is_active=${is_active}`;
+    console.log(is_active);
+    try {
+      const response = await fetch(apiUrl, {
+        method: "GET",
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      console.log("API response:", data);
+      Alert.alert("Success", "Reminder Created Successfully!", [
+        {
+          text: "OK",
+          onPress: () => {
+            setMessage("");
+            fetchReminders();
+          },
+        },
+      ]);
+    } catch (error) {
+      console.error("Error sending reminder:", error);
+    }
+  };
 
   const tableData = [
     {
@@ -81,25 +123,26 @@ export const Reminder = ({ navigation, route }) => {
     return (
       <View style={styles.tableRow}>
         <Text style={styles.columnHeader}>Sr.No</Text>
-        <Text style={styles.columnHeader}>Reminder</Text>
+        {/* <Text style={styles.columnHeader}>Reminder</Text> */}
         <Text style={styles.columnHeader}>Message</Text>
         <Text style={styles.columnHeader}>Sent</Text>
         <Text style={styles.columnHeader}>Created</Text>
-        <Text style={styles.columnHeader}>Status on/off</Text>
+        <Text style={styles.columnHeader}>Status</Text>
       </View>
     );
   };
 
-  const renderTableRow = (rowData) => {
+  const renderTableRow = (rowData, index) => {
+    const formattedReminderDate = moment(rowData.REMIND_DATE).format("YYYY-MM-DD HH:mm A");
+
     return (
       <View style={styles.tableRow}>
-        <Text style={styles.tableCell}>{rowData.srNo}</Text>
-        <Text style={styles.tableCell}>{rowData.reminderSetTo}</Text>
-        <Text style={styles.tableCell}>{rowData.message}</Text>
-        <Text style={styles.tableCell}>{rowData.sent}</Text>
-        <Text style={styles.tableCell}>{rowData.createdOn}</Text>
+        <Text style={styles.tableCell}>{index + 1}</Text>
+        <Text style={styles.tableCell}>{rowData.MESSAGE}</Text>
+        <Text style={styles.tableCell}>{rowData.IS_SENT === "YES" ? "Yes" : "No"}</Text>
+        <Text style={styles.tableCell}>{formattedReminderDate}</Text>
         <View style={{ alignItems: "center", left: RFPercentage(0.1) }}>
-          <Switch value={isStatusOn} trackColor={{ false: "#CDA349", true: "#06143b" }} onValueChange={(newValue) => setStatusOn(newValue)} />
+          <Switch style={{ transform: [{ scale: 0.8 }] }} value={rowData.IS_ACTIVE === 1} trackColor={{ false: "#CDA349", true: "#06143b" }} onValueChange={(newValue) => setStatusOn(newValue)} />
         </View>
       </View>
     );
@@ -107,13 +150,12 @@ export const Reminder = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container1}>
-      <BackButton navigation={navigation} label="Set Reminder" />
+      <BackButton navigation={navigation} label="Lead Detail" />
       <ScrollView nestedScrollEnabled showsVerticalScrollIndicator={false} style={{ width: "100%" }}>
         <View style={{ justifyContent: "center", alignItems: "center", width: "100%" }}>
           <TouchableOpacity activeOpacity={0.8} style={{ marginTop: RFPercentage(4), width: "90%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row", alignSelf: "center" }}>
             <Text style={{ fontSize: RFPercentage(2.3), color: "#06143b", fontWeight: "bold" }}>Select Date</Text>
           </TouchableOpacity>
-
           <View style={styles.container}>
             <TouchableOpacity onPress={showDatePicker} style={styles.inputContainer}>
               <Text style={[styles.inputText, selectedDate ? styles.selectedText : styles.placeholderText]}>{selectedDate ? formatDateTime(selectedDate) : "Select Date and Time"}</Text>
@@ -154,12 +196,24 @@ export const Reminder = ({ navigation, route }) => {
               marginTop: RFPercentage(2),
             }}
           >
-            <TextInput placeholder="Message" placeholderTextColor={"#9CBBD2"} style={{ width: "90%", color: COLORS.black, fontSize: RFPercentage(1.8) }} />
+            <TextInput
+              value={message}
+              onChangeText={(text) => setMessage(text)}
+              placeholder="Message"
+              placeholderTextColor={"#9CBBD2"}
+              style={{ width: "90%", color: COLORS.black, fontSize: RFPercentage(1.8) }}
+            />
           </View>
 
-          <View style={{ marginTop: RFPercentage(6), width: "60%", flexDirection: "row", justifyContent: "space-between", alignItems: "center", alignSelf: "center" }}>
+          <View style={{ flexDirection: "row", marginTop: RFPercentage(2), width: "90%", justifyContent: "flex-start", alignItems: "center" }}>
+            <Text style={{ fontSize: RFPercentage(2), color: "#06143b", fontWeight: "bold" }}>Set Status</Text>
+            <Switch style={{ transform: [{ scale: 0.8 }] }} value={isSwitchOn} onValueChange={toggleSwitch} trackColor={{ false: "#CDA349", true: "#06143b" }} />
+          </View>
+
+          <View style={{ marginTop: RFPercentage(3), width: "60%", flexDirection: "row", justifyContent: "space-between", alignItems: "center", alignSelf: "center" }}>
             <TouchableOpacity
               activeOpacity={0.8}
+              onPress={sendReminder}
               style={{ borderRadius: RFPercentage(1.5), backgroundColor: COLORS.primary, width: RFPercentage(14), height: RFPercentage(5.5), justifyContent: "center", alignItems: "center" }}
             >
               <Text style={{ color: COLORS.secondry, fontFamily: FONTS.Medium, fontSize: RFPercentage(2) }}>Save</Text>
@@ -173,12 +227,17 @@ export const Reminder = ({ navigation, route }) => {
           </View>
 
           {/* Table */}
-          <View style={styles.tableContainer}>
-            {renderTableHeader()}
-            {tableData.map((rowData, index) => (
-              <View key={index}>{renderTableRow(rowData)}</View>
-            ))}
-          </View>
+          {isLoading ? (
+            <ActivityIndicator size="large" style={{ marginTop: RFPercentage(6) }} color={"#06143b"} />
+          ) : reminders.length === 0 ? (
+            <Text style={{ textAlign: "center", marginTop: RFPercentage(14), fontSize: RFPercentage(1.8), color: "grey", fontFamily: FONTS.Regular }}>No Data Added</Text>
+          ) : (
+            // Render data when isLoading is false and reminders array is not empty
+            <View style={styles.tableContainer}>
+              {renderTableHeader()}
+              {reminders.map((rowData, index) => renderTableRow(rowData, index))}
+            </View>
+          )}
         </View>
         <View style={{ marginBottom: RFPercentage(20) }} />
       </ScrollView>
@@ -228,15 +287,16 @@ const styles = StyleSheet.create({
 
   tableContainer: {
     marginTop: RFPercentage(4),
-    width: "98%",
+    width: "100%",
     alignSelf: "center",
+    justifyContent: "center",
   },
 
   tableRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    // paddingHorizontal: 8,
+    paddingHorizontal: 6,
     paddingVertical: 8,
     borderBottomWidth: 1,
     borderBottomColor: "#CDA349",
@@ -257,7 +317,7 @@ const styles = StyleSheet.create({
   },
 
   tableCell: {
-    fontSize: RFPercentage(1.8),
+    fontSize: RFPercentage(1.7),
     flex: 1,
     textAlign: "center",
     paddingVertical: 5,

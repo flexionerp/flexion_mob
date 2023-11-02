@@ -10,7 +10,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { useDispatch, useSelector } from "react-redux";
 import HTML from "react-native-render-html";
 import moment from "moment";
-import DocumentPicker from "react-native-document-picker";
+// import DocumentPicker from "react-native-document-picker";
 import Pdf from "react-native-pdf";
 
 export const LeadNotes = ({ navigation, route }) => {
@@ -125,8 +125,8 @@ export const LeadNotes = ({ navigation, route }) => {
     setShowFullNote(!showFullNote);
   };
 
-  const [attachmentPicked, setAttachmentPicked] = useState(false);
-  const [selectedFileURI, setSelectedFileURI] = useState("");
+  // const [attachmentPicked, setAttachmentPicked] = useState(false);
+  // const [selectedFileURI, setSelectedFileURI] = useState("");
 
   // const handlePickDocument = async () => {
   //   try {
