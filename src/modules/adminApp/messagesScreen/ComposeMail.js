@@ -8,7 +8,6 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Entypo from "react-native-vector-icons/Entypo";
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
-import DocumentPicker from "react-native-document-picker";
 import PDFView from "react-native-pdf";
 
 export const ComposeMail = ({ navigation, route }) => {
@@ -16,58 +15,6 @@ export const ComposeMail = ({ navigation, route }) => {
   const lead_id = route.params?.lead_id;
   const [isLoading, setIsLoading] = useState(false);
 
-  const [pickedImages, setPickedImages] = useState([]);
-  const [pickedPDFs, setPickedPDFs] = useState([]);
-  const [pdfPicked, setPdfPicked] = useState(false);
-
-  const openImagePicker = () => {
-    const options = {
-      title: "Select Image",
-      storageOptions: {
-        skipBackup: true,
-        path: "images",
-      },
-    };
-
-    launchImageLibrary(options, (response) => {
-      if (!response.didCancel && !response.error) {
-        setPickedImages([...pickedImages, response.assets[0]]);
-      }
-    });
-  };
-
-  const openPDFPicker = async () => {
-    try {
-      const results = await DocumentPicker.pickMultiple({
-        type: [DocumentPicker.types.pdf],
-      });
-
-      setPickedPDFs([...pickedPDFs, ...results]);
-
-      setPdfPicked(results.length > 0);
-
-      console.log("Picked PDF Results", results);
-    } catch (error) {
-      console.log("Error:", error);
-    }
-  };
-  const openCamera = () => {
-    const options = {
-      title: "Take a Photo",
-      storageOptions: {
-        skipBackup: true,
-        path: "images",
-      },
-    };
-
-    launchCamera(options, (response) => {
-      if (response.didCancel) {
-      } else if (response.error) {
-      } else {
-      }
-      console.log("Cemra Picked Image Result", response);
-    });
-  };
   const [showButton, setShowButton] = useState(false);
   const toggleShowButton = () => {
     setShowButton(!showButton);
@@ -94,17 +41,6 @@ export const ComposeMail = ({ navigation, route }) => {
 
   const handleMessageChange = (text) => {
     setMessage(text);
-  };
-
-  const removePickedImage = (indexToRemove) => {
-    const updatedImages = pickedImages.filter((_, index) => index !== indexToRemove);
-    setPickedImages(updatedImages);
-  };
-
-  const removePickedPDF = (indexToRemove) => {
-    const updatedPDFs = pickedPDFs.filter((_, index) => index !== indexToRemove);
-    setPickedPDFs(updatedPDFs);
-    setPdfPicked(false);
   };
 
   const [cc, setCC] = useState("");
@@ -173,7 +109,7 @@ export const ComposeMail = ({ navigation, route }) => {
             <View style={{ marginTop: RFPercentage(2), width: "90%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
               <Text style={{ fontSize: RFPercentage(1.8), color: "grey", fontFamily: FONTS.Medium }}>To:</Text>
               {/* <TextInput placeholder="" style={{ fontFamily: FONTS.Regular, color: "black", marginLeft: RFPercentage(1), width: "100%" }} /> */}
-              <Text style={{ fontSize: RFPercentage(1.8), color: "black", fontFamily: FONTS.Medium }}> {lead_email}</Text>
+              <Text style={{ fontSize: RFPercentage(1.8), color: "black", fontFamily: FONTS.Medium }}> {lead_email ? lead_email : "No email added"}</Text>
             </View>
             <View style={{ marginTop: RFPercentage(2), width: "100%", height: RFPercentage(0.1), backgroundColor: "lightgrey" }} />
             <View style={{ marginTop: RFPercentage(2), width: "90%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
@@ -228,49 +164,6 @@ export const ComposeMail = ({ navigation, route }) => {
         <View style={{ marginBottom: RFPercentage(18) }} />
       </ScrollView>
 
-      {/* Attachemnts will be shown here in a row like we have in gmail attachments */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ position: "absolute", bottom: RFPercentage(20), width: "90%", alignSelf: "center" }}>
-        {pickedImages.map((image, index) => (
-          <View key={index} style={{ position: "relative" }}>
-            <Image source={{ uri: image.uri }} style={{ borderRadius: RFPercentage(1), opacity: 0.8, width: 100, height: 100, marginRight: 10 }} />
-            <TouchableOpacity onPress={() => removePickedImage(index)} style={{ position: "absolute", top: RFPercentage(0.5), right: RFPercentage(2) }}>
-              <AntDesign name="closecircle" style={{ fontSize: RFPercentage(2.4), color: "white" }} />
-            </TouchableOpacity>
-          </View>
-        ))}
-        {pickedPDFs.map((pdf, index) => (
-          <PDFView
-            key={index}
-            source={{ uri: pdf.uri, cache: true }}
-            onLoadComplete={(numberOfPages, filePath) => {}}
-            onPageChanged={(page, numberOfPages) => {}}
-            onError={(error) => {
-              console.error("PDF Error:", error);
-            }}
-            style={{ width: 100, height: 100, marginRight: 10 }}
-          />
-        ))}
-        {pickedPDFs.map((pdf, index) => (
-          <View
-            key={index}
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              width: RFPercentage(12),
-              height: RFPercentage(12),
-              borderColor: "red",
-              borderWidth: RFPercentage(0.1),
-              borderRadius: RFPercentage(1),
-              marginRight: 10,
-            }}
-          >
-            <TouchableOpacity style={{ position: "absolute", top: RFPercentage(0.5), right: RFPercentage(0.6) }} onPress={() => removePickedPDF(index)}>
-              <AntDesign name="closecircle" style={{ fontSize: RFPercentage(2.4), color: "black" }} />
-            </TouchableOpacity>
-            <Text style={{ fontSize: RFPercentage(2), color: "red", fontFamily: FONTS.Medium }}>PDF Picked</Text>
-          </View>
-        ))}
-      </ScrollView>
       {/* Bottom Actions */}
       <View style={{ width: "86%", position: "absolute", bottom: RFPercentage(16), justifyContent: "center", alignItems: "center", flexDirection: "row", alignSelf: "center" }}>
         {/* <TouchableOpacity activeOpacity={0.8}>
@@ -320,36 +213,6 @@ export const ComposeMail = ({ navigation, route }) => {
           <Text style={{ marginLeft: RFPercentage(1), fontSize: RFPercentage(2), color: "white", fontFamily: FONTS.Medium }}>Send</Text>
         </TouchableOpacity>
       </View>
-      {/* Second modal  */}
-      <Modal visible={isMenuVisible3} transparent={true} onRequestClose={() => setIsAttachmentMenuVisible(false)}>
-        <View style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", flex: 1, justifyContent: "center", alignItems: "center" }}>
-          <View
-            style={{
-              width: "100%",
-              position: "absolute",
-              bottom: 0,
-              height: "30%",
-              borderRadius: RFPercentage(2),
-              backgroundColor: "white",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <TouchableOpacity onPress={openImagePicker}>
-              <Text style={{ fontSize: RFPercentage(2), color: "#06143b", fontFamily: FONTS.Medium }}>Select Image</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ marginTop: RFPercentage(3) }} onPress={openPDFPicker}>
-              <Text style={{ fontSize: RFPercentage(2), color: "#06143b", fontFamily: FONTS.Medium }}>Select PDF</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ marginTop: RFPercentage(3) }} onPress={openCamera}>
-              <Text style={{ fontSize: RFPercentage(2), color: "#06143b", fontFamily: FONTS.Medium }}>Take a Photo</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ marginTop: RFPercentage(3) }} onPress={() => setIsMenuVisible3(false)}>
-              <Text style={{ fontSize: RFPercentage(2), color: "#06143b", fontFamily: FONTS.Medium }}>Done</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
     </SafeAreaView>
   );
 };

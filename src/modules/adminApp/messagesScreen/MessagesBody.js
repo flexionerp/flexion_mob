@@ -61,8 +61,8 @@ export const MessagesBody = ({ navigation, route }) => {
           <View style={{ marginTop: RFPercentage(3), width: "90%", height: RFPercentage(0.1), backgroundColor: "lightgrey" }} />
 
           {/* Body Of Email */}
-          <View style={{ width: "90%", justifyContent: "flex-start", alignItems: "flex-start", flexDirection: "row", marginTop: RFPercentage(3) }}>
-            <View style={{ width: "90%", alignSelf: "flex-start", alignItems: "flex-start" }}>
+          <View style={{ width: "90%", alignSelf: "center", justifyContent: "flex-start", alignItems: "flex-start", flexDirection: "row", marginTop: RFPercentage(3) }}>
+            <View style={{ width: "90%", alignSelf: "center", alignItems: "flex-start" }}>
               <HTML source={{ html: body }} contentWidth={Dimensions.get("window").width} onLinkPress={handleLinkPress} />
             </View>
           </View>

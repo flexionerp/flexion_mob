@@ -406,7 +406,25 @@ export const TotalLeadMainListings = ({ navigation, route }) => {
                             {item.LEAD_AGE === null ? `${item.DIFF / 60} Hours ${item.DIFF % 60} Minutes` : `${item.LEAD_AGE} day(s)`}
                           </Text>
                         </View>
+                        <View style={{ justifyContent: "center", alignItems: "center", position: "absolute", right: 0, top: RFPercentage(3.8) }}>
+                          <View
+                            style={{
+                              justifyContent: "center",
+                              alignItems: "center",
+                              flexDirection: "row",
+                              width: RFPercentage(9.2),
+                              height: RFPercentage(3.6),
+                              borderRadius: RFPercentage(1.2),
+                              borderColor: "#06143b",
+                              borderWidth: RFPercentage(0.1),
+                            }}
+                          >
+                            <AntDesign name="tagso" style={{ fontSize: RFPercentage(2.7) }} color={"#06143b"} />
+                            <Text style={{ fontSize: RFPercentage(1.8), marginLeft: RFPercentage(0.3), color: "#06143b", fontFamily: FONTS.Medium }}>{item.ID}</Text>
+                          </View>
+                        </View>
                       </View>
+
                       <TouchableOpacity
                         activeOpacity={0.8}
                         style={{

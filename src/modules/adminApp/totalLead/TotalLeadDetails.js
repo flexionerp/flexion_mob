@@ -364,43 +364,43 @@ export const TotalLeadDetails = ({ navigation, route }) => {
       ...prevState,
       [field]: false,
     }));
-    if (field === "firstName") {
-      setFirstName(firstName);
-      updateLeadName();
-    }
-    if (field === "mobileNo") {
-      setMobileNo(mobileNo);
-      updateLeadMobile();
-    }
-    if (field === "email") {
-      setEmail(email);
-      updateLeadEmail();
-    }
-    if (field === "phone") {
-      setPhone(phone);
-      updateLeadPhone();
-    }
+    // if (field === "firstName") {
+    //   setFirstName(firstName);
+    //   updateLeadName();
+    // }
+    // if (field === "mobileNo") {
+    //   setMobileNo(mobileNo);
+    //   updateLeadMobile();
+    // }
+    // if (field === "email") {
+    //   setEmail(email);
+    //   updateLeadEmail();
+    // }
+    // if (field === "phone") {
+    //   setPhone(phone);
+    //   updateLeadPhone();
+    // }
 
-    if (field === "budgetMax") {
-      setBudgetMax(budgetMax);
-      updateLeadBudgetMax();
-    }
-    if (field === "budgetMin") {
-      setBudgetMin(budgetMin);
-      updateLeadBudgetMin();
-    }
-    if (field === "address") {
-      setAddress(address);
-      updateLeadAddress();
-    }
-    if (field === "pobox") {
-      setPOBox(pobox);
-      updateLeadPOBOX();
-    }
-    if (field === "company") {
-      setCompany(company);
-      updateLeadCompany();
-    }
+    // if (field === "budgetMax") {
+    //   setBudgetMax(budgetMax);
+    //   updateLeadBudgetMax();
+    // }
+    // if (field === "budgetMin") {
+    //   setBudgetMin(budgetMin);
+    //   updateLeadBudgetMin();
+    // }
+    // if (field === "address") {
+    //   setAddress(address);
+    //   updateLeadAddress();
+    // }
+    // if (field === "pobox") {
+    //   setPOBox(pobox);
+    //   updateLeadPOBOX();
+    // }
+    // if (field === "company") {
+    //   setCompany(company);
+    //   updateLeadCompany();
+    // }
   };
 
   const handleCancel = (field) => {
@@ -836,29 +836,25 @@ export const TotalLeadDetails = ({ navigation, route }) => {
                     alignSelf: "center",
                   }}
                 >
-                  {/* {Platform.OS == 'android' ? 
-                 <>
-                    {
-                      item.value === "" && (
-                    <Text
-                      style={{
-                        position: "absolute",
-                        left: RFPercentage(2),
-                        color: "#9CBBD2",
-                        fontFamily: FONTS.Regular,
-                      }}
-                    >
-                      {item.label}
-                    </Text>
-                    )
-                      }
-                      </>
-                    :
-                    null
-                }
-                  */}
+                  {/* {Platform.OS == "android" ? (
+                    <>
+                      {item.value === "" && (
+                        <Text
+                          style={{
+                            position: "absolute",
+                            left: RFPercentage(2),
+                            color: "#9CBBD2",
+                            fontFamily: FONTS.Regular,
+                          }}
+                        >
+                          {item.label}
+                        </Text>
+                      )}
+                    </>
+                  ) : null} */}
+
                   <TextInput
-                    multiline={item.decs ? true : null}
+                    // multiline={item.decs ? true : null}
                     placeholder={item.label}
                     placeholderTextColor={"#9CBBD2"}
                     style={{ width: "100%", color: "#9CBBD2", fontFamily: FONTS.Regular }}

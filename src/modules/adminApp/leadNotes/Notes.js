@@ -10,7 +10,6 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { useDispatch, useSelector } from "react-redux";
 import HTML from "react-native-render-html";
 import moment from "moment";
-// import DocumentPicker from "react-native-document-picker";
 import Pdf from "react-native-pdf";
 
 export const LeadNotes = ({ navigation, route }) => {
@@ -125,31 +124,6 @@ export const LeadNotes = ({ navigation, route }) => {
     setShowFullNote(!showFullNote);
   };
 
-  // const [attachmentPicked, setAttachmentPicked] = useState(false);
-  // const [selectedFileURI, setSelectedFileURI] = useState("");
-
-  // const handlePickDocument = async () => {
-  //   try {
-  //     const result = await DocumentPicker.pick({
-  //       type: [DocumentPicker.types.allFiles],
-  //       allowMultiSelection: true,
-  //     });
-
-  //     if (result.length > 0) {
-  //       const selectedURIs = result.map((file) => file.uri);
-
-  //       setAttachmentPicked(true);
-
-  //       setSelectedFileURI(selectedURIs);
-  //     }
-  //   } catch (err) {
-  //     if (DocumentPicker.isCancel(err)) {
-  //     } else {
-  //       throw err;
-  //     }
-  //   }
-  // };
-
   const insertNote = async () => {
     try {
       const url = `${Url}insert_notes_lead_api?note_type=3&hdr_id=${leadID}&notes=${notes}&org_id=33&user_id=${token}`;
@@ -168,63 +142,12 @@ export const LeadNotes = ({ navigation, route }) => {
     }
   };
 
-  // useEffect(() => {
-  //   insertNote();
-  // }, []);
-
-  // const [pdfModalVisible, setPdfModalVisible] = useState(false);
-  // const [pdfUrl, setPdfUrl] = useState("");
-  // const [isLoading2, setIsLoading2] = useState(true);
-
-  // const fetchPdfData = async () => {
-  //   setIsLoading2(true);
-
-  //   try {
-  //     const response = await fetch(`${Url}get_common_documents_lead_api?lead_id=${leadID}`);
-
-  //     if (!response.ok) {
-  //       throw new Error("Network response was not ok");
-  //     }
-
-  //     const data = await response.json();
-  //     console.log("\n\n\n\n\n\n\n\n\n\n\nData document view returned data", data);
-
-  //     if (data.length > 0 && data[0].length > 0 && data[0][0].FILE_PATH) {
-  //       const filePath = data[0][0].FILE_PATH;
-  //       const combinedUrl = `https://erp.flexion.ae:8018${filePath}`;
-  //       console.log("\n\n\n\n\n\n\n\nCombined URL", combinedUrl);
-  //       setPdfUrl(combinedUrl);
-  //     } else {
-  //       // Alert.alert("Error", "PDF file not found in the API response.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching PDF data:", error);
-  //     // Alert.alert("Error", "An error occurred while fetching PDF data.");
-  //   } finally {
-  //     setIsLoading2(false);
-  //   }
-  // };
-
-  // const closePdfModal = () => {
-  //   setPdfModalVisible(false);
-  // };
-
-  // const openPdfModal = (pdfUrl) => {
-  //   setPdfUrl(pdfUrl);
-  //   setPdfModalVisible(true);
-  // };
-
-  // useEffect(() => {
-  //   fetchPdfData();
-  // }, []);
-
   const [pdfModalVisible, setPdfModalVisible] = useState(false);
-  const [pdfUrls, setPdfUrls] = useState([]); // Store an array of PDF URLs
+  const [pdfUrls, setPdfUrls] = useState([]);
   const [currentPdfIndex, setCurrentPdfIndex] = useState(0);
   const [isLoading2, setIsLoading2] = useState(true);
 
   useEffect(() => {
-    // Fetch PDF data when the component mounts
     fetchPdfData();
   }, []);
 
@@ -232,7 +155,6 @@ export const LeadNotes = ({ navigation, route }) => {
     setIsLoading2(true);
 
     try {
-      // Replace this with your API call to get multiple PDF URLs
       const response = await fetch(`${Url}get_common_documents_lead_api?lead_id=${leadID}`);
 
       if (!response.ok) {

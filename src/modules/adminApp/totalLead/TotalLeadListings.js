@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, ActivityIndicator } from "react-native";
 import { COLORS, FONTS } from "../../../constants";
 import { BackButton } from "../../../common/backButton";
 import { RFPercentage } from "react-native-responsive-fontsize";
@@ -14,7 +14,7 @@ import InputField from "../../../common/InputField";
 export const TotalLeadListings = ({ navigation, route }) => {
   const { token } = useSelector((state) => state.user);
   const [firstObject, setFirstObject] = useState(null);
-
+  const [loading, setloading] = useState(false);
   const [apiResponse, setApiResponse] = useState([]);
 
   const [coldCount, setColdCount] = useState(0);
@@ -29,9 +29,9 @@ export const TotalLeadListings = ({ navigation, route }) => {
 
   const makeApiRequest = async () => {
     try {
+      setloading(true);
       const response = await axios.get(`${Url}leads_list_api?userid=${token}`);
       // console.log("From Cold Screen", response.data.data);
-
       const firstObject = response.data.data[0];
       const leadCount = firstObject ? firstObject.length : 0;
       // console.log("Latest count cold screen", leadCount);
@@ -85,8 +85,10 @@ export const TotalLeadListings = ({ navigation, route }) => {
       setFirstObject(firstObject);
 
       setApiResponse(response.data.data[0]);
+      setloading(false);
     } catch (error) {
       console.error("API Error :", error);
+      setloading(false);
     }
   };
   useEffect(() => {
@@ -165,91 +167,103 @@ export const TotalLeadListings = ({ navigation, route }) => {
       </View>
 
       <ScrollView nestedScrollEnabled showsVerticalScrollIndicator={false} style={{ width: "100%" }}>
-        <View style={{ marginTop: RFPercentage(1), justifyContent: "center", alignItems: "center", width: "100%" }}>
-          {chunkedCategories.map((row, rowIndex) => (
-            <View key={rowIndex} style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "90%", alignSelf: "center", marginTop: RFPercentage(1) }}>
-              {row.map((category, index) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => {
-                    const filteredLeads = firstObject.filter((lead) => lead.LEAD_STATUS === category.name.toUpperCase());
-                    navigation.navigate("TotalLeadMainListings", { category: category.name, leads: filteredLeads });
-                  }}
-                  activeOpacity={0.9}
-                  style={{
-                    // flex: 1,
-                    width: RFPercentage(14.5),
-                    height: RFPercentage(14.5),
-                    marginHorizontal: RFPercentage(0.5),
-                    borderRadius: RFPercentage(1.5),
-                    backgroundColor: category.color,
-                    height: RFPercentage(11),
-                    justifyContent: "flex-start",
-                    alignItems: "flex-start",
-                    padding: RFPercentage(1),
-                  }}
-                >
-                  <Text style={{ color: "#fff", fontSize: RFPercentage(1.8), fontFamily: FONTS.Medium }}>{category.name}</Text>
-                  <Text style={{ position: "absolute", bottom: RFPercentage(1), right: RFPercentage(1), color: "#fff", fontSize: RFPercentage(3), fontFamily: FONTS.Bold }}>{category.count}</Text>
-                </TouchableOpacity>
-              ))}
+        {loading ? (
+          <ActivityIndicator size="large" style={{ marginTop: RFPercentage(5) }} color="#06143b" />
+        ) : (
+          <View style={{ marginTop: RFPercentage(1), justifyContent: "center", alignItems: "center", width: "100%" }}>
+            {chunkedCategories.map((row, rowIndex) => (
+              <View key={rowIndex} style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "90%", alignSelf: "center", marginTop: RFPercentage(1) }}>
+                {row.map((category, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => {
+                      const filteredLeads = firstObject.filter((lead) => lead.LEAD_STATUS === category.name.toUpperCase());
+                      navigation.navigate("TotalLeadMainListings", { category: category.name, leads: filteredLeads });
+                    }}
+                    activeOpacity={0.9}
+                    style={{
+                      // flex: 1,
+                      width: RFPercentage(14.5),
+                      height: RFPercentage(14.5),
+                      marginHorizontal: RFPercentage(0.5),
+                      borderRadius: RFPercentage(1.5),
+                      backgroundColor: category.color,
+                      height: RFPercentage(11),
+                      justifyContent: "flex-start",
+                      alignItems: "flex-start",
+                      padding: RFPercentage(1),
+                    }}
+                  >
+                    <Text style={{ color: "#fff", fontSize: RFPercentage(1.8), fontFamily: FONTS.Medium }}>{category.name}</Text>
+                    <Text style={{ position: "absolute", bottom: RFPercentage(1), right: RFPercentage(1), color: "#fff", fontSize: RFPercentage(3), fontFamily: FONTS.Bold }}>{category.count}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            ))}
+
+            {/* Large Boxes */}
+            <View activeOpacity={0.8} style={{ marginTop: RFPercentage(3), width: "90%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
+              <Text style={{ fontSize: RFPercentage(2.2), color: "#06143b", fontFamily: FONTS.SemiBold }}>Labels</Text>
             </View>
-          ))}
 
-          {/* Large Boxes */}
-          <View activeOpacity={0.8} style={{ marginTop: RFPercentage(3), width: "90%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
-            <Text style={{ fontSize: RFPercentage(2.2), color: "#06143b", fontFamily: FONTS.SemiBold }}>Labels</Text>
+            <TouchableOpacity
+              onPress={() => {
+                const filteredLeads = apiResponse.filter((lead) => lead.IS_READ === "0");
+                navigation.navigate("TotalLeadMainListings", { unreadOnly: true, leads: filteredLeads });
+              }}
+              activeOpacity={0.8}
+              style={{ marginTop: RFPercentage(2), backgroundColor: "#B0C4DE", width: "90%", height: RFPercentage(8), borderRadius: RFPercentage(2), justifyContent: "center", alignItems: "center" }}
+            >
+              <Text style={{ color: "#fff", fontSize: RFPercentage(2.2), fontFamily: FONTS.Medium }}>Unread Lead</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("LabelWise", { apiResponse: apiResponse });
+              }}
+              activeOpacity={0.8}
+              style={{ marginTop: RFPercentage(2), backgroundColor: "lightgrey", width: "90%", height: RFPercentage(8), borderRadius: RFPercentage(2), justifyContent: "center", alignItems: "center" }}
+            >
+              <Text style={{ color: "#fff", fontSize: RFPercentage(2.2), fontFamily: FONTS.Medium }}>Label Wise</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("AgentWise", { apiResponse: apiResponse });
+              }}
+              activeOpacity={0.8}
+              style={{ marginTop: RFPercentage(2), backgroundColor: "#BC8F8F", width: "90%", height: RFPercentage(8), borderRadius: RFPercentage(2), justifyContent: "center", alignItems: "center" }}
+            >
+              <Text style={{ color: "#fff", fontSize: RFPercentage(2.2), fontFamily: FONTS.Medium }}>Agent Wise</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                const filteredLeads = apiResponse.filter((lead) => lead.IS_EMAIL_SENT_AGENT === "1");
+                navigation.navigate("TotalLeadMainListings", { leads: filteredLeads, noAction: true });
+              }}
+              activeOpacity={0.8}
+              style={{
+                marginTop: RFPercentage(2),
+                backgroundColor: "lightgreen",
+                width: "90%",
+                height: RFPercentage(8),
+                borderRadius: RFPercentage(2),
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text style={{ color: "#fff", fontSize: RFPercentage(2.2), fontFamily: FONTS.Medium }}>30 Min No Action</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                const filteredLeads = apiResponse.filter((lead) => lead.IS_EMAIL_SENT === "1");
+                navigation.navigate("TotalLeadMainListings", { leads: filteredLeads, hours: true });
+              }}
+              activeOpacity={0.8}
+              style={{ marginTop: RFPercentage(2), backgroundColor: "#F4A460", width: "90%", height: RFPercentage(8), borderRadius: RFPercentage(2), justifyContent: "center", alignItems: "center" }}
+            >
+              <Text style={{ color: "#fff", fontSize: RFPercentage(2.2), fontFamily: FONTS.Medium }}>48 Hours No Action</Text>
+            </TouchableOpacity>
           </View>
-
-          <TouchableOpacity
-            onPress={() => {
-              const filteredLeads = apiResponse.filter((lead) => lead.IS_READ === "0");
-              navigation.navigate("TotalLeadMainListings", { unreadOnly: true, leads: filteredLeads });
-            }}
-            activeOpacity={0.8}
-            style={{ marginTop: RFPercentage(2), backgroundColor: "#B0C4DE", width: "90%", height: RFPercentage(8), borderRadius: RFPercentage(2), justifyContent: "center", alignItems: "center" }}
-          >
-            <Text style={{ color: "#fff", fontSize: RFPercentage(2.2), fontFamily: FONTS.Medium }}>Unread Lead</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("LabelWise", { apiResponse: apiResponse });
-            }}
-            activeOpacity={0.8}
-            style={{ marginTop: RFPercentage(2), backgroundColor: "lightgrey", width: "90%", height: RFPercentage(8), borderRadius: RFPercentage(2), justifyContent: "center", alignItems: "center" }}
-          >
-            <Text style={{ color: "#fff", fontSize: RFPercentage(2.2), fontFamily: FONTS.Medium }}>Label Wise</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("AgentWise", { apiResponse: apiResponse });
-            }}
-            activeOpacity={0.8}
-            style={{ marginTop: RFPercentage(2), backgroundColor: "#BC8F8F", width: "90%", height: RFPercentage(8), borderRadius: RFPercentage(2), justifyContent: "center", alignItems: "center" }}
-          >
-            <Text style={{ color: "#fff", fontSize: RFPercentage(2.2), fontFamily: FONTS.Medium }}>Agent Wise</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              const filteredLeads = apiResponse.filter((lead) => lead.IS_EMAIL_SENT_AGENT === "1");
-              navigation.navigate("TotalLeadMainListings", { leads: filteredLeads, noAction: true });
-            }}
-            activeOpacity={0.8}
-            style={{ marginTop: RFPercentage(2), backgroundColor: "lightgreen", width: "90%", height: RFPercentage(8), borderRadius: RFPercentage(2), justifyContent: "center", alignItems: "center" }}
-          >
-            <Text style={{ color: "#fff", fontSize: RFPercentage(2.2), fontFamily: FONTS.Medium }}>30 Min No Action</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              const filteredLeads = apiResponse.filter((lead) => lead.IS_EMAIL_SENT === "1");
-              navigation.navigate("TotalLeadMainListings", { leads: filteredLeads, hours: true });
-            }}
-            activeOpacity={0.8}
-            style={{ marginTop: RFPercentage(2), backgroundColor: "#F4A460", width: "90%", height: RFPercentage(8), borderRadius: RFPercentage(2), justifyContent: "center", alignItems: "center" }}
-          >
-            <Text style={{ color: "#fff", fontSize: RFPercentage(2.2), fontFamily: FONTS.Medium }}>48 Hours No Action</Text>
-          </TouchableOpacity>
-        </View>
+        )}
         <View style={{ marginBottom: RFPercentage(14) }} />
       </ScrollView>
     </SafeAreaView>
