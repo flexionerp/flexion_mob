@@ -125,6 +125,11 @@ export const LeadNotes = ({ navigation, route }) => {
   };
 
   const insertNote = async () => {
+    if (notes.trim() === "") {
+      Alert.alert("Validation Error", "Kindly add a note.");
+      return;
+    }
+
     try {
       const url = `${Url}insert_notes_lead_api?note_type=3&hdr_id=${leadID}&notes=${notes}&org_id=33&user_id=${token}`;
       const response = await fetch(url, {
@@ -162,7 +167,7 @@ export const LeadNotes = ({ navigation, route }) => {
       }
 
       const data = await response.json();
-      const pdfUrls = data.map((item) => `https://erp.flexion.ae:8018${item[0].FILE_PATH}`);
+      const pdfUrls = data.map((item) => `https://erp.flexion.ae:8018${item[0]?.FILE_PATH}`);
       setPdfUrls(pdfUrls);
       setCurrentPdfIndex(0); // Set the initial PDF to be displayed
     } catch (error) {

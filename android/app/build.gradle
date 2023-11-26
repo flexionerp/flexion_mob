@@ -146,8 +146,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
             // multiDexEnabled true
 
-        versionCode 17
-        versionName "1.17"
+        versionCode 19
+        versionName "1.19"
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
         if (isNewArchitectureEnabled()) {

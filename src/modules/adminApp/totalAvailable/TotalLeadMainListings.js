@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ImageBackground, ScrollView, Modal, TextInput, ActivityIndicator, Alert, FlatList } from "react-native";
-import { COLORS, FONTS, Url } from "../../../constants";
+import { COLORS, FONTS, Url, SCREEN_HEIGHT, SCREEN_WIDTH, SCREENS } from "../../../constants";
 import { BackButton } from "../../../common/backButton";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -22,6 +22,7 @@ export const TotalLeadMainListings = ({ navigation, route }) => {
   const hours = route.params?.hours;
   const labelType = route.params?.labelType;
   const agentName = route.params?.agentName;
+  const lead_id = route.params?.lead_id;
 
   const [mainListingLoading, setMainListingLoading] = useState(true);
   const [agentListingData, setAgentListingData] = useState([]);
@@ -53,7 +54,7 @@ export const TotalLeadMainListings = ({ navigation, route }) => {
       const response = await Axios.get(`${Url}leads_list_api?userid=${token}`);
       const firstObject = response.data.data[0];
       const leadCount = firstObject ? firstObject.length : 0;
-      console.log("Latest count cold screen", leadCount);
+      // console.log("Latest count cold screen", leadCount);
       setAgentListingData(firstObject);
       setMainListingLoading(false);
     } catch (error) {
@@ -142,6 +143,11 @@ export const TotalLeadMainListings = ({ navigation, route }) => {
 
   const filterData = () => {
     return agentListingData.filter((item) => {
+      if (lead_id && item.LEAD_ID === lead_id) {
+        // Open only the lead with the specified lead_id
+        return true;
+      }
+
       if (unreadOnly) {
         return (
           item.IS_READ === "0" &&
@@ -193,7 +199,7 @@ export const TotalLeadMainListings = ({ navigation, route }) => {
   };
 
   // Set filteredData based on your filter conditions
-  const filteredData = filterData();
+  const filteredData = filterData(lead_id);
 
   const [isMenuVisible3, setIsMenuVisible3] = useState(false);
   const toggleMenu3 = () => {
@@ -355,7 +361,13 @@ export const TotalLeadMainListings = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <BackButton navigation={navigation} label="Dashboard" />
+      {/* <BackButton navigation={navigation} label="Dashboard" /> */}
+      <View style={{ width: "90%", justifyContent: "flex-start", alignItems: "center", alignSelf: "center", flexDirection: "row" }}>
+        <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate(SCREENS.TOTALLEADLISTINGS)} style={{}}>
+          <Ionicons name="chevron-back" style={{ fontSize: RFPercentage(3.2), marginRight: 5 }} color={"#06143b"} />
+        </TouchableOpacity>
+        <Text style={{ color: COLORS.boldText, fontSize: SCREEN_WIDTH * 0.043, fontFamily: FONTS.SemiBold, marginLeft: 8 }}>Dashboard</Text>
+      </View>
       {/* Input field */}
       <View style={{ marginTop: RFPercentage(1), justifyContent: "center", alignItems: "center", width: "100%" }}>
         {inputField.map((item, i) => (

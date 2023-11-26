@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, ActivityIndicator } from "react-native";
-import { COLORS, FONTS } from "../../../constants";
+import { COLORS, FONTS, Url, SCREEN_HEIGHT, SCREEN_WIDTH, SCREENS } from "../../../constants";
 import { BackButton } from "../../../common/backButton";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { Url } from "../../../constants";
 import { useFocusEffect } from "@react-navigation/native";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 // components
 import InputField from "../../../common/InputField";
@@ -143,7 +143,12 @@ export const TotalLeadListings = ({ navigation, route }) => {
   );
   return (
     <SafeAreaView style={styles.container}>
-      <BackButton navigation={navigation} label="Total Assign Leads" />
+      <View style={{ width: "90%", justifyContent: "flex-start", alignItems: "center", alignSelf: "center", flexDirection: "row" }}>
+        <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate("HomeScreen")} style={{}}>
+          <Ionicons name="chevron-back" style={{ fontSize: RFPercentage(3.2), marginRight: 5 }} color={"#06143b"} />
+        </TouchableOpacity>
+        <Text style={{ color: COLORS.boldText, fontSize: SCREEN_WIDTH * 0.043, fontFamily: FONTS.SemiBold, marginLeft: 8 }}>Total Leads</Text>
+      </View>
 
       {/* Input field */}
       <View style={{ marginTop: RFPercentage(1), justifyContent: "center", alignItems: "center", width: "100%" }}>

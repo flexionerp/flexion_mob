@@ -65,6 +65,7 @@ import { LeadStatusChange } from "../totalLead/LeadStatusChange";
 import { ComposeMail } from "../messagesScreen/ComposeMail";
 import { LeadAgentChange } from "../totalLead/LeadAgentChange";
 import { LeadTagChange } from "../totalLead/LeadTagChange";
+import { LeadClick } from "../totalLead/LeadClick";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -96,6 +97,13 @@ function HomeRoutes() {
       <Stack.Screen
         name="HomeInProgress"
         component={HomeInProgress}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="LeadClick"
+        component={LeadClick}
         options={{
           headerShown: false,
         }}

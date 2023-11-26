@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, TextInput, Modal, Image, Alert, ActivityIndicator, Platform } from "react-native";
-import { COLORS, FONTS, Url } from "../../../constants";
+import { COLORS, FONTS, Url, SCREENS } from "../../../constants";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -17,35 +17,146 @@ import PDFView from "react-native-pdf";
 import axios from "axios";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import CheckBox from "@react-native-community/checkbox";
+import Axios from "axios";
+import { useSelector } from "react-redux";
 
 //components
 import InputField from "../../../common/InputField";
 
-export const TotalLeadDetails = ({ navigation, route }) => {
-  const FIRST_NAME = route.params?.FIRST_NAME;
-  const ID = route.params?.ID;
-  const MOBILE = route.params?.MOBILE;
-  const EMAIL = route.params?.EMAIL;
-  const BUDGET = route.params?.BUDGET;
-  const COUNTRY = route.params?.COUNTRY;
-  const CITY = route.params?.CITY;
-  const ADDRESS = route.params?.ADDRESS;
-  const LEAD_STATUS = route.params?.LEAD_STATUS;
-  const LEAD_SOURCE = route.params?.LEAD_SOURCE;
-  const COMPANY = route.params?.COMPANY;
-  const BHK1 = route.params?.BHK1;
-  const BHK2 = route.params?.BHK2;
-  const BHK3 = route.params?.BHK3;
-  const OFFICE = route.params?.OFFICE;
-  const RETAIL = route.params?.RETAIL;
-  const STUDIO = route.params?.STUDIO;
-  const BROKER = route.params?.BROKER;
-  const POBOX = route.params?.POBOX;
-  const LAST_NAME = route.params?.LAST_NAME;
-  const BUDGET_MAX = route.params?.BUDGET_MAX;
-  const BUDGET_MIN = route.params?.BUDGET_MIN;
-  const PCOUNTRY_ID = route.params?.PCOUNTRY_ID;
-  const refreshCallback = route.params?.refreshCallback;
+export const LeadClick = ({ navigation, route }) => {
+  const [mainListingLoading, setMainListingLoading] = useState(true);
+  // const leadId = route.params?.leadId;
+
+  const { token } = useSelector((state) => state.user);
+
+  const [leadData, setLeadData] = useState({
+    FIRST_NAME: "",
+    ID: "",
+    MOBILE: "",
+    EMAIL: "",
+    BUDGET: "",
+    COUNTRY: "",
+    CITY: "",
+    ADDRESS: "",
+    LEAD_STATUS: "",
+    LEAD_SOURCE: "",
+    COMPANY: "",
+    BHK1: "",
+    BHK2: "",
+    BHK3: "",
+    OFFICE: "",
+    RETAIL: "",
+    STUDIO: "",
+    BROKER: "",
+    POBOX: "",
+    LAST_NAME: "",
+    BUDGET_MAX: "",
+    BUDGET_MIN: "",
+    PCOUNTRY_ID: "",
+  });
+
+  const fetchMainListingData = async () => {
+    try {
+      console.log("Route Object:", route);
+
+      const leadId = parseInt(route.params.leadId, 10);
+      const response = await Axios.get(`${Url}leads_list_api?userid=${token}`);
+      // const leadId = 7436;
+      const leadDataArray = response.data.data[0];
+
+      // Find the lead data with the specified lead_id
+      const filteredLeadData = leadDataArray.find((data) => data.ID === leadId);
+      if (filteredLeadData) {
+        const {
+          FIRST_NAME,
+          ID,
+          MOBILE,
+          EMAIL,
+          BUDGET,
+          COUNTRY,
+          CITY,
+          ADDRESS,
+          LEAD_STATUS,
+          LEAD_SOURCE,
+          COMPANY,
+          BHK1,
+          BHK2,
+          BHK3,
+          OFFICE,
+          RETAIL,
+          STUDIO,
+          BROKER,
+          POBOX,
+          LAST_NAME,
+          BUDGET_MAX,
+          BUDGET_MIN,
+          PCOUNTRY_ID,
+        } = filteredLeadData;
+
+        setLeadData({
+          FIRST_NAME,
+          ID,
+          MOBILE,
+          EMAIL,
+          BUDGET,
+          COUNTRY,
+          CITY,
+          ADDRESS,
+          LEAD_STATUS,
+          LEAD_SOURCE,
+          COMPANY,
+          BHK1,
+          BHK2,
+          BHK3,
+          OFFICE,
+          RETAIL,
+          STUDIO,
+          BROKER,
+          POBOX,
+          LAST_NAME,
+          BUDGET_MAX,
+          BUDGET_MIN,
+          PCOUNTRY_ID,
+        });
+      }
+
+      setMainListingLoading(false);
+    } catch (error) {
+      console.error("API Error:", error);
+      setMainListingLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMainListingData();
+  }, []);
+
+  // Access the values using leadData
+  const {
+    FIRST_NAME,
+    ID,
+    MOBILE,
+    EMAIL,
+    BUDGET,
+    COUNTRY,
+    CITY,
+    ADDRESS,
+    LEAD_STATUS,
+    LEAD_SOURCE,
+    COMPANY,
+    BHK1,
+    BHK2,
+    BHK3,
+    OFFICE,
+    RETAIL,
+    STUDIO,
+    BROKER,
+    POBOX,
+    LAST_NAME,
+    BUDGET_MAX,
+    BUDGET_MIN,
+    PCOUNTRY_ID,
+  } = leadData;
 
   const goBackWithRefresh = () => {
     if (refreshCallback) {
@@ -100,8 +211,8 @@ export const TotalLeadDetails = ({ navigation, route }) => {
   const [value3, setValue3] = useState(null);
   const [items3, setItems3] = useState([]);
 
-  const [selectedCountryId, setSelectedCountryId] = useState(null); // State to store the selected country ID
-  const [selectedCity, setSelectedCity] = useState(null); // State to store the selected city
+  const [selectedCountryId, setSelectedCountryId] = useState(null);
+  const [selectedCity, setSelectedCity] = useState(null);
 
   useEffect(() => {
     const apiUrl = `${Url}country_list_api`;
@@ -230,31 +341,31 @@ export const TotalLeadDetails = ({ navigation, route }) => {
   const fields = [
     {
       name: "firstName",
-      label: FIRST_NAME || "First Name",
+      label: leadData.FIRST_NAME || "First Name",
       value: firstName,
       setter: setFirstName,
     },
     {
       name: "mobileNo",
-      label: MOBILE || "Mobile Number",
+      label: leadData.MOBILE || "Mobile Number",
       value: mobileNo,
       setter: setMobileNo,
     },
     {
       name: "email",
-      label: EMAIL || "Email",
+      label: leadData.EMAIL || "Email",
       value: email,
       setter: setEmail,
     },
     {
       name: "budgetMax",
-      label: BUDGET_MAX || "Budget Max",
+      label: leadData.BUDGET_MAX || "Budget Max",
       value: budgetMax,
       setter: setBudgetMax,
     },
     {
       name: "budgetMin",
-      label: BUDGET_MIN || "Budget Min",
+      label: leadData.BUDGET_MIN || "Budget Min",
       value: budgetMin,
       setter: setBudgetMin,
     },
@@ -266,19 +377,19 @@ export const TotalLeadDetails = ({ navigation, route }) => {
     },
     {
       name: "leadStatus",
-      label: LEAD_STATUS || "Lead Status",
+      label: leadData.LEAD_STATUS || "Lead Status",
       value: leadStatus,
       setter: setLeadStatus,
     },
     {
       name: "leadSource",
-      label: LEAD_SOURCE + "(Lead Source)" || "Lead Source",
+      label: leadData.LEAD_SOURCE + "(Lead Source)" || "Lead Source",
       value: leadSource,
       setter: setLeadSource,
     },
     {
       name: "company",
-      label: COMPANY || "Company",
+      label: leadData.COMPANY || "Company",
       value: company,
       setter: setCompany,
     },
@@ -290,7 +401,7 @@ export const TotalLeadDetails = ({ navigation, route }) => {
     },
     {
       name: "brokerName",
-      label: BROKER || "Broker Name",
+      label: leadData.BROKER || "Broker Name",
       value: brokerName,
       setter: setBrokerName,
     },
@@ -309,20 +420,20 @@ export const TotalLeadDetails = ({ navigation, route }) => {
 
     {
       name: "country",
-      label: COUNTRY || "Country",
+      label: leadData.COUNTRY || "Country",
       value: country,
       setter: setCountry,
     },
 
     {
       name: "city",
-      label: CITY || "City",
+      label: leadData.CITY || "City",
       value: city,
       setter: setCity,
     },
     {
       name: "pobox",
-      label: POBOX || "PO BOX",
+      label: leadData.POBOX || "PO BOX",
       value: pobox,
       setter: setPOBox,
     },
@@ -340,7 +451,7 @@ export const TotalLeadDetails = ({ navigation, route }) => {
     },
     {
       name: "address",
-      label: ADDRESS || "Address",
+      label: leadData.ADDRESS || "Address",
       decs: true,
       value: address,
       setter: setAddress,
@@ -762,19 +873,12 @@ export const TotalLeadDetails = ({ navigation, route }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ width: "90%", flexDirection: "row", justifyContent: "space-between", alignItems: "center", alignSelf: "center" }}>
-        <TouchableOpacity activeOpacity={0.8} onPress={goBackWithRefresh} style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+        <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate("TotalLeadListings")} style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
           <Ionicons name="chevron-back" style={{ fontSize: RFPercentage(4) }} color={"#06143b"} />
-          <Text style={{ marginLeft: RFPercentage(0.5), fontSize: RFPercentage(2.3), color: "#06143b", fontWeight: "bold" }}>Lead Listing</Text>
+          <Text style={{ marginLeft: RFPercentage(0.5), fontSize: RFPercentage(2.3), color: "#06143b", fontWeight: "bold" }}>Lead Listing New</Text>
         </TouchableOpacity>
       </View>
       <ScrollView nestedScrollEnabled showsVerticalScrollIndicator={false} style={{ width: "100%" }}>
-        {/* <Text>{BHK1}</Text>
-        <Text>{BHK2}</Text>
-        <Text>{BHK3}</Text>
-        <Text>{OFFICE}</Text>
-        <Text>{RETAIL}</Text>
-        <Text>{STUDIO}</Text> */}
-        {/* <Text>{FIRST_NAME}</Text> */}
         <View style={{ justifyContent: "center", alignItems: "center", width: "100%" }}>
           <View style={{ marginTop: RFPercentage(3), width: "86%", flexDirection: "row", justifyContent: "space-between", alignItems: "center", alignSelf: "center" }}>
             <TouchableOpacity

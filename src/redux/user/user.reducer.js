@@ -1,4 +1,4 @@
-import ActionsType from "./../utils/actions.type"
+import ActionsType from "./../utils/actions.type";
 const INITIAL_STATE = {
   userDetail: null,
   token: null,
@@ -6,49 +6,46 @@ const INITIAL_STATE = {
   isCustomer: false,
 
   error: {},
-  response: {}
-}
+  response: {},
+};
 
 const userReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-
-
-
     case ActionsType.SET_IS_CUSTOMER:
       return {
         ...state,
-        isCustomer: action.payload
-      }
+        isCustomer: action.payload,
+      };
 
     case ActionsType.SET_ORG_ID:
       return {
         ...state,
-        orgID: action.payload
-      }
+        orgID: action.payload,
+      };
 
     case ActionsType.SET_USER_DETAIL:
       return {
         ...state,
-        userDetail: action.payload
-      }
+        userDetail: action.payload,
+      };
     case ActionsType.SET_TOKEN:
       return {
         ...state,
-        token: action.payload
-      }
+        token: action.payload,
+      };
     case ActionsType.API_ERROR:
       return {
         ...state,
-        error: action.payload
-      }
+        error: action.payload,
+      };
     case ActionsType.API_SUCCESS:
       return {
         ...state,
-        response: action.payload
-      }
+        response: action.payload,
+      };
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default userReducer
+export default userReducer;

@@ -8,6 +8,7 @@ const SCREENS = {
   BOOKINGDETAIL: "BookingDetail",
   INVOICEDETAIL: "InvoiceDetail",
   RECEIPTDETAIL: "ReceiptDetail",
+  LEADCLICK: "LeadClick",
   FORGOTPASSWORD: "ForgotPassword",
   VIEWALLAVAILABLELISTING: "ViewAllAvailableListings",
   VIEWGALLERY: "ViewGallery",

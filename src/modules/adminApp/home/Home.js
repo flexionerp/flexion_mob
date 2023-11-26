@@ -1,25 +1,25 @@
 import { ImageBackground, SafeAreaView, ScrollView, StyleSheet, Text, View, Image, TouchableOpacity, Platform, Alert, Button } from "react-native";
-import React, { useState, useEffect } from "react";
-import { FONTS, ICONS, Url } from "../../../constants";
-import { StatsRow } from "../../../common/statsRow";
-import { BtnLI } from "../../../common/btnLI";
-import { BtnLIM } from "../../../common/btnLIM";
-import { useDispatch, useSelector } from "react-redux";
 import { getPropertyStats, getCountList, getReservationList, getMonthlyStats } from "../../../redux/property/property.action";
-import { useFocusEffect } from "@react-navigation/native";
-import axios from "axios";
-import { RFPercentage } from "react-native-responsive-fontsize";
 import messaging, { firebase } from "@react-native-firebase/messaging";
+import { RFPercentage } from "react-native-responsive-fontsize";
+import { useFocusEffect } from "@react-navigation/native";
+import { FONTS, ICONS, Url } from "../../../constants";
+import { useDispatch, useSelector } from "react-redux";
+import { StatsRow } from "../../../common/statsRow";
+import React, { useState, useEffect } from "react";
+import { BtnLIM } from "../../../common/btnLIM";
+import { BtnLI } from "../../../common/btnLI";
 import notifee from "@notifee/react-native";
+import axios from "axios";
 
-// Till here
 const CustomerDetail = () => {
-  const { userDetail } = useSelector((state) => state.user);
+  const userDetail = useSelector((state) => state.user.userDetail);
 
   return (
     <View style={styles.customerContainer}>
       <Text style={styles.hello}>Hello,</Text>
       <Text style={styles.customerName}>{userDetail && userDetail.FIRST_NAME + " " + userDetail.LAST_NAME}!</Text>
+      {/* <Text>{userDetail.LOGIN_NAME}</Text> */}
     </View>
   );
 };
@@ -35,6 +35,8 @@ const UnitCount = ({ count, label, disabled, onClick }) => {
 };
 
 const Home = ({ navigation, route }) => {
+  const userDetail = useSelector((state) => state.user.userDetail);
+
   // Push Notification work
   async function registerAppWithFCM() {
     await messaging().registerDeviceForRemoteMessages();
@@ -72,7 +74,7 @@ const Home = ({ navigation, route }) => {
       const token = await firebase.messaging().getToken();
       if (token) {
         console.log("FCM token:", token);
-        setDeviceToken(token); // Store the token in state
+        setDeviceToken(token);
       } else {
         console.log("FCM token is null");
       }
@@ -84,102 +86,149 @@ const Home = ({ navigation, route }) => {
   useEffect(() => {
     getDeviceToken();
   }, []);
+
+  // // Forground
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
       Alert.alert("A new FCM message arrived in Forground State!", JSON.stringify(remoteMessage));
-      console.log("\n\n\n\n Message handled in the Forground State!", remoteMessage);
+      // console.log("\n\n\n\n Message handled in the Forground State!", remoteMessage.data.action);
+      const leadId = remoteMessage.data && remoteMessage.data.leadId;
+      console.log("\n\n\n\n\n\n\n\nLeadID Via Notification", leadId);
+      if (leadId) {
+        navigation.navigate("LeadClick", { leadId: leadId });
+      } else {
+        console.log("Unhandled action:", leadId);
+      }
+      await notifee.displayNotification({
+        title: remoteMessage.notification.title,
+        body: remoteMessage.notification.body,
+      });
     });
 
     return unsubscribe;
   }, []);
 
-  // Thisssssss
+  // messaging().onMessage(async (remoteMessage) => {
+  //   console.log("\n\n\n\n Message handled in the Background State!", remoteMessage);
+  // });
+
+  // Background
   messaging().setBackgroundMessageHandler(async (remoteMessage) => {
     console.log("\n\n\n\n Message handled in the Background State!", remoteMessage);
 
-    // You can add code here to display a local notification using Notifee
+    const leadId = remoteMessage.data && remoteMessage.data.leadId;
+    console.log("\n\n\n\n\n\n\n\nLeadID Via Notification", leadId);
+    if (leadId) {
+      navigation.navigate("LeadClick", { leadId: leadId });
+    } else {
+      console.log("Unhandled action:", leadId);
+    }
+
     await notifee.displayNotification({
       title: remoteMessage.notification.title,
       body: remoteMessage.notification.body,
-      // Add other notification options as needed
     });
   });
 
-  messaging().getInitialNotification(async (remoteMessage) => {
-    console.log("\n\n\n\n Message handled in the Kill State!", remoteMessage);
-  });
+  // messaging().getInitialNotification(async (remoteMessage) => {
+  //   console.log("\n\n\n\n Message handled in the Kill State!", remoteMessage);
+  //   const action = remoteMessage.data && remoteMessage.data.action;
+
+  //   if (action === "48HoursNoAction") {
+  //     // Use navigation.replace or navigation.reset here
+  //     navigation.replace("TotalLeadMainListings", { hours: true });
+  //   } else if (action === "30MinsNoAction") {
+  //     navigation.replace("TotalLeadMainListings", { noAction: true });
+  //   } else if (action === "noAction") {
+  //     navigation.replace("TotalLeadMainListings", { category: "ASSIGNED" });
+  //   } else {
+  //     console.log("Unhandled action:", action);
+  //   }
+
+  //   // await notifee.displayNotification({
+  //   //   title: remoteMessage.notification.title,
+  //   //   body: remoteMessage.notification.body,
+  //   // });
+  // });
+
+  // kill Mode
+  useEffect(() => {
+    const handleKillStateNotification = async (remoteMessage) => {
+      console.log("\n\n\n\n Message handled in the Kill State!", remoteMessage);
+      const leadId = remoteMessage.data && remoteMessage.data.leadId;
+      console.log("\n\n\n\n\n\n\n\nLeadID Via Notification", leadId);
+      if (leadId) {
+        navigation.navigate("LeadClick", { leadId: leadId });
+      } else {
+        console.log("Unhandled action:", leadId);
+      }
+
+      // Uncomment the following lines if you want to display the notification
+      // await notifee.displayNotification({
+      //   title: remoteMessage.notification.title,
+      //   body: remoteMessage.notification.body,
+      // });
+    };
+
+    const unsubscribeKillState = messaging().onNotificationOpenedApp(handleKillStateNotification);
+
+    // Check if the app was opened from a terminated state
+    messaging()
+      .getInitialNotification()
+      .then((remoteMessage) => {
+        if (remoteMessage) {
+          handleKillStateNotification(remoteMessage);
+        }
+      });
+
+    return () => {
+      unsubscribeKillState();
+    };
+  }, [navigation]);
 
   // Function to send a test notification Thissss
-  const sendTestNotification = async () => {
-    try {
-      // Get the FCM token
-      const fcmToken = await firebase.messaging().getToken();
-      console.log("\n\n\n\n\nFecthed FCM Token", fcmToken);
+  // const sendTestNotification = async () => {
+  //   try {
+  //     // Get the FCM token
+  //     const fcmToken = await firebase.messaging().getToken();
+  //     console.log("\n\n\n\n\nFecthed FCM Token", fcmToken);
 
-      if (fcmToken) {
-        // Send FCM notification using the obtained token
-        const response = await fetch("https://fcm.googleapis.com/fcm/send", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "key=AAAA7ujSLDg:APA91bFcIUpZb8Zpt89yfPE57i2rdhPSEBde57PpnPYSFJuA9ZZBEKXgaWS24IRjFU_mF1vbvblttaSWzn5aJOaDEZXq7ejXkdyNMTK3ek94au8xWkGoemoYo2V_Q4Fm5TKRcXf__El1",
-          },
-          body: JSON.stringify({
-            to: fcmToken, // Use the obtained FCM token here
-            notification: {
-              title: "Test Notification",
-              body: "This is a test notification from your app.",
-            },
-            data: {
-              // You can add custom data here if needed
-            },
-          }),
-        });
+  //     if (fcmToken) {
+  //       const response = await fetch("https://fcm.googleapis.com/fcm/send", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: "key=AAAA7ujSLDg:APA91bFcIUpZb8Zpt89yfPE57i2rdhPSEBde57PpnPYSFJuA9ZZBEKXgaWS24IRjFU_mF1vbvblttaSWzn5aJOaDEZXq7ejXkdyNMTK3ek94au8xWkGoemoYo2V_Q4Fm5TKRcXf__El1",
+  //         },
+  //         body: JSON.stringify({
+  //           to: fcmToken,
+  //           notification: {
+  //             title: "Test Notification",
+  //             body: "This is a test notification from your app.",
+  //           },
+  //           data: {
+  //             action: "30MinsNoAction",
+  //           },
+  //         }),
+  //       });
 
-        if (response.status === 200) {
-          console.log("Test notification sent successfully");
+  //       if (response.status === 200) {
+  //         console.log("Test notification sent successfully");
 
-          // Display local notification using Notifee
-          await notifee.displayNotification({
-            title: "Flexion",
-            body: "Your Ticket is Generated",
-          });
-        } else {
-          console.error("Failed to send test notification");
-        }
-      } else {
-        console.log("FCM token is null");
-      }
-    } catch (error) {
-      console.error("Error sending test notification:", error);
-    }
-  };
-
-  // Send device token to api
-  const sendDeviceTokenToAPI = async () => {
-    if (deviceToken) {
-      try {
-        // Replace 'user_id' with the actual user ID from your application
-        const userId = 5231;
-        const apiUrl = `http://tvh.flexion.ae:9091/mobile_device_id?user_id=${userId}&device_id=${deviceToken}`;
-
-        const response = await axios.post(apiUrl);
-
-        if (response.status === 200) {
-          console.log("Device token sent successfully to the API");
-        } else {
-          console.error("Failed to send device token to the API");
-        }
-      } catch (error) {
-        console.error("Error sending device token to the API:", error);
-      }
-    }
-  };
-
-  // Call the function to send the device token when the user logs in and comes to the Home screen
-  // useEffect(() => {
-  //   sendDeviceTokenToAPI();
-  // }, [deviceToken]);
+  //         await notifee.displayNotification({
+  //           title: "Flexion",
+  //           body: "Your Ticket is Generated",
+  //         });
+  //       } else {
+  //         console.error("Failed to send test notification");
+  //       }
+  //     } else {
+  //       console.log("FCM token is null");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error sending test notification:", error);
+  //   }
+  // };
 
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.user);
@@ -188,7 +237,7 @@ const Home = ({ navigation, route }) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [apiResponse, setApiResponse] = useState([]);
 
-  const [totalLeadCount, setTotalLeadCount] = useState(0); // Initialize with 0
+  const [totalLeadCount, setTotalLeadCount] = useState(0);
 
   const makeApiRequest = async () => {
     try {
@@ -199,7 +248,6 @@ const Home = ({ navigation, route }) => {
       const leadCount = firstObject ? firstObject.length : 0;
       console.log("Latest count", leadCount);
 
-      // Set the total lead count in state
       setTotalLeadCount(leadCount);
 
       setApiResponse(response.data.data);
@@ -249,30 +297,50 @@ const Home = ({ navigation, route }) => {
     // console.log("Find Retail here", tempcount);
   };
 
-  async function onDisplayNotification() {
-    // Request permissions (required for iOS)
-    await notifee.requestPermission();
+  // send token api
+  const [apiResponse2, setApiResponse2] = useState([]);
 
-    // Create a channel (required for Android)
-    const channelId = await notifee.createChannel({
-      id: "default",
-      name: "Default Channel",
-    });
+  const makeApiRequest2 = async () => {
+    try {
+      const platform = Platform.OS.toLowerCase();
 
-    // Display a notification
-    await notifee.displayNotification({
-      title: "Flexion",
-      body: "Your Ticket is Generated",
-      android: {
-        channelId,
-        smallIcon: "name-of-a-small-icon", // optional, defaults to 'ic_launcher'.
-        // pressAction is needed if you want the notification to open the app when pressed
-        pressAction: {
-          id: "default",
-        },
-      },
-    });
-  }
+      const response = await axios.get(
+        `${Url}get_mobile_device_id_api?user_id=${token}&fcm_token=${deviceToken}&user_name=${userDetail.LOGIN_NAME}&app_type=FLEXION&app_platform=${platform}&status=offline&is_active=1`,
+      );
+      setApiResponse2(response.data);
+
+      // Handle the API response data as needed
+      console.log("\n\n\n\n\n\n\n\n\n\nToken Sent Successfully!", response.data);
+    } catch (error) {
+      console.error("\n\n\n\n\n\n\n\n\n\n\nAPI Error/////:", error);
+    }
+  };
+
+  useEffect(() => {
+    makeApiRequest2();
+  }, [deviceToken]);
+
+  // async function onDisplayNotification() {
+  //   await notifee.requestPermission();
+
+  //   const channelId = await notifee.createChannel({
+  //     id: "default",
+  //     name: "Default Channel",
+  //   });
+
+  //   await notifee.displayNotification({
+  //     title: "Flexion",
+  //     body: "Your Ticket is Generated",
+  //     android: {
+  //       channelId,
+  //       smallIcon: "name-of-a-small-icon", // optional, defaults to 'ic_launcher'.
+  //       // pressAction is needed if you want the notification to open the app when pressed
+  //       pressAction: {
+  //         id: "default",
+  //       },
+  //     },
+  //   });
+  // }
 
   return (
     <ImageBackground source={ICONS.bgImg} style={styles.container}>
