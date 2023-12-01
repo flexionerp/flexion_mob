@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, SafeAreaView, ImageBackground, Platform, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, Image, SafeAreaView, ImageBackground, Platform, TouchableOpacity, Alert } from "react-native";
 import React, { useEffect } from "react";
 import { ICONS, CUSTOMWIDTH, COLORS, FONTS, SCREENS, SCREEN_WIDTH } from "../../constants";
 import { RowItem } from "./components/RowItem";
@@ -36,6 +36,28 @@ export const MyAccount = ({ navigation, route }) => {
 
     // Navigate to the login screen
     navigation.navigate(SCREENS.LOGINSCREEN);
+  };
+
+  const showDeleteAccountAlert = () => {
+    Alert.alert(
+      "Delete Account",
+      "Are you sure you want to delete this account?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: () => handleDeleteAccount(),
+        },
+      ],
+      { cancelable: false },
+    );
+  };
+
+  const handleDeleteAccount = () => {
+    logout();
   };
   return (
     <SafeAreaView style={{ flex: 1, width: "100%" }}>
@@ -91,6 +113,23 @@ export const MyAccount = ({ navigation, route }) => {
           </View>
         </View>
         <View style={{ height: 20 }} />
+        <View style={{ width: "90%", justifyContent: "flex-start", alignItems: "flex-start", top: RFPercentage(-3) }}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => showDeleteAccountAlert()}
+            style={{
+              borderRadius: RFPercentage(2),
+              borderColor: COLORS.primary,
+              borderWidth: RFPercentage(0.2),
+              width: "38%",
+              height: RFPercentage(6.2),
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ color: COLORS.normalText, fontSize: RFPercentage(1.8), fontFamily: FONTS.Bold }}>Delete Account</Text>
+          </TouchableOpacity>
+        </View>
         <View style={{ width: "85%", alignItems: "center", position: "absolute", bottom: Platform.OS == "ios" ? 70 : 90, flexDirection: "row", justifyContent: "space-between", flexWrap: "wrap" }}>
           {/* <RegularBtn
                         label={"Reset Password"}

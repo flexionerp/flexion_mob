@@ -15,6 +15,7 @@ export const TotalAvailable = ({ navigation, route }) => {
   const [items, setItems] = useState([
     { label: "MGT1", value: "MGT1" },
     { label: "MGT2", value: "MGT2" },
+    { label: "MGTL", value: "MGTL" },
     { label: "MGR", value: "MGR" },
     { label: "All Towers", value: null },
   ]);
@@ -32,6 +33,9 @@ export const TotalAvailable = ({ navigation, route }) => {
       return unitCode.includes("MGT1");
     } else if (value === "MGT2") {
       return unitCode.includes("MGT2");
+    } else if (value === "MGR") {
+    } else if (value === "MGTL") {
+      return unitCode.includes("MGTL");
     } else if (value === "MGR") {
       return unitCode.includes("MGR");
     }
@@ -70,7 +74,7 @@ export const TotalAvailable = ({ navigation, route }) => {
             />
           </View>
 
-          <View style={[styles.allTowersContainer, { marginTop: open ? RFPercentage(22) : RFPercentage(6) }]}>
+          <View style={[styles.allTowersContainer, { marginTop: open ? RFPercentage(28) : RFPercentage(6) }]}>
             <View style={styles.subAllTowersContainer}>
               {!value ? <Text style={styles.allTowersText}>All Towers </Text> : <Text style={styles.allTowersText}>In Tower {value}</Text>}
 

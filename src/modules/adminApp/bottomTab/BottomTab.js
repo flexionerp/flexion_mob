@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { COLORS, FONTS, ICONS } from "../../../constants";
 import Home from "../home/Home";
+import PieChart from "../charts/PieChart";
 
 import UnitListing from "../unit/unitListing";
 import Construction from "../construction/ConstructionUpdate";
@@ -66,6 +67,7 @@ import { ComposeMail } from "../messagesScreen/ComposeMail";
 import { LeadAgentChange } from "../totalLead/LeadAgentChange";
 import { LeadTagChange } from "../totalLead/LeadTagChange";
 import { LeadClick } from "../totalLead/LeadClick";
+import Graph from "../charts/Graph";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -87,6 +89,7 @@ function HomeRoutes() {
           headerShown: false,
         }}
       />
+
       <Stack.Screen
         name="DetailDashbaord"
         component={DetailDashbaord}
@@ -496,6 +499,13 @@ function UnitRoutes() {
           headerShown: false,
         }}
       />
+      {/* <Stack.Screen
+        name="Graph"
+        component={Graph}
+        options={{
+          headerShown: false,
+        }}
+      /> */}
       <Stack.Screen
         name="AddPayment"
         component={AddPayment}
@@ -647,6 +657,27 @@ function UnitRoutes() {
   );
 }
 
+function ChartRoutes() {
+  return (
+    <Stack.Navigator initialRouteName={"Chart"}>
+      <Stack.Screen
+        name="Chart"
+        component={PieChart}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Graph"
+        component={Graph}
+        options={{
+          headerShown: false,
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+
 export default function App() {
   return (
     <Tab.Navigator
@@ -686,6 +717,25 @@ export default function App() {
                 </ImageBackground>
               ) : (
                 <Image source={ICONS.tab1} style={{ width: 35, height: 35 }} resizeMode={"contain"} />
+              )}
+            </View>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Charts"
+        component={ChartRoutes}
+        options={{
+          unmountOnBlur: true,
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <View style={styles.tabBtnStyle}>
+              {focused ? (
+                <ImageBackground source={ICONS.tabBg} style={{ width: 52, height: 52, justifyContent: "center", alignItems: "center" }}>
+                  <Image source={ICONS.charta} style={{ width: 30, height: 30 }} resizeMode={"contain"} />
+                </ImageBackground>
+              ) : (
+                <Image source={ICONS.chart} style={{ width: 35, height: 35 }} resizeMode={"contain"} />
               )}
             </View>
           ),

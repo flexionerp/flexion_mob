@@ -224,7 +224,7 @@ export const TotalLeadMainListings = ({ navigation, route }) => {
     try {
       const response = await Axios.get(`${Url}leads_list_api?userid=${token}`);
       const result = response.data.data[1];
-      // console.log("\n\n\n\n\n\n\nAgent Change Data", result);
+      console.log("\n\n\n\n\n\n\nAgent Change Data", result);
       setAgentData(result);
       setFilteredAgentData(result);
       setLoading(false);

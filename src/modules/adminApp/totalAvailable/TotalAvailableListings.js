@@ -110,7 +110,7 @@ export const TotalAvailableListings = ({ navigation, route }) => {
                 </View>
               ))
             ) : (
-              <Text style={{ alignSelf: "center", marginTop: 25 }}>No available listings for {unitType}</Text>
+              <Text style={{ alignSelf: "center", marginTop: 25, color: COLORS.boldText, fontFamily: FONTS.Medium, fontSize: RFPercentage(2) }}>No Available listings For {unitType}</Text>
             )}
           </View>
           <View style={{ marginBottom: RFPercentage(10) }} />

@@ -7,7 +7,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useDispatch, useSelector } from "react-redux";
-import moment from "moment";
+import moment from "moment-timezone";
 
 export const Reminder = ({ navigation, route }) => {
   const { token } = useSelector((state) => state.user);
@@ -76,13 +76,77 @@ export const Reminder = ({ navigation, route }) => {
   }, []);
 
   // Insert Reminder API
+  // const sendReminder = async () => {
+  //   console.log("Message Typed:", message);
+  //   const formattedDate = selectedDate ? formatDateTime(selectedDate) : null;
+  //   const is_active = isSwitchOn ? 1 : 0;
+  //   console.log("\n\n\n\n\n\n\n\n\n\n\nFormat date time", formattedDate);
+  //   const apiUrl = `${Url}insert_reminder_api?remin_date=08-FEB-2023,03:58:00 PM&form_id=116&ref_code=lead_reminder&ref_id=${leadID}&is_sms=0&is_email=1&is_whatsapp=0&message=${message}&org_id=33&ref_table=lead_overview&user_id=${token}&ref_name=lead_reminder&is_active=1`;
+  //   console.log(is_active);
+  //   try {
+  //     const response = await fetch(apiUrl, {
+  //       method: "GET",
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error("Network response was not ok");
+  //     }
+  //     const data = await response.json();
+  //     console.log("API response:", data);
+  //     Alert.alert("Success", "Reminder Created Successfully!", [
+  //       {
+  //         text: "OK",
+  //         onPress: () => {
+  //           setMessage("");
+  //           fetchReminders();
+  //         },
+  //       },
+  //     ]);
+  //   } catch (error) {
+  //     console.error("Error sending reminder:", error);
+  //   }
+  // };
+  // const sendReminder = async () => {
+  //   console.log("Message Typed:", message);
+  //   const formattedDate = selectedDate ? moment(selectedDate).format("DD-MMM-YYYY,hh:mm:ss A") : null;
+  //   const is_active = isSwitchOn ? 1 : 0;
+  //   console.log("\n\n\n\n\n\n\n\n\n\n\nFormat date time", formattedDate);
+  //   const apiUrl = `${Url}insert_reminder_api?remin_date=${formattedDate}&form_id=116&ref_code=lead_reminder&ref_id=${leadID}&is_sms=0&is_email=1&is_whatsapp=0&message=${message}&org_id=33&ref_table=lead_overview&user_id=${token}&ref_name=lead_reminder&is_active=${is_active}`;
+  //   console.log(is_active);
+  //   try {
+  //     const response = await fetch(apiUrl, {
+  //       method: "GET",
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error("Network response was not ok");
+  //     }
+  //     const data = await response.json();
+  //     console.log("API response:", data);
+  //     Alert.alert("Success", "Reminder Created Successfully!", [
+  //       {
+  //         text: "OK",
+  //         onPress: () => {
+  //           setMessage("");
+  //           fetchReminders();
+  //         },
+  //       },
+  //     ]);
+  //   } catch (error) {
+  //     console.error("Error sending reminder:", error);
+  //   }
+  // };
   const sendReminder = async () => {
     console.log("Message Typed:", message);
-    const formattedDate = selectedDate ? formatDateTime(selectedDate) : null;
+
+    // Assuming 'selectedDate' is in UTC, you can adjust the time zone to 'Asia/Dubai'
+    const formattedDate = selectedDate ? moment(selectedDate).tz("Asia/Dubai").format("DD-MMM-YYYY,hh:mm:ss A") : null;
+
     const is_active = isSwitchOn ? 1 : 0;
     console.log("\n\n\n\n\n\n\n\n\n\n\nFormat date time", formattedDate);
-    const apiUrl = `${Url}insert_reminder_api?remin_date=08-FEB-2023,03:58:00 PM&form_id=116&ref_code=lead_reminder&ref_id=${leadID}&is_sms=0&is_email=1&is_whatsapp=0&message=${message}&org_id=33&ref_table=lead_overview&user_id=${token}&ref_name=lead_reminder&is_active=${is_active}`;
+    const apiUrl = `${Url}insert_reminder_api?remin_date=${formattedDate}&form_id=116&ref_code=lead_reminder&ref_id=${leadID}&is_sms=0&is_email=1&is_whatsapp=0&message=${message}&org_id=33&ref_table=lead_overview&user_id=${token}&ref_name=lead_reminder&is_active=1`;
     console.log(is_active);
+
     try {
       const response = await fetch(apiUrl, {
         method: "GET",
@@ -91,8 +155,10 @@ export const Reminder = ({ navigation, route }) => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
+
       const data = await response.json();
       console.log("API response:", data);
+
       Alert.alert("Success", "Reminder Created Successfully!", [
         {
           text: "OK",
@@ -171,6 +237,7 @@ export const Reminder = ({ navigation, route }) => {
             <DateTimePickerModal
               isVisible={isDatePickerVisible}
               mode="datetime"
+              minimumDate={new Date()} // Set minimumDate to the current date
               onConfirm={handleConfirm}
               onCancel={hideDatePicker}
               headerTextIOS="Select Date and Time"
@@ -205,10 +272,10 @@ export const Reminder = ({ navigation, route }) => {
             />
           </View>
 
-          <View style={{ flexDirection: "row", marginTop: RFPercentage(2), width: "90%", justifyContent: "flex-start", alignItems: "center" }}>
+          {/* <View style={{ flexDirection: "row", marginTop: RFPercentage(2), width: "90%", justifyContent: "flex-start", alignItems: "center" }}>
             <Text style={{ fontSize: RFPercentage(2), color: "#06143b", fontWeight: "bold" }}>Set Status</Text>
             <Switch style={{ transform: [{ scale: 0.8 }] }} value={isSwitchOn} onValueChange={toggleSwitch} trackColor={{ false: "#CDA349", true: "#06143b" }} />
-          </View>
+          </View> */}
 
           <View style={{ marginTop: RFPercentage(3), width: "60%", flexDirection: "row", justifyContent: "space-between", alignItems: "center", alignSelf: "center" }}>
             <TouchableOpacity
@@ -220,6 +287,7 @@ export const Reminder = ({ navigation, route }) => {
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.8}
+              onPress={() => navigation.goBack()}
               style={{ borderRadius: RFPercentage(1.5), backgroundColor: COLORS.normalText, width: RFPercentage(14), height: RFPercentage(5.5), justifyContent: "center", alignItems: "center" }}
             >
               <Text style={{ color: COLORS.secondry, fontFamily: FONTS.Medium, fontSize: RFPercentage(2) }}>Close</Text>

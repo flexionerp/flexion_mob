@@ -293,6 +293,7 @@ const Home = ({ navigation, route }) => {
 
   const setAvailableUnits = () => {
     let tempcount = totalUnitsCount.filter(({ STATUS }) => STATUS == "PRE_RESERVED" || STATUS == "AVAILABLE" || STATUS == "RELEASED");
+    // let tempcount = totalUnitsCount;
     setAvailable(tempcount);
     // console.log("Find Retail here", tempcount);
   };
@@ -302,15 +303,20 @@ const Home = ({ navigation, route }) => {
 
   const makeApiRequest2 = async () => {
     try {
-      const platform = Platform.OS.toLowerCase();
+      // Check if deviceToken is not null before making the API request
+      if (deviceToken) {
+        const platform = Platform.OS.toLowerCase();
 
-      const response = await axios.get(
-        `${Url}get_mobile_device_id_api?user_id=${token}&fcm_token=${deviceToken}&user_name=${userDetail.LOGIN_NAME}&app_type=FLEXION&app_platform=${platform}&status=offline&is_active=1`,
-      );
-      setApiResponse2(response.data);
+        const response = await axios.get(
+          `${Url}get_mobile_device_id_api?user_id=${token}&fcm_token=${deviceToken}&user_name=${userDetail.LOGIN_NAME}&app_type=FLEXION&app_platform=${platform}&status=offline&is_active=1`,
+        );
+        setApiResponse2(response.data);
 
-      // Handle the API response data as needed
-      console.log("\n\n\n\n\n\n\n\n\n\nToken Sent Successfully!", response.data);
+        // Handle the API response data as needed
+        console.log("\n\n\n\n\n\n\n\n\n\nToken Sent Successfully!", response.data);
+      } else {
+        console.log("FCM token is null. Skipping API request.");
+      }
     } catch (error) {
       console.error("\n\n\n\n\n\n\n\n\n\n\nAPI Error/////:", error);
     }

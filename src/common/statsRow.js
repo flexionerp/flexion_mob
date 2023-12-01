@@ -16,6 +16,7 @@ import {
   getHomelist,
 } from "../redux/property/property.action";
 import { useFocusEffect } from "@react-navigation/native";
+import { RFPercentage } from "react-native-responsive-fontsize";
 
 export const StatsRow = ({ units, navigation, route, refreshCallback }) => {
   const dispatch = useDispatch();
@@ -200,6 +201,7 @@ export const StatsRow = ({ units, navigation, route, refreshCallback }) => {
           >
             {booked.length < 200 ? <Text style={styles.rightCount}>0</Text> : <Text style={styles.rightCount}>{notReleased.length}</Text>}
             <Text style={styles.rightLabel}>TOTAL Not-Released</Text>
+            <Image source={ICONS.nextArrow} style={{ width: 20, height: 20, position: "absolute", right: RFPercentage(2) }} resizeMode="contain" />
           </TouchableOpacity>
         )}
         {reserve.length > 0 && (
@@ -219,12 +221,14 @@ export const StatsRow = ({ units, navigation, route, refreshCallback }) => {
           <TouchableOpacity onPress={() => navigation.navigate(SCREENS.STATSLISTING, { label: "Booked", list: booked })} style={[styles.top]}>
             <Text style={styles.rightCount}>{booked.length}</Text>
             <Text style={styles.rightLabel}>TOTAL Booked</Text>
+            <Image source={ICONS.nextArrow} style={{ width: 20, height: 20, position: "absolute", right: RFPercentage(2) }} resizeMode="contain" />
           </TouchableOpacity>
         )}
         {booked.length > 0 && !isCustomer && (
           <TouchableOpacity disabled={isCustomer} onPress={() => navigation.navigate(SCREENS.STATSLISTING, { label: "Cancellation", list: cancelllation })} style={[styles.top]}>
             <>{isCustomer ? <Text style={styles.rightCount}>0</Text> : <Text style={styles.rightCount}>{cancelllation.length}</Text>}</>
             <Text style={styles.rightLabel}>TOTAL Cancellation{"\n"}In-Progress</Text>
+            <Image source={ICONS.nextArrow} style={{ width: 17, height: 17, position: "absolute", right: RFPercentage(2), top: RFPercentage(2.2) }} resizeMode="contain" />
           </TouchableOpacity>
         )}
       </View>

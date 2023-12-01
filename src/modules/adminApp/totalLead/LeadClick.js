@@ -875,7 +875,7 @@ export const LeadClick = ({ navigation, route }) => {
       <View style={{ width: "90%", flexDirection: "row", justifyContent: "space-between", alignItems: "center", alignSelf: "center" }}>
         <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate("TotalLeadListings")} style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
           <Ionicons name="chevron-back" style={{ fontSize: RFPercentage(4) }} color={"#06143b"} />
-          <Text style={{ marginLeft: RFPercentage(0.5), fontSize: RFPercentage(2.3), color: "#06143b", fontWeight: "bold" }}>Lead Listing New</Text>
+          <Text style={{ marginLeft: RFPercentage(0.5), fontSize: RFPercentage(2.3), color: "#06143b", fontWeight: "bold" }}>Lead Listing</Text>
         </TouchableOpacity>
       </View>
       <ScrollView nestedScrollEnabled showsVerticalScrollIndicator={false} style={{ width: "100%" }}>
