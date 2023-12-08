@@ -230,11 +230,11 @@ export const getPropertyStats = () => {
       .then((resp) => {
         let response = resp.data;
         dispatch(setPropertyStats(response));
-        // console.log("Total Units Count's API Res :", response);
+        // console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTotal Units Count's API Res :", response.data.length);
       })
       .catch((error) => {
         const err = error;
-        console.log("getPropertyStats: ", err);
+        // console.log("getPropertyStats: ", err);
         dispatch(setLoader(false));
       });
   };
@@ -251,13 +251,13 @@ export const getReservationList = (id) => {
       .then((resp) => {
         let response = resp.data;
         console.log("getReservationList here ==============>: ", response.data.length);
-        // console.log("Here is the total data response =========> ", resp.data);
+        console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHere is the total data response =========> ", resp.data);
         dispatch(setReservationList(response.data));
         dispatch(setLoader(false));
       })
       .catch((error) => {
         const err = error;
-        console.log("getReservationList: ", err);
+        // console.log("getReservationList: ", err);
         dispatch(setLoader(false));
       });
   };
@@ -591,7 +591,7 @@ export const getCountList = () => {
       .catch((error) => {
         const err = error;
         if (err.response) {
-          console.log("getCountList error", err.response);
+          // console.log("getCountList error", err.response);
         }
         dispatch(setLoader(false));
       });
@@ -613,7 +613,7 @@ export const getDuesCount = (id) => {
       .catch((error) => {
         const err = error;
         if (err.response) {
-          console.log("getDuesCount error", err.response);
+          // console.log("getDuesCount error", err.response);
         }
         dispatch(setLoader(false));
       });
@@ -642,7 +642,7 @@ export const getCountryList = () => {
       .catch((error) => {
         const err = error;
         if (err.response) {
-          console.log("getCountryList error", err.response);
+          // console.log("getCountryList error", err.response);
         }
       });
   };
@@ -671,7 +671,7 @@ export const getCityList = (id) => {
         const err = error;
         dispatch(setLoader(false));
         if (err.response) {
-          console.log("getCityList error", err.response);
+          // console.log("getCityList error", err.response);
         }
       });
   };
@@ -699,7 +699,7 @@ export const getCityList1 = (id) => {
         const err = error;
         dispatch(setLoader(false));
         if (err.response) {
-          console.log("getCityList1 error", err.response);
+          // console.log("getCityList1 error", err.response);
         }
       });
   };
@@ -726,7 +726,7 @@ export const insertCustomer = (data, navigation) => {
         const err = error;
         dispatch(setLoader(false));
         if (err.response) {
-          console.log("insertCustomer error", err.response);
+          // console.log("insertCustomer error", err.response);
         }
       });
   };

@@ -701,7 +701,7 @@ export default function App() {
           shadowOpacity: 0.26,
         },
       }}
-      initialRouteName={"Dashboard"}
+      initialRouteName={"Charts"}
     >
       <Tab.Screen
         name="Home"

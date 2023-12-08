@@ -12,6 +12,7 @@ import notifee from "@notifee/react-native";
 import axios from "axios";
 import { BackButton } from "../../../common/backButton";
 import Feather from "react-native-vector-icons/Feather";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 import {
   getReservationList,
@@ -200,20 +201,20 @@ const PieChart = ({ navigation, route }) => {
   }, [totalUnitsCount, reservationList, token]);
 
   const setAvailableUnits = () => {
-    let tempcount = totalUnitsCount.filter(({ STATUS }) => STATUS == "PRE_RESERVED" || STATUS == "AVAILABLE" || STATUS == "RELEASED");
+    let tempcount = totalUnitsCount.filter(({ STATUS }) => STATUS == "AVAILABLE");
     setAvailable(tempcount);
     // console.log("Find Retail here", tempcount);
   };
 
-  const calculateTotalSaleValue = () => {
-    let totalSaleValue = 0;
-    totalUnitsCount.forEach((unit) => {
-      if (unit.PRICE_VALUE) {
-        totalSaleValue += unit.PRICE_VALUE;
-      }
-    });
-    return totalSaleValue.toFixed(2);
-  };
+  // const calculateTotalSaleValue = () => {
+  //   let totalSaleValue = 0;
+  //   totalUnitsCount.forEach((unit) => {
+  //     if (unit.PRICE_VALUE) {
+  //       totalSaleValue += unit.PRICE_VALUE;
+  //     }
+  //   });
+  //   return totalSaleValue.toFixed(2);
+  // };
 
   // const calculateTotalSaleValue = () => {
   //   let totalSaleValue = 0;
@@ -228,10 +229,61 @@ const PieChart = ({ navigation, route }) => {
   //   return totalSaleValue.toFixed(2);
   // };
 
+  const [inventoryData, setInventoryData] = useState([]);
+  const [availableInventoryData, setAvailableInventoryData] = useState([]);
+
+  useEffect(() => {
+    const fetchInventoryData = async () => {
+      try {
+        const response = await axios.get(`${Url}get_inventory?tower=all&unit=all&APIKey=216bb413-8022-416e-83cf-aad38748d724`);
+        setInventoryData(response.data); // Assuming the response is an array, adjust accordingly
+
+        // Filter data where UNIT_STATUS is "Available"
+        const availableData = response.data.filter((item) => item.UNIT_STATUS === "Available");
+        setAvailableInventoryData(availableData);
+
+        console.log("Inventory Data:", response.data); // Log the response for debugging
+        console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAvailable Inventory Data:", availableData); // Log available inventory data for debugging
+      } catch (error) {
+        console.error("Error fetching inventory data:", error);
+      }
+    };
+
+    fetchInventoryData();
+  }, []);
+
+  const calculateTotalSaleValue = () => {
+    let totalSaleValue = 0;
+
+    availableInventoryData.forEach((unit) => {
+      if (unit.SALE_VALUE && typeof unit.SALE_VALUE === "number") {
+        // Check if SALE_VALUE is present and is a number
+        totalSaleValue += unit.SALE_VALUE;
+      } else if (unit.SALE_VALUE && typeof unit.SALE_VALUE === "string") {
+        // If SALE_VALUE is a string, convert it to a number
+        const saleValue = Number(unit.SALE_VALUE.replace(/,/g, ""));
+        if (!isNaN(saleValue)) {
+          totalSaleValue += saleValue;
+        }
+      }
+    });
+
+    return (
+      totalSaleValue &&
+      Math.abs(totalSaleValue)
+        .toFixed(1)
+        .replace(/\d(?=(\d{3})+\.)/g, "$&,")
+    );
+  };
   return (
     <ImageBackground source={ICONS.bgImg} style={styles.container}>
       <SafeAreaView style={styles.main}>
-        <BackButton navigation={navigation} label="Charts" />
+        <View style={{ width: "90%", justifyContent: "flex-start", alignItems: "center", alignSelf: "center", flexDirection: "row" }}>
+          <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate("Home")} style={{}}>
+            <Ionicons name="chevron-back" style={{ fontSize: RFPercentage(3.2), marginRight: 5 }} color={"#06143b"} />
+          </TouchableOpacity>
+          <Text style={{ color: COLORS.boldText, fontSize: SCREEN_WIDTH * 0.043, fontFamily: FONTS.SemiBold, marginLeft: 8 }}>Home</Text>
+        </View>
         <ScrollView style={{ width: "100%" }}>
           <View style={{ width: "100%", alignItems: "center" }}>
             {/* Sale */}
@@ -351,7 +403,7 @@ const PieChart = ({ navigation, route }) => {
                     backgroundColor: "#B0C4DE",
                   }}
                 >
-                  <Text style={{ marginTop: RFPercentage(6), color: COLORS.boldText, fontSize: RFPercentage(3), fontFamily: FONTS.Medium }}>{totalUnitsCount.length}</Text>
+                  <Text style={{ marginTop: RFPercentage(6), color: COLORS.boldText, fontSize: RFPercentage(3), fontFamily: FONTS.Medium }}>{availableInventoryData.length}</Text>
                   <Text style={{ marginTop: RFPercentage(2), color: COLORS.boldText, fontSize: RFPercentage(2.5), fontFamily: FONTS.Medium }}>{calculateTotalSaleValue()}</Text>
                   <Text style={{ marginTop: RFPercentage(0), color: COLORS.boldText, fontSize: RFPercentage(2.5), fontFamily: FONTS.Medium }}>AED</Text>
                 </TouchableOpacity>

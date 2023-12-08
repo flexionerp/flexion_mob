@@ -295,7 +295,7 @@ const Home = ({ navigation, route }) => {
     let tempcount = totalUnitsCount.filter(({ STATUS }) => STATUS == "PRE_RESERVED" || STATUS == "AVAILABLE" || STATUS == "RELEASED");
     // let tempcount = totalUnitsCount;
     setAvailable(tempcount);
-    // console.log("Find Retail here", tempcount);
+    // console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\nFind Retail here", tempcount);
   };
 
   // send token api
