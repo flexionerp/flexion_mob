@@ -248,6 +248,8 @@ const Home = ({ navigation, route }) => {
       const leadCount = firstObject ? firstObject.length : 0;
       console.log("Latest count", leadCount);
 
+      console.log("\n\n\n\n\n\n\n\n\n\n\n\n\nLead List API firstObject", firstObject);
+
       setTotalLeadCount(leadCount);
 
       setApiResponse(response.data.data);

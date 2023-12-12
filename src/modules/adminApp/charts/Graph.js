@@ -8,6 +8,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import DropDownPicker from "react-native-dropdown-picker";
 import { BarChart } from "react-native-chart-kit";
 import { useSelector } from "react-redux";
+import axios from "axios";
 
 const Graph = ({ navigation, route }) => {
   const title = route.params?.title;
@@ -60,7 +61,7 @@ const Graph = ({ navigation, route }) => {
 
         const data = await response.json();
 
-        console.log("\n\n\n\n\n\n\n\n\n Response from list of unit dropdown", data);
+        // console.log("\n\n\n\n\n\n\n\n\n Response from list of unit dropdown", data);
 
         const apiDropdownValues = data.map((item) => ({
           label: item.UNIT_SPECS_NAME,
@@ -163,7 +164,7 @@ const Graph = ({ navigation, route }) => {
 
         const data = await response.json();
 
-        console.log("\n\n\n\n\n\n\n\n\n Response from list of customers", data);
+        // console.log("\n\n\n\n\n\n\n\n\n Response from list of customers", data);
 
         const apiDropdownValues = data.map((item) => ({
           label: item.VAULES,
@@ -193,7 +194,7 @@ const Graph = ({ navigation, route }) => {
 
         const data = await response.json();
 
-        console.log("\n\n\n\n\n\n\n\n\n Response from list of unit dropdown", data);
+        // console.log("\n\n\n\n\n\n\n\n\n Response from list of unit dropdown", data);
 
         const apiDropdownValues = data.map((item) => ({
           label: item.VAULES,
@@ -223,7 +224,7 @@ const Graph = ({ navigation, route }) => {
 
         const data = await response.json();
 
-        console.log("\n\n\n\n\n\n\n\n\n Response from list of document picker", data);
+        // console.log("\n\n\n\n\n\n\n\n\n Response from list of document picker", data);
 
         const apiDropdownValues = data.map((item) => ({
           label: item.VAULES,
@@ -238,6 +239,168 @@ const Graph = ({ navigation, route }) => {
 
     fetchData();
   }, []);
+
+  // Cancellations
+  const [open4cancel, setOpen4cancel] = useState(false);
+  const [value4cancel, setValue4cancel] = useState(null);
+  const [items4cancel, setItems4cancel] = useState([
+    { label: "All", value: "all" },
+    { label: "RETAIL", value: "RETAIL" },
+    { label: "TOWER 1", value: "TOWER%201" },
+    { label: "TOWER 2", value: "TOWER%202" },
+    { label: "TREPPAN LIVING", value: "TREPPAN%20LIVING" },
+  ]);
+
+  const [open4fcancel, setOpen4fcancel] = useState(false);
+  const [value4fcancel, setValue4fcancel] = useState(null);
+  const [items4fcancel, setItems4fcancel] = useState([{ label: "All", value: "all" }]);
+
+  const [opencancel, setOpencancel] = useState(false);
+  const [valuecancel, setValuecancel] = useState(null);
+  const [itemscancel, setItemscancel] = useState([{ label: "All", value: "all" }]);
+
+  const [opendcancel, setOpendcancel] = useState(false);
+  const [valuedcancel, setValuedcancel] = useState(null);
+  const [itemsdcancel, setItemsdcancel] = useState([{ label: "All", value: "all" }]);
+
+  // Lead
+  const [open4lead, setOpen4lead] = useState(false);
+  const [value4lead, setValue4lead] = useState(null);
+  const [items4lead, setItems4lead] = useState([
+    { label: "All", value: "all" },
+    { label: "ASSIGNED", value: "ASSIGNED" },
+    { label: "COLD", value: "COLD" },
+    { label: "WARM", value: "WARM" },
+    { label: "HOT", value: "HOT" },
+    { label: "DEAL", value: "DEAL" },
+    { label: "JUNK", value: "JUNK" },
+  ]);
+
+  const [open4flead, setOpen4flead] = useState(false);
+  const [value4flead, setValue4flead] = useState(null);
+  const [items4flead, setItems4flead] = useState([
+    { label: "Month", value: "months" },
+    { label: "Week", value: "weeks" },
+    { label: "Days", value: "days" },
+  ]);
+
+  const [openlead, setOpenlead] = useState(false);
+  const [valuelead, setValuelead] = useState(null);
+  const [itemslead, setItemslead] = useState([
+    { label: "All", value: "all" },
+    { label: "Whatsapp", value: "Whatsapp" },
+    { label: "Facebook", value: "Facebook" },
+    { label: "Google", value: "Google" },
+  ]);
+
+  // Tciket
+  const [open4ticket, setOpen4ticket] = useState(false);
+  const [value4ticket, setValue4ticket] = useState(null);
+  const [items4ticket, setItems4ticket] = useState([{ label: "All", value: 1 }]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://tvh.flexion.ae:9091/get_ticket_list_values_api?data=status&APIKey=216bb413-8022-416e-83cf-aad38748d724");
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch dropdown values");
+        }
+
+        const data = await response.json();
+
+        // console.log("\n\n\n\n\n\n\n\n\n Response from list of status ticket dropdown", data);
+
+        const apiDropdownValues = data.map((item) => ({
+          label: item.NAME,
+          value: item.ID,
+        }));
+
+        setItems4ticket([...items4ticket, ...apiDropdownValues]);
+      } catch (error) {
+        console.error("Error fetching dropdown values:", error.message);
+      }
+    };
+
+    fetchData();
+  }, []);
+  const handleTicketValueChange = (value) => {
+    setValue4ticket(value);
+  };
+
+  const [open4fticket, setOpen4fticket] = useState(false);
+  const [value4fticket, setValue4fticket] = useState(null);
+  const [items4fticket, setItems4fticket] = useState([{ label: "All", value: "all" }]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://tvh.flexion.ae:9091/get_ticket_list_values_api?data=assign&APIKey=216bb413-8022-416e-83cf-aad38748d724");
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch dropdown values");
+        }
+
+        const data = await response.json();
+
+        // console.log("\n\n\n\n\n\n\n\n\n Response from list of status ticket dropdown", data);
+
+        const apiDropdownValues = data.map((item) => ({
+          label: item.FIRST_NAME,
+          value: item.ID,
+        }));
+
+        setItems4fticket([...items4fticket, ...apiDropdownValues]);
+      } catch (error) {
+        console.error("Error fetching dropdown values:", error.message);
+      }
+    };
+
+    fetchData();
+  }, []);
+  const handleTicketValueChange2 = (value) => {
+    setValue4fticket(value);
+  };
+
+  const [openticket, setOpenticket] = useState(false);
+  const [valueticket, setValueticket] = useState(null);
+  const [itemsticket, setItemsticket] = useState([{ label: "All", value: "all" }]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://tvh.flexion.ae:9091/get_ticket_list_values_api?data=source&APIKey=216bb413-8022-416e-83cf-aad38748d724");
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch dropdown values");
+        }
+
+        const data = await response.json();
+
+        // console.log("\n\n\n\n\n\n\n\n\n Response from list of status ticket dropdown", data);
+
+        const apiDropdownValues = data.map((item) => ({
+          label: item.NAME,
+          value: item.ID,
+        }));
+
+        setItemsticket([...itemsticket, ...apiDropdownValues]);
+      } catch (error) {
+        console.error("Error fetching dropdown values:", error.message);
+      }
+    };
+
+    fetchData();
+  }, []);
+  const handleTicketValueChange3 = (value) => {
+    setValueticket(value);
+  };
+
+  const [opentickettime, setOpentickettime] = useState(false);
+  const [valuetickettime, setValuetickettime] = useState(null);
+  const [itemstickettime, setItemstickettime] = useState([
+    { label: "All", value: "all" },
+    { label: "Days", value: "days" },
+    { label: "Months", value: "months" },
+    { label: "Weeks", value: "weeks" },
+  ]);
 
   const data = {
     labels: ["100,00", "200,00", "600,00", "40,00", "50,000"],
@@ -263,7 +426,18 @@ const Graph = ({ navigation, route }) => {
       value4d !== null ||
       value4fd !== null ||
       value4su !== null ||
-      valuedd !== null
+      valuedd !== null ||
+      value4cancel !== null ||
+      value4fcancel !== null ||
+      valuecancel !== null ||
+      valuedcancel !== null ||
+      value4ticket !== null ||
+      value4fticket !== null ||
+      valueticket !== null ||
+      value4lead !== null ||
+      value4flead !== null ||
+      valuelead !== null ||
+      valuetickettime !== null
     );
   };
 
@@ -309,6 +483,17 @@ const Graph = ({ navigation, route }) => {
     setValue4fd(null);
     setValue4su(null);
     setValuedd(null);
+    setValue4cancel(null);
+    setValue4fcancel(null);
+    setValuecancel(null);
+    setValuedcancel(null);
+    setValue4ticket(null);
+    setValue4fticket(null);
+    setValueticket(null);
+    setValue4lead(null);
+    setValue4flead(null);
+    setValuelead(null);
+    setValuetickettime(null);
   };
 
   // Sales Data
@@ -335,12 +520,10 @@ const Graph = ({ navigation, route }) => {
         // console.log(totalSalesValue);
         setTotalSalesValue(totalSalesValue);
 
-        // Get the last 5 responses
         const lastFiveResponses = result.slice(-5);
-        console.log("\n\n\n\n\n\n\n\n\n\n\nThis is the response from sale graph api", result);
+        // console.log("\n\n\n\n\n\n\n\n\n\n\nThis is the response from sale graph api", result);
         setLastFiveResponses(lastFiveResponses);
 
-        // Calculate the total sales for all 10 months
         const totalSales = result.reduce((sum, entry) => sum + entry.TOTAL_SALES, 0);
 
         const formattedData = {
@@ -363,7 +546,7 @@ const Graph = ({ navigation, route }) => {
         };
 
         setSalesData(formattedData);
-        console.log("\n\n\n\n\n\n\n\n\nAPI Response for sale graph:", formattedData);
+        // console.log("\n\n\n\n\n\n\n\n\nAPI Response for sale graph:", formattedData);
       } catch (error) {
         console.error("\n\n\n\n\n\n\n\n\nError fetching data:", error);
       }
@@ -390,9 +573,9 @@ const Graph = ({ navigation, route }) => {
         const response = await fetch(url);
         const result = await response.json();
 
-        console.log("\n\n\n\n\n\n\n\n\n\n\n Inventory Data", result);
+        // console.log("\n\n\n\n\n\n\n\n\n\n\n Inventory Data", result);
         const totalInventoryValue = result.reduce((sum, entry) => sum + entry.SALE_VALUE, 0);
-        console.log("\n\n\n\n\n\n\n\n\n\nTotal inventory value", totalInventoryValue);
+        // console.log("\n\n\n\n\n\n\n\n\n\nTotal inventory value", totalInventoryValue);
         setTotalInventoryValue(totalInventoryValue);
         const filteredResult = value4f ? result.filter((entry) => entry.FLOOR === value4f) : result;
 
@@ -421,7 +604,7 @@ const Graph = ({ navigation, route }) => {
         setItems4f(availableFloorItems);
         setLastFiveResponsesi(filteredResult);
         setInventoryData(formattedData);
-        console.log("\n\n\n\n\n\n\n\n\nAPI Response for Inventory graph:", formattedData);
+        // console.log("\n\n\n\n\n\n\n\n\nAPI Response for Inventory graph:", formattedData);
       } catch (error) {
         console.error("\n\n\n\n\n\n\n\n\nError fetching data:", error);
       }
@@ -464,7 +647,7 @@ const Graph = ({ navigation, route }) => {
       return false;
     });
 
-    const saleValue = filteredData.reduce((sum, entry) => sum + entry.SALE_VALUE, 0);
+    const saleValue = filteredData.reduce((sum, entry) => sum + entry.INV_BALANCE, 0);
     return Number(saleValue).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
@@ -477,11 +660,11 @@ const Graph = ({ navigation, route }) => {
 
         const response = await fetch(url);
         const result = await response.json();
-        setResult(result); // Set the result in the component state
-        console.log("\n\n\n\n\n\n\n\n\n\n\nDues Data", result);
+        setResult(result);
+        // console.log("\n\n\n\n\n\n\n\n\n\n\nDues Data", result);
 
-        const totalDuesValue = result.reduce((sum, entry) => sum + entry.SALE_VALUE, 0);
-        console.log("\n\n\n\n\n\n\n\n\n\nTotal Dues value", totalDuesValue);
+        const totalDuesValue = result.reduce((sum, entry) => sum + entry.INV_BALANCE, 0);
+        // console.log("\n\n\n\n\n\n\n\n\n\nTotal Dues value", totalDuesValue);
 
         setTotalDuesValue(totalDuesValue);
 
@@ -518,7 +701,7 @@ const Graph = ({ navigation, route }) => {
         };
 
         setDuesData(formattedData);
-        console.log("\n\n\n\n\n\n\n\n\nAPI Response for Dues graph:", formattedData);
+        // console.log("\n\n\n\n\n\n\n\n\nAPI Response for Dues graph:", formattedData);
       } catch (error) {
         console.error("\n\n\n\n\n\n\n\n\nError fetching data:", error);
       }
@@ -548,7 +731,7 @@ const Graph = ({ navigation, route }) => {
         setTotalCollectionValue(totalCollectionValue);
         // Get the last 5 responses
         const lastFiveResponses = result.slice(-5);
-        console.log("\n\n\n\n\n\n\n\n\n\n\nThis is the response from collection graph api", result);
+        // console.log("\n\n\n\n\n\n\n\n\n\n\nThis is the response from collection graph api", result);
         setLastFiveResponsesc(lastFiveResponses);
 
         const formattedData = {
@@ -569,27 +752,194 @@ const Graph = ({ navigation, route }) => {
         };
 
         setCollectionData(formattedData);
-        console.log("\n\n\n\n\n\n\n\n\nAPI Response for collection graph:", formattedData);
+        // console.log("\n\n\n\n\n\n\n\n\nAPI Response for collection graph:", formattedData);
       } catch (error) {
-        console.error("\n\n\n\n\n\n\n\n\nError fetching data:", error);
+        // console.error("\n\n\n\n\n\n\n\n\nError fetching data:", error);
       }
     };
 
     fetchData();
   }, [valuec, value4c, value4fc]);
 
+  // lead Data
+  const [totalLeads, setTotalLeads] = useState(0);
+  const [leadChartData, setLeadChartData] = useState({
+    labels: [],
+    datasets: [
+      {
+        data: [],
+      },
+    ],
+  });
+
+  useEffect(() => {
+    const makeApiRequest = async () => {
+      try {
+        const response = await axios.get(`${Url}leads_list_api?userid=${token}`);
+        const leadData = response.data.data[0];
+
+        if (!Array.isArray(leadData) || leadData.length === 0) {
+          console.error("Lead data is not valid:", leadData);
+          return;
+        }
+
+        console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAPI Response for Lead graph:", leadData);
+
+        const currentDate = new Date();
+        const lastFiveMonths = Array.from({ length: 5 }, (_, index) => {
+          const month = currentDate.getMonth() - index + 1;
+          const year = currentDate.getFullYear();
+          return `${month < 10 ? "0" : ""}${month}/${year}`;
+        });
+
+        const filteredLeads = leadData.filter((lead) => {
+          if (lead && lead.CREATED_ON) {
+            const [day, month, year] = lead.CREATED_ON.split("/");
+            const leadMonthYear = `${month.padStart(2, "0")}/${year}`;
+            return lastFiveMonths.includes(leadMonthYear);
+          }
+          return false;
+        });
+
+        const monthCounts = lastFiveMonths.reduce((counts, month) => {
+          const count = filteredLeads.filter((lead) => {
+            if (lead && lead.CREATED_ON) {
+              const [leadDay, leadMonth, leadYear] = lead.CREATED_ON.split("/");
+              const formattedLeadMonth = `${leadMonth.padStart(2, "0")}/${leadYear}`;
+              return month === formattedLeadMonth;
+            }
+            return false;
+          }).length;
+          counts[month] = count;
+          return counts;
+        }, {});
+
+        const allCount = lastFiveMonths.reduce((sum, month) => {
+          const count = monthCounts[month] || 0;
+          return sum + count;
+        }, 0);
+        monthCounts.All = allCount;
+
+        const formattedLeadData = {
+          labels: [...lastFiveMonths, "All"],
+          datasets: [
+            {
+              data: Object.values(monthCounts),
+            },
+          ],
+        };
+
+        // Set state
+        setTotalLeads(allCount);
+        setLeadChartData(formattedLeadData);
+        console.log("Formatted Response for Lead graph:", formattedLeadData);
+      } catch (error) {
+        console.error("Error fetching lead data:", error);
+      }
+    };
+
+    makeApiRequest();
+  }, [valuelead, value4lead, value4flead, value3]);
+
+  // Ticket Data
+  const [ticketData, setTicketData] = useState({
+    labels: [],
+    datasets: [
+      {
+        data: [],
+      },
+    ],
+  });
+
+  const [lastFiveResponsesTickets, setLastFiveResponsesTickets] = useState([]);
+
+  const [itemsTs, setItemsTs] = useState([]);
+
+  const formatDateString = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getDate()}-${date.toLocaleString("default", { month: "short" })}-${date.getFullYear().toString().substr(-2)}`;
+  };
+
+  useEffect(() => {
+    const fetchTicketData = async () => {
+      try {
+        const ticketUrl = `http://tvh.flexion.ae:9091/get_ticket_list_api?dt=${valuetickettime || "days"}&ts=${value4ticket || 1}&assign=${value4fticket || "all"}&source=${
+          valueticket || "all"
+        }&APIKey=216bb413-8022-416e-83cf-aad38748d724`;
+        const ticketResponse = await fetch(ticketUrl);
+        const ticketResult = await ticketResponse.json();
+
+        // console.log("\n\n\n\n\n\n\n\n\nAPI Response for Ticket graph:", ticketResult);
+
+        const latestFiveResponses = ticketResult.slice(-5);
+
+        setLastFiveResponsesTickets(latestFiveResponses);
+
+        const allCount = ticketResult.reduce((sum, entry) => sum + entry.TOTAL_TICKETS, 0);
+
+        let formattedTicketData = {};
+        let labelKey = "";
+
+        if (valuetickettime === "months") {
+          formattedTicketData = {
+            labels: latestFiveResponses.map((entry) => formatDateString(entry.MONTHS)),
+            datasets: [
+              {
+                data: latestFiveResponses.map((entry) => entry.TOTAL_TICKETS),
+              },
+            ],
+          };
+          labelKey = "MONTHS";
+        } else if (valuetickettime === "weeks") {
+          formattedTicketData = {
+            labels: latestFiveResponses.map((entry) => formatDateString(entry.WEEK_START)),
+            datasets: [
+              {
+                data: latestFiveResponses.map((entry) => entry.TOTAL_TICKETS),
+              },
+            ],
+          };
+          labelKey = "WEEK_START";
+        } else {
+          formattedTicketData = {
+            labels: latestFiveResponses.map((entry) => formatDateString(entry.REPORT_DATE)),
+            datasets: [
+              {
+                data: latestFiveResponses.map((entry) => entry.TOTAL_TICKETS),
+              },
+            ],
+          };
+          labelKey = "REPORT_DATE";
+        }
+
+        formattedTicketData.labels.push("All");
+        formattedTicketData.datasets[0].data.push(allCount);
+
+        const availableTimePeriods = latestFiveResponses.map((entry) => ({
+          label: formatDateString(entry[labelKey]),
+          value: entry[labelKey].toString(),
+        }));
+
+        setItemsTs(availableTimePeriods);
+        setTicketData(formattedTicketData);
+
+        // console.log("\n\n\n\n\n\n\n\n\nAPI Response for Ticket graph:", formattedTicketData);
+      } catch (error) {
+        console.error("\n\n\n\n\n\n\n\n\nError fetching ticket data:", error);
+      }
+    };
+
+    fetchTicketData();
+  }, [valuetickettime, value4ticket, value4fticket, valueticket]);
+
   return (
     <ImageBackground source={ICONS.bgImg} style={styles.container}>
       <SafeAreaView style={styles.main}>
         <BackButton navigation={navigation} label="Chart Details" />
-
+        <Text>{value4lead}</Text>
         <ScrollView style={{ width: "100%" }}>
           <View style={{ width: "100%", alignItems: "center" }}>
             <View style={{ width: "90%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row", marginTop: RFPercentage(2) }}>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={{ color: COLORS.boldText, fontSize: RFPercentage(2.2), fontFamily: FONTS.Medium }}>Select</Text>
-                <Ionicons name="filter" style={{ marginLeft: RFPercentage(1), fontSize: RFPercentage(3) }} color={COLORS.boldText} />
-              </View>
               {isAnyDropdownSelected() && (
                 <TouchableOpacity onPress={handleClearButtonPress} activeOpacity={0.8} style={{ flexDirection: "row", position: "absolute", right: 0 }}>
                   <Text style={{ color: COLORS.boldText, fontSize: RFPercentage(2.1), fontFamily: FONTS.Medium }}>Clear</Text>
@@ -984,10 +1334,385 @@ const Graph = ({ navigation, route }) => {
                 </View>
               </>
             )}
+
+            {/* Cancellations API */}
+            {title === "Cancellations" && (
+              <>
+                <View style={{ width: "90%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row", marginTop: RFPercentage(1) }}>
+                  <View style={{ width: "34%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
+                    {/* Dropdown1 */}
+                    <View style={styles.dropDownView}>
+                      <DropDownPicker
+                        placeholder="Property"
+                        placeholderStyle={{ color: COLORS.normalText }}
+                        style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
+                        dropDownContainerStyle={{ maxHeight: RFPercentage(16), backgroundColor: "#0000", borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1) }}
+                        open={open4cancel}
+                        value={value4cancel}
+                        items={items4cancel}
+                        setOpen={setOpen4cancel}
+                        setValue={setValue4cancel}
+                        setItems={setItems4cancel}
+                        labelStyle={{
+                          fontWeight: "500",
+                          color: COLORS.dark,
+                          fontSize: RFPercentage(1.8),
+                        }}
+                      />
+                    </View>
+                  </View>
+
+                  <View style={{ width: "34%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
+                    {/* Dropdown2 */}
+                    <View style={styles.dropDownView}>
+                      <DropDownPicker
+                        placeholder="Customer"
+                        searchable={true} // Enable search
+                        searchPlaceholder="Search..."
+                        placeholderStyle={{ color: COLORS.normalText }}
+                        style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
+                        dropDownContainerStyle={{ maxHeight: RFPercentage(24), backgroundColor: "#0000", borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1) }}
+                        open={open4fcancel}
+                        value={value4fcancel}
+                        items={items4fcancel}
+                        setOpen={setOpen4fcancel}
+                        setValue={setValue4fcancel}
+                        setItems={setItems4fcancel}
+                        labelStyle={{
+                          fontWeight: "500",
+                          color: COLORS.dark,
+                          fontSize: RFPercentage(1.8),
+                        }}
+                      />
+                    </View>
+                  </View>
+
+                  <View style={{ width: "34%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
+                    {/* Dropdown3 */}
+                    <View style={styles.dropDownView}>
+                      <DropDownPicker
+                        placeholder="Unit"
+                        searchable={true} // Enable search
+                        searchPlaceholder="Search unit..."
+                        placeholderStyle={{ color: COLORS.normalText }}
+                        style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
+                        dropDownContainerStyle={{
+                          maxHeight: RFPercentage(24),
+                          backgroundColor: "#0000",
+                          borderColor: COLORS.boldText,
+                          borderWidth: RFPercentage(0.1),
+                        }}
+                        open={opencancel}
+                        value={valuecancel}
+                        items={itemscancel}
+                        setOpen={setOpencancel}
+                        setValue={setValuecancel}
+                        setItems={setItemscancel}
+                        labelStyle={{
+                          fontWeight: "500",
+                          color: COLORS.dark,
+                          fontSize: RFPercentage(1.8),
+                        }}
+                      />
+                    </View>
+                  </View>
+                </View>
+
+                <View style={{ width: "90%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row", marginTop: open4cancel ? RFPercentage(20) : RFPercentage(5) }}>
+                  <View style={{ position: "absolute", left: 0, width: "34%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
+                    {/* Dropdown4 */}
+                    <View style={styles.dropDownView}>
+                      <DropDownPicker
+                        placeholder="Document"
+                        placeholderStyle={{ color: COLORS.normalText }}
+                        style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
+                        dropDownContainerStyle={{
+                          maxHeight: RFPercentage(24),
+                          backgroundColor: "#0000",
+                          borderColor: COLORS.boldText,
+                          borderWidth: RFPercentage(0.1),
+                        }}
+                        open={opendcancel}
+                        value={valuedcancel}
+                        items={itemsdcancel}
+                        setOpen={setOpendcancel}
+                        setValue={setValuedcancel}
+                        setItems={setItemsdcancel}
+                        labelStyle={{
+                          fontWeight: "500",
+                          color: COLORS.dark,
+                          fontSize: RFPercentage(1.8),
+                        }}
+                      />
+                    </View>
+                  </View>
+                </View>
+              </>
+            )}
+
+            {/* Lead API */}
+            {title === "Lead" && (
+              <>
+                <View style={{ width: "90%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row", marginTop: RFPercentage(1) }}>
+                  <View style={{ width: "34%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
+                    {/* Dropdown1 */}
+                    <View style={styles.dropDownView}>
+                      <DropDownPicker
+                        placeholder="Status"
+                        placeholderStyle={{ color: COLORS.normalText }}
+                        style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
+                        dropDownContainerStyle={{ maxHeight: RFPercentage(16), backgroundColor: "#0000", borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1) }}
+                        open={open4lead}
+                        value={value4lead}
+                        items={items4lead}
+                        setOpen={setOpen4lead}
+                        setValue={setValue4lead}
+                        setItems={setItems4lead}
+                        labelStyle={{
+                          fontWeight: "500",
+                          color: COLORS.dark,
+                          fontSize: RFPercentage(1.8),
+                        }}
+                      />
+                    </View>
+                  </View>
+
+                  <View style={{ width: "34%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
+                    {/* Dropdown2 */}
+                    <View style={styles.dropDownView}>
+                      <DropDownPicker
+                        placeholder="All Agent"
+                        placeholderStyle={{ color: COLORS.normalText }}
+                        style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
+                        dropDownContainerStyle={{ maxHeight: RFPercentage(24), backgroundColor: "#0000", borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1) }}
+                        open={open3}
+                        loading={loading}
+                        ActivityIndicatorComponent={({ color, size }) => <ActivityIndicator color={color} size={size} />}
+                        value={value3}
+                        items={agents}
+                        setOpen={setOpen3}
+                        setValue={setValue3}
+                        setItems={setItems3}
+                        searchable={true} // Enable search
+                        searchPlaceholder="Search agent..."
+                        searchablePlaceholderTextColor={COLORS.normalText}
+                        searchableError={() => <Text>Agent not found</Text>}
+                        labelStyle={{
+                          fontWeight: "500",
+                          color: COLORS.dark,
+                          fontSize: RFPercentage(1.8),
+                        }}
+                      />
+                    </View>
+                  </View>
+
+                  <View style={{ width: "34%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
+                    {/* Dropdown3 */}
+                    <View style={styles.dropDownView}>
+                      <DropDownPicker
+                        placeholder="Source"
+                        searchable={true} // Enable search
+                        searchPlaceholder="Search unit..."
+                        placeholderStyle={{ color: COLORS.normalText }}
+                        style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
+                        dropDownContainerStyle={{
+                          maxHeight: RFPercentage(24),
+                          backgroundColor: "#0000",
+                          borderColor: COLORS.boldText,
+                          borderWidth: RFPercentage(0.1),
+                        }}
+                        open={openlead}
+                        value={valuelead}
+                        items={itemslead}
+                        setOpen={setOpenlead}
+                        setValue={setValuelead}
+                        setItems={setItemslead}
+                        labelStyle={{
+                          fontWeight: "500",
+                          color: COLORS.dark,
+                          fontSize: RFPercentage(1.8),
+                        }}
+                      />
+                    </View>
+                  </View>
+                </View>
+                <View style={{ width: "90%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row", marginTop: open4lead ? RFPercentage(20) : RFPercentage(5) }}>
+                  <View style={{ position: "absolute", left: 0, width: "34%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
+                    {/* Dropdown4 */}
+                    <View style={styles.dropDownView}>
+                      <DropDownPicker
+                        placeholder="Days"
+                        placeholderStyle={{ color: COLORS.normalText }}
+                        style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
+                        dropDownContainerStyle={{
+                          maxHeight: RFPercentage(24),
+                          backgroundColor: "#0000",
+                          borderColor: COLORS.boldText,
+                          borderWidth: RFPercentage(0.1),
+                        }}
+                        open={open4flead}
+                        value={value4flead}
+                        items={items4flead}
+                        setOpen={setOpen4flead}
+                        setValue={setValue4flead}
+                        setItems={setItems4flead}
+                        labelStyle={{
+                          fontWeight: "500",
+                          color: COLORS.dark,
+                          fontSize: RFPercentage(1.8),
+                        }}
+                      />
+                    </View>
+                  </View>
+                </View>
+              </>
+            )}
+
+            {/* Ticket API */}
+            {title === "Ticket" && (
+              <>
+                <View style={{ width: "90%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row", marginTop: RFPercentage(1) }}>
+                  <View style={{ width: "34%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
+                    {/* Dropdown1 */}
+                    <View style={styles.dropDownView}>
+                      <DropDownPicker
+                        placeholder="Status"
+                        placeholderStyle={{ color: COLORS.normalText }}
+                        style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
+                        dropDownContainerStyle={{ maxHeight: RFPercentage(20), backgroundColor: "#0000", borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1) }}
+                        open={open4ticket}
+                        value={value4ticket}
+                        items={items4ticket}
+                        setOpen={setOpen4ticket}
+                        setValue={handleTicketValueChange}
+                        setItems={setItems4ticket}
+                        labelStyle={{
+                          fontWeight: "500",
+                          color: COLORS.dark,
+                          fontSize: RFPercentage(1.8),
+                        }}
+                      />
+                    </View>
+                  </View>
+
+                  <View style={{ width: "34%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
+                    {/* Dropdown2 */}
+                    <View style={styles.dropDownView}>
+                      <DropDownPicker
+                        placeholder="Assign"
+                        searchable={true} // Enable search
+                        searchPlaceholder="Search..."
+                        placeholderStyle={{ color: COLORS.normalText }}
+                        style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
+                        dropDownContainerStyle={{ maxHeight: RFPercentage(24), backgroundColor: "#0000", borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1) }}
+                        open={open4fticket}
+                        value={value4fticket}
+                        items={items4fticket}
+                        setOpen={setOpen4fticket}
+                        setValue={handleTicketValueChange2}
+                        setItems={setItems4fticket}
+                        labelStyle={{
+                          fontWeight: "500",
+                          color: COLORS.dark,
+                          fontSize: RFPercentage(1.8),
+                        }}
+                      />
+                    </View>
+                  </View>
+
+                  <View style={{ width: "34%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
+                    {/* Dropdown3 */}
+                    <View style={styles.dropDownView}>
+                      <DropDownPicker
+                        placeholder="Source"
+                        searchable={true} // Enable search
+                        searchPlaceholder="Search..."
+                        placeholderStyle={{ color: COLORS.normalText }}
+                        style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
+                        dropDownContainerStyle={{
+                          maxHeight: RFPercentage(24),
+                          backgroundColor: "#0000",
+                          borderColor: COLORS.boldText,
+                          borderWidth: RFPercentage(0.1),
+                        }}
+                        open={openticket}
+                        value={valueticket}
+                        items={itemsticket}
+                        setOpen={setOpenticket}
+                        setValue={handleTicketValueChange3}
+                        setItems={setItemsticket}
+                        labelStyle={{
+                          fontWeight: "500",
+                          color: COLORS.dark,
+                          fontSize: RFPercentage(1.8),
+                        }}
+                      />
+                    </View>
+                  </View>
+                </View>
+
+                <View style={{ width: "90%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row", marginTop: open4ticket ? RFPercentage(26) : RFPercentage(5) }}>
+                  <View style={{ position: "absolute", left: 0, width: "34%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
+                    {/* Dropdown4 */}
+                    <View style={styles.dropDownView}>
+                      <DropDownPicker
+                        placeholder="Days"
+                        placeholderStyle={{ color: COLORS.normalText }}
+                        style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
+                        dropDownContainerStyle={{
+                          maxHeight: RFPercentage(24),
+                          backgroundColor: "#0000",
+                          borderColor: COLORS.boldText,
+                          borderWidth: RFPercentage(0.1),
+                        }}
+                        open={opentickettime}
+                        value={valuetickettime}
+                        items={itemstickettime}
+                        setOpen={setOpentickettime}
+                        setValue={setValuetickettime}
+                        setItems={setItemstickettime}
+                        labelStyle={{
+                          fontWeight: "500",
+                          color: COLORS.dark,
+                          fontSize: RFPercentage(1.8),
+                        }}
+                      />
+                    </View>
+                  </View>
+                </View>
+              </>
+            )}
             {/* Graph */}
             <View
               style={{
-                marginTop: open || open3 || open4 || openi || open4i || open4f || openc || open4c || open4fc || opend || open4d || open4fd || open4su || opendd ? RFPercentage(26) : RFPercentage(4),
+                marginTop:
+                  open ||
+                  open3 ||
+                  open4 ||
+                  openi ||
+                  open4i ||
+                  open4f ||
+                  openc ||
+                  open4c ||
+                  open4fc ||
+                  opend ||
+                  open4d ||
+                  open4fd ||
+                  open4su ||
+                  opendd ||
+                  open4cancel ||
+                  open4fcancel ||
+                  opencancel ||
+                  opendcancel ||
+                  open4ticket ||
+                  open4fticket ||
+                  openticket ||
+                  open4lead ||
+                  open4flead ||
+                  openlead ||
+                  opentickettime
+                    ? RFPercentage(26)
+                    : RFPercentage(4),
                 justifyContent: "center",
                 alignItems: "center",
               }}
@@ -1058,6 +1783,43 @@ const Graph = ({ navigation, route }) => {
               <BarChart
                 style={{ marginTop: RFPercentage(2), borderRadius: 16 }}
                 data={duesData}
+                width={SCREEN_WIDTH * 0.9}
+                height={300}
+                chartConfig={{
+                  backgroundGradientFrom: "#ffffff",
+                  backgroundGradientTo: "#ffffff",
+                  decimalPlaces: 0,
+                  color: (opacity = 1) => `rgba(10, 150, 44, ${opacity})`,
+                  labelColor: () => `rgba(0, 0, 0, 1)`,
+                }}
+                fromZero={true}
+                showValuesOnTopOfBars={true}
+                verticalLabelRotation={28}
+              />
+            )}
+
+            {title === "Lead" && (
+              <BarChart
+                style={{ marginTop: RFPercentage(2), borderRadius: 16 }}
+                data={leadChartData}
+                width={SCREEN_WIDTH * 0.9}
+                height={300}
+                chartConfig={{
+                  backgroundGradientFrom: "#ffffff",
+                  backgroundGradientTo: "#ffffff",
+                  decimalPlaces: 0,
+                  color: (opacity = 1) => `rgba(10, 150, 44, ${opacity})`,
+                  labelColor: () => `rgba(0, 0, 0, 1)`,
+                }}
+                fromZero={true}
+                showValuesOnTopOfBars={true}
+                verticalLabelRotation={28}
+              />
+            )}
+            {title === "Ticket" && (
+              <BarChart
+                style={{ marginTop: RFPercentage(2), borderRadius: 16 }}
+                data={ticketData}
                 width={SCREEN_WIDTH * 0.9}
                 height={300}
                 chartConfig={{

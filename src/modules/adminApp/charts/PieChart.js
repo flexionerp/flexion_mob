@@ -1,16 +1,9 @@
 import { ImageBackground, SafeAreaView, ScrollView, StyleSheet, Text, View, Image, TouchableOpacity, Platform, Alert, Button } from "react-native";
-import messaging, { firebase } from "@react-native-firebase/messaging";
 import { RFPercentage } from "react-native-responsive-fontsize";
-import { useFocusEffect } from "@react-navigation/native";
 import { FONTS, ICONS, Url, SCREEN_WIDTH, COLORS, SCREENS } from "../../../constants";
 import { useDispatch, useSelector } from "react-redux";
-import { StatsRow } from "../../../common/statsRow";
 import React, { useState, useEffect } from "react";
-import { BtnLIM } from "../../../common/btnLIM";
-import { BtnLI } from "../../../common/btnLI";
-import notifee from "@notifee/react-native";
 import axios from "axios";
-import { BackButton } from "../../../common/backButton";
 import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
@@ -206,29 +199,6 @@ const PieChart = ({ navigation, route }) => {
     // console.log("Find Retail here", tempcount);
   };
 
-  // const calculateTotalSaleValue = () => {
-  //   let totalSaleValue = 0;
-  //   totalUnitsCount.forEach((unit) => {
-  //     if (unit.PRICE_VALUE) {
-  //       totalSaleValue += unit.PRICE_VALUE;
-  //     }
-  //   });
-  //   return totalSaleValue.toFixed(2);
-  // };
-
-  // const calculateTotalSaleValue = () => {
-  //   let totalSaleValue = 0;
-  //   totalUnitsCount.forEach((unit) => {
-  //     // Assuming SALE_VALUE is a property of the unit object
-  //     if (unit.PRICE_VALUE) {
-  //       // Remove commas from SALE_VALUE and convert it to a number
-  //       const saleValue = Number(unit.PRICE_VALUE.replace(/,/g, ""));
-  //       totalSaleValue += saleValue;
-  //     }
-  //   });
-  //   return totalSaleValue.toFixed(2);
-  // };
-
   const [inventoryData, setInventoryData] = useState([]);
   const [availableInventoryData, setAvailableInventoryData] = useState([]);
 
@@ -242,8 +212,8 @@ const PieChart = ({ navigation, route }) => {
         const availableData = response.data.filter((item) => item.UNIT_STATUS === "Available");
         setAvailableInventoryData(availableData);
 
-        console.log("Inventory Data:", response.data); // Log the response for debugging
-        console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAvailable Inventory Data:", availableData); // Log available inventory data for debugging
+        // console.log("Inventory Data:", response.data); // Log the response for debugging
+        // console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAvailable Inventory Data:", availableData); // Log available inventory data for debugging
       } catch (error) {
         console.error("Error fetching inventory data:", error);
       }
@@ -275,6 +245,92 @@ const PieChart = ({ navigation, route }) => {
         .replace(/\d(?=(\d{3})+\.)/g, "$&,")
     );
   };
+
+  const [totalLeadCount, setTotalLeadCount] = useState(0);
+  const makeApiRequest = async () => {
+    try {
+      const response = await axios.get(`${Url}leads_list_api?userid=${token}`);
+
+      const firstObject = response.data.data[0];
+      const leadCount = firstObject ? firstObject.length : 0;
+      console.log("Latest count", leadCount);
+
+      // console.log("\n\n\n\n\n\n\n\n\n\n\n\n\nLead List API firstObject", firstObject);
+
+      setTotalLeadCount(leadCount);
+
+      // setApiResponse(response.data.data);
+    } catch (error) {
+      console.error("API Error:", error);
+    }
+  };
+  useEffect(() => {
+    makeApiRequest();
+  }, []);
+
+  // Dues
+  const [dues2, setDues2] = useState(0);
+
+  useEffect(() => {
+    // Make the API request
+    fetch(`${Url}get_due_list_api?property=all&customer=all&unit=all&document=all&APIKey=216bb413-8022-416e-83cf-aad38748d724`)
+      .then((response) => response.json())
+      .then((data) => {
+        // Assuming the API response is an array of objects and each object has an INV_BALANCE field
+        const totalBalance = data.reduce((sum, item) => sum + parseFloat(item.INV_BALANCE), 0);
+
+        // Update the state with the total balance
+        setDues2(totalBalance);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  // Tickets
+  const [totalTickets, setTotalTickets] = useState(0);
+
+  useEffect(() => {
+    // Make the API request
+    fetch("http://tvh.flexion.ae:9091/get_ticket_list_api?dt=days&ts=1&assign=all&source=all&APIKey=216bb413-8022-416e-83cf-aad38748d724")
+      .then((response) => response.json())
+      .then((data) => {
+        // Assuming the API response is an array of objects and each object has a TOTAL_TICKETS field
+        const totalTicketsSum = data.reduce((sum, item) => sum + parseFloat(item.TOTAL_TICKETS), 0);
+
+        // Update the state with the total tickets sum
+        setTotalTickets(totalTicketsSum);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  // Cancellations stats
+  const [cancellationCount, setCancellationCount] = useState(0);
+  const [totalSaleValue, setTotalSaleValue] = useState(0);
+
+  useEffect(() => {
+    fetch(`${Url}get_reservation_grid_api?user_info_id=${token}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.data && Array.isArray(data.data)) {
+          const cancellationResponses = data.data.filter((response) => response.STATUS_NAME === "Reservation cancellation in progress");
+
+          const count = cancellationResponses.length;
+          const sum = cancellationResponses.reduce((total, item) => total + parseFloat(item.SALE_VALUE.replace(/[^0-9.-]+/g, "")), 0);
+
+          setCancellationCount(count);
+          setTotalSaleValue(sum);
+        } else {
+          console.error("Invalid API response:", data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
   return (
     <ImageBackground source={ICONS.bgImg} style={styles.container}>
       <SafeAreaView style={styles.main}>
@@ -442,11 +498,121 @@ const PieChart = ({ navigation, route }) => {
                 >
                   {/* <Text style={{ marginTop: RFPercentage(6), color: COLORS.boldText, fontSize: RFPercentage(3), fontFamily: FONTS.Medium }}>999</Text> */}
                   <Text style={{ color: COLORS.boldText, fontSize: RFPercentage(2.5), fontFamily: FONTS.Medium }}>
-                    {Math.abs(dues)
+                    {Math.abs(dues2)
                       .toFixed(1)
                       .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                   </Text>
                   <Text style={{ marginTop: RFPercentage(0), color: COLORS.boldText, fontSize: RFPercentage(2.5), fontFamily: FONTS.Medium }}>AED</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* Under Cancellations */}
+            <View style={{ width: "90%", justifyContent: "center", alignItems: "center" }}>
+              <View style={{ marginTop: RFPercentage(3), flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+                <Text style={{ color: COLORS.boldText, fontSize: RFPercentage(2.7), fontFamily: FONTS.SemiBold }}>Cancellations</Text>
+                <Feather name="corner-right-down" style={{ top: RFPercentage(0.5), marginHorizontal: RFPercentage(0.6), fontSize: RFPercentage(2.8) }} color={"#06143b"} />
+              </View>
+              <View
+                style={{
+                  width: RFPercentage(27),
+                  height: RFPercentage(27),
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderColor: "#f0ffff",
+                  borderWidth: RFPercentage(0.5),
+                  borderRadius: RFPercentage(30),
+                  marginTop: RFPercentage(2),
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() => navigation.navigate(SCREENS.GRAPH, { title: "Cancellations" })}
+                  activeOpacity={0.6}
+                  style={{
+                    width: RFPercentage(25),
+                    height: RFPercentage(25),
+                    borderRadius: RFPercentage(100),
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    backgroundColor: "#f0ffff",
+                  }}
+                >
+                  <Text style={{ marginTop: RFPercentage(6), color: COLORS.boldText, fontSize: RFPercentage(3), fontFamily: FONTS.Medium }}>{cancellationCount}</Text>
+                  <Text style={{ marginTop: RFPercentage(1), color: COLORS.boldText, fontSize: RFPercentage(2.5), fontFamily: FONTS.Medium }}>
+                    {totalSaleValue.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                  </Text>
+                  <Text style={{ marginTop: RFPercentage(0), color: COLORS.boldText, fontSize: RFPercentage(2.5), fontFamily: FONTS.Medium }}>AED</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* Leads */}
+            <View style={{ width: "90%", justifyContent: "center", alignItems: "center" }}>
+              <View style={{ marginTop: RFPercentage(3), flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+                <Text style={{ color: COLORS.boldText, fontSize: RFPercentage(2.7), fontFamily: FONTS.SemiBold }}>Leads</Text>
+                <Feather name="corner-right-down" style={{ top: RFPercentage(0.5), marginHorizontal: RFPercentage(0.6), fontSize: RFPercentage(2.8) }} color={"#06143b"} />
+              </View>
+              <View
+                style={{
+                  width: RFPercentage(27),
+                  height: RFPercentage(27),
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderColor: "#b0e0e6",
+                  borderWidth: RFPercentage(0.5),
+                  borderRadius: RFPercentage(30),
+                  marginTop: RFPercentage(2),
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() => navigation.navigate(SCREENS.GRAPH, { title: "Lead" })}
+                  activeOpacity={0.6}
+                  style={{
+                    width: RFPercentage(25),
+                    height: RFPercentage(25),
+                    borderRadius: RFPercentage(100),
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "#b0e0e6",
+                  }}
+                >
+                  {/* <Text style={{ marginTop: RFPercentage(6), color: COLORS.boldText, fontSize: RFPercentage(3), fontFamily: FONTS.Medium }}>999</Text> */}
+                  <Text style={{ color: COLORS.boldText, fontSize: RFPercentage(2.9), fontFamily: FONTS.Medium }}>{totalLeadCount}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* Tickets */}
+            <View style={{ width: "90%", justifyContent: "center", alignItems: "center" }}>
+              <View style={{ marginTop: RFPercentage(3), flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+                <Text style={{ color: COLORS.boldText, fontSize: RFPercentage(2.7), fontFamily: FONTS.SemiBold }}>Tickets</Text>
+                <Feather name="corner-right-down" style={{ top: RFPercentage(0.5), marginHorizontal: RFPercentage(0.6), fontSize: RFPercentage(2.8) }} color={"#06143b"} />
+              </View>
+              <View
+                style={{
+                  width: RFPercentage(27),
+                  height: RFPercentage(27),
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderColor: "#B3CCFF",
+                  borderWidth: RFPercentage(0.5),
+                  borderRadius: RFPercentage(30),
+                  marginTop: RFPercentage(2),
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() => navigation.navigate(SCREENS.GRAPH, { title: "Ticket" })}
+                  activeOpacity={0.6}
+                  style={{
+                    width: RFPercentage(25),
+                    height: RFPercentage(25),
+                    borderRadius: RFPercentage(100),
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "#B3CCFF",
+                  }}
+                >
+                  <Text style={{ color: COLORS.boldText, fontSize: RFPercentage(2.8), fontFamily: FONTS.Medium }}>{totalTickets}</Text>
                 </TouchableOpacity>
               </View>
             </View>

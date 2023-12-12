@@ -250,8 +250,8 @@ export const getReservationList = (id) => {
       .get(`${Url}get_reservation_grid_api?user_info_id=${id}`, { headers: headers })
       .then((resp) => {
         let response = resp.data;
-        console.log("getReservationList here ==============>: ", response.data.length);
-        console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHere is the total data response =========> ", resp.data);
+        // console.log("getReservationList here ==============>: ", response.data.length);
+        // console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n Here is the total data response =========> ", resp.data);
         dispatch(setReservationList(response.data));
         dispatch(setLoader(false));
       })
