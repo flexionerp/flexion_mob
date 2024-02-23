@@ -5,6 +5,7 @@ import { RFPercentage } from "react-native-responsive-fontsize";
 import DropDownPicker from "react-native-dropdown-picker";
 import { BackButton } from "../../../common/backButton";
 import { useSelector } from "react-redux";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 export const TotalAvailable = ({ navigation, route }) => {
   const { userDetail } = useSelector((state) => state.user);
@@ -57,8 +58,7 @@ export const TotalAvailable = ({ navigation, route }) => {
             <DropDownPicker
               placeholder="All Towers"
               placeholderStyle={{ color: COLORS.normalText }}
-              style={{ borderColor: COLORS.borderColor, borderWidth: RFPercentage(0.1) }}
-              containerStyle={{ backgroundColor: null }}
+              style={{ borderColor: COLORS.borderColor, borderWidth: RFPercentage(0.1), backgroundColor: null }}
               listMode="SCROLLVIEW"
               dropDownContainerStyle={{ backgroundColor: "#0000", borderColor: COLORS.borderColor, borderWidth: RFPercentage(0.1) }}
               open={open}

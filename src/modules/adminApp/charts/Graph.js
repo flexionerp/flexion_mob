@@ -9,6 +9,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { BarChart } from "react-native-chart-kit";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import * as Progress from "react-native-progress";
 
 const Graph = ({ navigation, route }) => {
   const title = route.params?.title;
@@ -34,10 +35,54 @@ const Graph = ({ navigation, route }) => {
   const [open3, setOpen3] = useState(false);
   const [value3, setValue3] = useState(null);
   const [items3, setItems3] = useState([
-    { label: "Dion", value: "Dion" },
-    { label: "Aldrin", value: "Aldrin" },
-    { label: "Vandom", value: "Vandom" },
+    { label: "All Agent", value: "all" },
+    { value: "6", label: "Dion" },
+    { value: "11", label: "Sakina" },
+    { value: "12", label: "JoclaireAG" },
+    { value: "13", label: "fhamidAG" },
+    { value: "14", label: "yhamidAG" },
+    { value: "16", label: "Anastasia" },
+    { value: "17", label: "Yasser" },
+    { value: "20", label: "Aldrin" },
+    { value: "22", label: "joclaire_mgmt_units" },
+    { value: "26", label: "Anthony" },
+    { value: "27", label: "bahaa" },
+    { value: "28", label: "jawharacsd" },
+    { value: "29", label: "oldleads" },
+    { value: "30", label: "aldrinag" },
+    { value: "31", label: "Victoria" },
   ]);
+
+  const handleAgentValueChange = (label) => {
+    setValue3(label);
+  };
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const response = await axios.get(`${Url}leads_list_api?userid=${token}`);
+  //       const result = response.data.data[1];
+
+  //       console.log("\n\n\n\n\n\n\n\n\n\n\nye rha", result);
+
+  //       // Map the API data to the format required by DropDownPicker
+  //       const mappedData = apiData.map((item) => ({
+  //         label: item.LOGIN_NAME,
+  //         value: item.ID.toString(), // Ensure value is a string
+  //       }));
+
+  //       // Add the mapped data to the existing items
+  //       setItems3([...items3, ...mappedData]);
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
 
   const [open4, setOpen4] = useState(false);
   const [value4, setValue4] = useState(null);
@@ -272,9 +317,31 @@ const Graph = ({ navigation, route }) => {
     { label: "COLD", value: "COLD" },
     { label: "WARM", value: "WARM" },
     { label: "HOT", value: "HOT" },
-    { label: "DEAL", value: "DEAL" },
-    { label: "JUNK", value: "JUNK" },
   ]);
+
+  const [open3l, setOpen3l] = useState(false);
+  const [value3l, setValue3l] = useState(null);
+  const [items3l, setItems3l] = useState([
+    { label: "Dion", value: "Dion" },
+    { label: "Sakina", value: "Sakina" },
+    { label: "JoclaireAG", value: "JoclaireAG" },
+    { label: "fhamidAG", value: "fhamidAG" },
+    { label: "yhamidAG", value: "yhamidAG" },
+    { label: "Anastasia", value: "Anastasia" },
+    { label: "Yasser", value: "Yasser" },
+    { label: "Aldrin", value: "Aldrin" },
+    { label: "joclaire_mgmt_units", value: "joclaire_mgmt_units" },
+    { label: "Anthony", value: "Anthony" },
+    { label: "bahaa", value: "bahaa" },
+    { label: "jawharacsd", value: "jawharacsd" },
+    { label: "oldleads", value: "oldleads" },
+    { label: "aldrinag", value: "aldrinag" },
+    { label: "Victoria", value: "Victoria" },
+  ]);
+
+  const handleAgentValueChangel = (value) => {
+    setValue3l(value);
+  };
 
   const [open4flead, setOpen4flead] = useState(false);
   const [value4flead, setValue4flead] = useState(null);
@@ -396,7 +463,6 @@ const Graph = ({ navigation, route }) => {
   const [opentickettime, setOpentickettime] = useState(false);
   const [valuetickettime, setValuetickettime] = useState(null);
   const [itemstickettime, setItemstickettime] = useState([
-    { label: "All", value: "all" },
     { label: "Days", value: "days" },
     { label: "Months", value: "months" },
     { label: "Weeks", value: "weeks" },
@@ -415,6 +481,7 @@ const Graph = ({ navigation, route }) => {
     return (
       value !== null ||
       value3 !== null ||
+      value3l !== null ||
       value4 !== null ||
       valuei !== null ||
       value4i !== null ||
@@ -442,36 +509,37 @@ const Graph = ({ navigation, route }) => {
   };
 
   // Dropdown of agents
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       setLoading(true);
 
-        const response = await fetch(`${Url}leads_list_api?userid=${token}`);
-        const result = await response.json();
+  //       const response = await fetch(`${Url}leads_list_api?userid=${token}`);
+  //       const result = await response.json();
 
-        const agentNamesFromApi = result.data[1].map((agent) => ({
-          label: agent.LOGIN_NAME,
-          value: agent.ID,
-        }));
+  //       const agentNamesFromApi = result.data[1].map((agent) => ({
+  //         label: agent.LOGIN_NAME,
+  //         value: agent.ID,
+  //       }));
 
-        const agentNames = [{ label: "All Agent", value: "all" }, ...agentNamesFromApi];
+  //       const agentNames = [...agentNamesFromApi];
 
-        setAgents(agentNames);
-      } catch (error) {
-        console.error("\n\n\n\n\n\n\n\n\nError fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  //       setAgents(agentNames);
+  //     } catch (error) {
+  //       console.error("\n\n\n\n\n\n\n\n\nError fetching data:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
   const handleClearButtonPress = () => {
     setValue(null);
     setValuei(null);
     setValue3(null);
+    setValue3l(null);
     setValue4(null);
     setValue4i(null);
     setValue4f(null);
@@ -520,7 +588,7 @@ const Graph = ({ navigation, route }) => {
         // console.log(totalSalesValue);
         setTotalSalesValue(totalSalesValue);
 
-        const lastFiveResponses = result.slice(-5);
+        const lastFiveResponses = result.slice(-6);
         // console.log("\n\n\n\n\n\n\n\n\n\n\nThis is the response from sale graph api", result);
         setLastFiveResponses(lastFiveResponses);
 
@@ -529,22 +597,24 @@ const Graph = ({ navigation, route }) => {
         const formattedData = {
           labels: [
             ...lastFiveResponses.map((entry) => {
+              let label;
               if (value4 === "weeks") {
-                return entry.WEEK_START;
+                label = formatDateString(entry.WEEK_START);
               } else {
                 const date = new Date(entry.REPORT_DATE);
-                return `${date.getDate()}-${date.toLocaleString("default", { month: "short" })}-${date.getFullYear().toString().substr(-2)}`;
+                label = `${date.getDate()}-${date.toLocaleString("default", { month: "short" })}-${date.getFullYear().toString().substr(-2)}`;
               }
+
+              // Replace "31-Dec-40" with "All"
+              return label === "31-Dec-40" ? "All" : label;
             }),
-            "All",
           ],
           datasets: [
             {
-              data: [...lastFiveResponses.map((entry) => entry.TOTAL_SALES), totalSales],
+              data: [...lastFiveResponses.map((entry) => entry.TOTAL_SALES)],
             },
           ],
         };
-
         setSalesData(formattedData);
         // console.log("\n\n\n\n\n\n\n\n\nAPI Response for sale graph:", formattedData);
       } catch (error) {
@@ -634,11 +704,11 @@ const Graph = ({ navigation, route }) => {
 
       if (categoryIndex === 0 && outstandingDays <= 30) {
         return true;
-      } else if (categoryIndex === 1 && outstandingDays <= 60) {
+      } else if (categoryIndex === 1 && outstandingDays <= 61) {
         return true;
-      } else if (categoryIndex === 2 && outstandingDays <= 90) {
+      } else if (categoryIndex === 2 && outstandingDays <= 91) {
         return true;
-      } else if (categoryIndex === 3 && outstandingDays <= 120) {
+      } else if (categoryIndex === 3 && outstandingDays <= 121) {
         return true;
       } else if (categoryIndex === 4 && outstandingDays > 120) {
         return true;
@@ -646,6 +716,10 @@ const Graph = ({ navigation, route }) => {
 
       return false;
     });
+
+    if (filteredData.length === 0) {
+      return ""; // or return some default value
+    }
 
     const saleValue = filteredData.reduce((sum, entry) => sum + entry.INV_BALANCE, 0);
     return Number(saleValue).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -736,13 +810,17 @@ const Graph = ({ navigation, route }) => {
 
         const formattedData = {
           labels: lastFiveResponses.map((entry) => {
+            let label;
             if (value4c === "weeks") {
-              return entry.WEEK_START;
+              label = formatDateString(entry.WEEK_START);
             } else if (value4c === "days") {
-              return entry.DAYS;
+              label = formatDateString(entry.DAYS);
             } else {
-              return entry.MONTHS;
+              label = formatDateString(entry.MONTHS);
             }
+
+            // Replace "31-Dec-40" with "All"
+            return label === "31-Dec-40" ? "All" : label;
           }),
           datasets: [
             {
@@ -750,7 +828,6 @@ const Graph = ({ navigation, route }) => {
             },
           ],
         };
-
         setCollectionData(formattedData);
         // console.log("\n\n\n\n\n\n\n\n\nAPI Response for collection graph:", formattedData);
       } catch (error) {
@@ -763,6 +840,9 @@ const Graph = ({ navigation, route }) => {
 
   // lead Data
   const [totalLeads, setTotalLeads] = useState(0);
+  const [loadingLead, setLoadingLead] = useState(true);
+  const [progress, setProgress] = useState(0);
+
   const [leadChartData, setLeadChartData] = useState({
     labels: [],
     datasets: [
@@ -775,6 +855,8 @@ const Graph = ({ navigation, route }) => {
   useEffect(() => {
     const makeApiRequest = async () => {
       try {
+        setLoadingLead(true);
+
         const response = await axios.get(`${Url}leads_list_api?userid=${token}`);
         const leadData = response.data.data[0];
 
@@ -783,25 +865,67 @@ const Graph = ({ navigation, route }) => {
           return;
         }
 
-        console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAPI Response for Lead graph:", leadData);
+        console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLead Data", leadData);
 
         const currentDate = new Date();
-        const lastFiveMonths = Array.from({ length: 5 }, (_, index) => {
-          const month = currentDate.getMonth() - index + 1;
-          const year = currentDate.getFullYear();
-          return `${month < 10 ? "0" : ""}${month}/${year}`;
-        });
+
+        let lastFiveDates = [];
+
+        if (value4flead === "days") {
+          // Calculate the last five days
+          lastFiveDates = Array.from({ length: 5 }, (_, index) => {
+            const date = new Date(currentDate);
+            date.setDate(currentDate.getDate() - index);
+            return date.toLocaleDateString("en-US", { month: "2-digit", day: "2-digit", year: "numeric" });
+          });
+        } else if (value4flead === "weeks") {
+          // Calculate the first date of last five weeks
+          lastFiveDates = Array.from({ length: 5 }, (_, index) => {
+            const date = new Date(currentDate);
+            date.setDate(currentDate.getDate() - index * 7);
+            const firstDayOfWeek = new Date(date.setDate(date.getDate() - date.getDay()));
+            return firstDayOfWeek.toLocaleDateString("en-US", { month: "2-digit", day: "2-digit", year: "numeric" });
+          });
+        } else {
+          // Default: Calculate the last five months
+          lastFiveDates = Array.from({ length: 5 }, (_, index) => {
+            const month = currentDate.getMonth() - index + 1;
+            const year = currentDate.getFullYear();
+            return `${month < 10 ? "0" : ""}${month}/${year}`;
+          });
+        }
 
         const filteredLeads = leadData.filter((lead) => {
-          if (lead && lead.CREATED_ON) {
-            const [day, month, year] = lead.CREATED_ON.split("/");
-            const leadMonthYear = `${month.padStart(2, "0")}/${year}`;
-            return lastFiveMonths.includes(leadMonthYear);
+          if (
+            lead &&
+            lead.CREATED_ON &&
+            (!value4lead || value4lead === "all" || lead.LEAD_STATUS === value4lead) &&
+            !["LOST", "DEAL", "JUNK"].includes(lead.LEAD_STATUS) &&
+            (!value3l || lead.AGENT === value3l)
+          ) {
+            const leadDateComponents = lead.CREATED_ON.split("/");
+            const leadMonthYear = `${leadDateComponents[1].padStart(2, "0")}/${leadDateComponents[2]}`;
+
+            if (value4flead === "days" || value4flead === "weeks") {
+              const formattedLeadDate = `${leadDateComponents[0].padStart(2, "0")}/${leadDateComponents[1].padStart(2, "0")}/${leadDateComponents[2]}`;
+              console.log("Formatted Lead Date here:", formattedLeadDate);
+              console.log("Last five dates:", lastFiveDates);
+              console.log("Includes:", lastFiveDates.includes(formattedLeadDate));
+              return lastFiveDates.includes(formattedLeadDate);
+            } else {
+              console.log("Lead Month/Year:", leadMonthYear);
+              console.log("Last five dates:", lastFiveDates);
+              console.log("Includes:", lastFiveDates.includes(leadMonthYear));
+              return lastFiveDates.includes(leadMonthYear);
+            }
           }
           return false;
         });
+        console.log("Filtered Leads:", filteredLeads);
 
-        const monthCounts = lastFiveMonths.reduce((counts, month) => {
+        console.log("Selected Agent Label:", value3l ? value3l : "All Agents");
+
+        const monthCounts = lastFiveDates.reduce((counts, month) => {
           const count = filteredLeads.filter((lead) => {
             if (lead && lead.CREATED_ON) {
               const [leadDay, leadMonth, leadYear] = lead.CREATED_ON.split("/");
@@ -814,14 +938,16 @@ const Graph = ({ navigation, route }) => {
           return counts;
         }, {});
 
-        const allCount = lastFiveMonths.reduce((sum, month) => {
+        const allCount = lastFiveDates.reduce((sum, month) => {
           const count = monthCounts[month] || 0;
           return sum + count;
         }, 0);
         monthCounts.All = allCount;
 
+        console.log("Month Counts:", monthCounts);
+
         const formattedLeadData = {
-          labels: [...lastFiveMonths, "All"],
+          labels: [...lastFiveDates, "All"],
           datasets: [
             {
               data: Object.values(monthCounts),
@@ -835,11 +961,22 @@ const Graph = ({ navigation, route }) => {
         console.log("Formatted Response for Lead graph:", formattedLeadData);
       } catch (error) {
         console.error("Error fetching lead data:", error);
+      } finally {
+        setLoadingLead(false);
+        setProgress(0);
       }
     };
 
     makeApiRequest();
-  }, [valuelead, value4lead, value4flead, value3]);
+  }, [valuelead, value4lead, value4flead, value3l]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress((prev) => (prev >= 0.9 ? 1 : prev + 0.01));
+    }, 250);
+
+    return () => clearInterval(interval);
+  }, [valuelead, value4lead, value4flead, value3, loadingLead]);
 
   // Ticket Data
   const [ticketData, setTicketData] = useState({
@@ -863,15 +1000,14 @@ const Graph = ({ navigation, route }) => {
   useEffect(() => {
     const fetchTicketData = async () => {
       try {
-        const ticketUrl = `http://tvh.flexion.ae:9091/get_ticket_list_api?dt=${valuetickettime || "days"}&ts=${value4ticket || 1}&assign=${value4fticket || "all"}&source=${
+        const ticketUrl = `http://tvh.flexion.ae:9095/get_ticket_list_api?dt=${valuetickettime || "days"}&ts=${value4ticket || 1}&assign=${value4fticket || "all"}&source=${
           valueticket || "all"
         }&APIKey=216bb413-8022-416e-83cf-aad38748d724`;
         const ticketResponse = await fetch(ticketUrl);
         const ticketResult = await ticketResponse.json();
+        // console.log("\n\n\n\n\n\n\n\n\nTicket graph api response", ticketResult);
 
-        // console.log("\n\n\n\n\n\n\n\n\nAPI Response for Ticket graph:", ticketResult);
-
-        const latestFiveResponses = ticketResult.slice(-5);
+        const latestFiveResponses = ticketResult.slice(-6);
 
         setLastFiveResponsesTickets(latestFiveResponses);
 
@@ -882,7 +1018,10 @@ const Graph = ({ navigation, route }) => {
 
         if (valuetickettime === "months") {
           formattedTicketData = {
-            labels: latestFiveResponses.map((entry) => formatDateString(entry.MONTHS)),
+            labels: latestFiveResponses.map((entry) => {
+              let label = formatDateString(entry.MONTHS);
+              return label === "31-Dec-40" ? "All" : label;
+            }),
             datasets: [
               {
                 data: latestFiveResponses.map((entry) => entry.TOTAL_TICKETS),
@@ -892,7 +1031,10 @@ const Graph = ({ navigation, route }) => {
           labelKey = "MONTHS";
         } else if (valuetickettime === "weeks") {
           formattedTicketData = {
-            labels: latestFiveResponses.map((entry) => formatDateString(entry.WEEK_START)),
+            labels: latestFiveResponses.map((entry) => {
+              let label = formatDateString(entry.WEEK_START);
+              return label === "31-Dec-40" ? "All" : label;
+            }),
             datasets: [
               {
                 data: latestFiveResponses.map((entry) => entry.TOTAL_TICKETS),
@@ -902,7 +1044,10 @@ const Graph = ({ navigation, route }) => {
           labelKey = "WEEK_START";
         } else {
           formattedTicketData = {
-            labels: latestFiveResponses.map((entry) => formatDateString(entry.REPORT_DATE)),
+            labels: latestFiveResponses.map((entry) => {
+              let label = formatDateString(entry.REPORT_DATE);
+              return label === "31-Dec-40" ? "All" : label;
+            }),
             datasets: [
               {
                 data: latestFiveResponses.map((entry) => entry.TOTAL_TICKETS),
@@ -912,9 +1057,6 @@ const Graph = ({ navigation, route }) => {
           labelKey = "REPORT_DATE";
         }
 
-        formattedTicketData.labels.push("All");
-        formattedTicketData.datasets[0].data.push(allCount);
-
         const availableTimePeriods = latestFiveResponses.map((entry) => ({
           label: formatDateString(entry[labelKey]),
           value: entry[labelKey].toString(),
@@ -922,8 +1064,6 @@ const Graph = ({ navigation, route }) => {
 
         setItemsTs(availableTimePeriods);
         setTicketData(formattedTicketData);
-
-        // console.log("\n\n\n\n\n\n\n\n\nAPI Response for Ticket graph:", formattedTicketData);
       } catch (error) {
         console.error("\n\n\n\n\n\n\n\n\nError fetching ticket data:", error);
       }
@@ -936,7 +1076,6 @@ const Graph = ({ navigation, route }) => {
     <ImageBackground source={ICONS.bgImg} style={styles.container}>
       <SafeAreaView style={styles.main}>
         <BackButton navigation={navigation} label="Chart Details" />
-        <Text>{value4lead}</Text>
         <ScrollView style={{ width: "100%" }}>
           <View style={{ width: "100%", alignItems: "center" }}>
             <View style={{ width: "90%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row", marginTop: RFPercentage(2) }}>
@@ -956,7 +1095,7 @@ const Graph = ({ navigation, route }) => {
                     {/* Dropdown1 */}
                     <View style={styles.dropDownView}>
                       <DropDownPicker
-                        placeholder="All Tower"
+                        placeholder="Tower"
                         placeholderStyle={{ color: COLORS.normalText }}
                         style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
                         dropDownContainerStyle={{
@@ -984,22 +1123,27 @@ const Graph = ({ navigation, route }) => {
                     {/* Dropdown2 */}
                     <View style={styles.dropDownView}>
                       <DropDownPicker
-                        placeholder="All Agent"
+                        placeholder="Agent"
+                        searchable={true}
+                        searchPlaceholder="Search..."
                         placeholderStyle={{ color: COLORS.normalText }}
-                        style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
-                        dropDownContainerStyle={{ maxHeight: RFPercentage(24), backgroundColor: "#0000", borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1) }}
+                        style={{
+                          borderColor: COLORS.boldText,
+                          borderWidth: RFPercentage(0.1),
+                          backgroundColor: "#f2f2f2",
+                        }}
+                        dropDownContainerStyle={{
+                          maxHeight: RFPercentage(24),
+                          backgroundColor: "#0000",
+                          borderColor: COLORS.boldText,
+                          borderWidth: RFPercentage(0.1),
+                        }}
                         open={open3}
-                        loading={loading}
-                        ActivityIndicatorComponent={({ color, size }) => <ActivityIndicator color={color} size={size} />}
                         value={value3}
-                        items={agents}
+                        items={items3}
                         setOpen={setOpen3}
                         setValue={setValue3}
                         setItems={setItems3}
-                        searchable={true} // Enable search
-                        searchPlaceholder="Search agent..."
-                        searchablePlaceholderTextColor={COLORS.normalText}
-                        searchableError={() => <Text>Agent not found</Text>}
                         labelStyle={{
                           fontWeight: "500",
                           color: COLORS.dark,
@@ -1038,7 +1182,7 @@ const Graph = ({ navigation, route }) => {
                     {/* Dropdown3 */}
                     <View style={styles.dropDownView}>
                       <DropDownPicker
-                        placeholder="Unit Type"
+                        placeholder="Unit"
                         placeholderStyle={{ color: COLORS.normalText }}
                         style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
                         dropDownContainerStyle={{ maxHeight: RFPercentage(24), backgroundColor: "#0000", borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1) }}
@@ -1148,7 +1292,7 @@ const Graph = ({ navigation, route }) => {
                     <View style={styles.dropDownView}>
                       <DropDownPicker
                         placeholder="Months"
-                        placeholderStyle={{ color: COLORS.normalText }}
+                        placeholderStyle={{ fontSize: RFPercentage(1.7), color: COLORS.normalText }}
                         style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
                         dropDownContainerStyle={{ maxHeight: RFPercentage(24), backgroundColor: "#0000", borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1) }}
                         open={open4c}
@@ -1170,8 +1314,8 @@ const Graph = ({ navigation, route }) => {
                     {/* Dropdown2 */}
                     <View style={styles.dropDownView}>
                       <DropDownPicker
-                        placeholder="Mode of Pay"
-                        placeholderStyle={{ color: COLORS.normalText }}
+                        placeholder="Mode..."
+                        placeholderStyle={{ fontSize: RFPercentage(1.7), color: COLORS.normalText }}
                         style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
                         dropDownContainerStyle={{ maxHeight: RFPercentage(24), backgroundColor: "#0000", borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1) }}
                         open={open4fc}
@@ -1193,8 +1337,8 @@ const Graph = ({ navigation, route }) => {
                     {/* Dropdown3 */}
                     <View style={styles.dropDownView}>
                       <DropDownPicker
-                        placeholder="Payment-Status"
-                        placeholderStyle={{ color: COLORS.normalText }}
+                        placeholder="Payme..."
+                        placeholderStyle={{ fontSize: RFPercentage(1.7), color: COLORS.normalText }}
                         style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
                         dropDownContainerStyle={{
                           maxHeight: RFPercentage(24),
@@ -1228,8 +1372,8 @@ const Graph = ({ navigation, route }) => {
                     {/* Dropdown1 */}
                     <View style={styles.dropDownView}>
                       <DropDownPicker
-                        placeholder="Property"
-                        placeholderStyle={{ color: COLORS.normalText }}
+                        placeholder="Prope..."
+                        placeholderStyle={{ fontSize: RFPercentage(1.7), color: COLORS.normalText }}
                         style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
                         dropDownContainerStyle={{ maxHeight: RFPercentage(16), backgroundColor: "#0000", borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1) }}
                         open={open4d}
@@ -1241,7 +1385,6 @@ const Graph = ({ navigation, route }) => {
                         labelStyle={{
                           fontWeight: "500",
                           color: COLORS.dark,
-                          fontSize: RFPercentage(1.8),
                         }}
                       />
                     </View>
@@ -1251,10 +1394,10 @@ const Graph = ({ navigation, route }) => {
                     {/* Dropdown2 */}
                     <View style={styles.dropDownView}>
                       <DropDownPicker
-                        placeholder="Customer"
+                        placeholder="Custo..."
                         searchable={true} // Enable search
                         searchPlaceholder="Search..."
-                        placeholderStyle={{ color: COLORS.normalText }}
+                        placeholderStyle={{ fontSize: RFPercentage(1.7), color: COLORS.normalText }}
                         style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
                         dropDownContainerStyle={{ maxHeight: RFPercentage(24), backgroundColor: "#0000", borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1) }}
                         open={open4fd}
@@ -1266,7 +1409,6 @@ const Graph = ({ navigation, route }) => {
                         labelStyle={{
                           fontWeight: "500",
                           color: COLORS.dark,
-                          fontSize: RFPercentage(1.8),
                         }}
                       />
                     </View>
@@ -1279,7 +1421,7 @@ const Graph = ({ navigation, route }) => {
                         placeholder="Unit"
                         searchable={true} // Enable search
                         searchPlaceholder="Search unit..."
-                        placeholderStyle={{ color: COLORS.normalText }}
+                        placeholderStyle={{ fontSize: RFPercentage(1.7), color: COLORS.normalText }}
                         style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
                         dropDownContainerStyle={{
                           maxHeight: RFPercentage(24),
@@ -1296,7 +1438,6 @@ const Graph = ({ navigation, route }) => {
                         labelStyle={{
                           fontWeight: "500",
                           color: COLORS.dark,
-                          fontSize: RFPercentage(1.8),
                         }}
                       />
                     </View>
@@ -1308,8 +1449,8 @@ const Graph = ({ navigation, route }) => {
                     {/* Dropdown4 */}
                     <View style={styles.dropDownView}>
                       <DropDownPicker
-                        placeholder="Document"
-                        placeholderStyle={{ color: COLORS.normalText }}
+                        placeholder="Docum..."
+                        placeholderStyle={{ fontSize: RFPercentage(1.7), color: COLORS.normalText }}
                         style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
                         dropDownContainerStyle={{
                           maxHeight: RFPercentage(24),
@@ -1326,7 +1467,6 @@ const Graph = ({ navigation, route }) => {
                         labelStyle={{
                           fontWeight: "500",
                           color: COLORS.dark,
-                          fontSize: RFPercentage(1.8),
                         }}
                       />
                     </View>
@@ -1343,8 +1483,8 @@ const Graph = ({ navigation, route }) => {
                     {/* Dropdown1 */}
                     <View style={styles.dropDownView}>
                       <DropDownPicker
-                        placeholder="Property"
-                        placeholderStyle={{ color: COLORS.normalText }}
+                        placeholder="Prope..."
+                        placeholderStyle={{ fontSize: RFPercentage(1.7), color: COLORS.normalText }}
                         style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
                         dropDownContainerStyle={{ maxHeight: RFPercentage(16), backgroundColor: "#0000", borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1) }}
                         open={open4cancel}
@@ -1366,10 +1506,10 @@ const Graph = ({ navigation, route }) => {
                     {/* Dropdown2 */}
                     <View style={styles.dropDownView}>
                       <DropDownPicker
-                        placeholder="Customer"
+                        placeholder="Custo..."
                         searchable={true} // Enable search
                         searchPlaceholder="Search..."
-                        placeholderStyle={{ color: COLORS.normalText }}
+                        placeholderStyle={{ fontSize: RFPercentage(1.7), color: COLORS.normalText }}
                         style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
                         dropDownContainerStyle={{ maxHeight: RFPercentage(24), backgroundColor: "#0000", borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1) }}
                         open={open4fcancel}
@@ -1394,7 +1534,7 @@ const Graph = ({ navigation, route }) => {
                         placeholder="Unit"
                         searchable={true} // Enable search
                         searchPlaceholder="Search unit..."
-                        placeholderStyle={{ color: COLORS.normalText }}
+                        placeholderStyle={{ fontSize: RFPercentage(1.7), color: COLORS.normalText }}
                         style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
                         dropDownContainerStyle={{
                           maxHeight: RFPercentage(24),
@@ -1423,8 +1563,8 @@ const Graph = ({ navigation, route }) => {
                     {/* Dropdown4 */}
                     <View style={styles.dropDownView}>
                       <DropDownPicker
-                        placeholder="Document"
-                        placeholderStyle={{ color: COLORS.normalText }}
+                        placeholder="Docum..."
+                        placeholderStyle={{ fontSize: RFPercentage(1.7), color: COLORS.normalText }}
                         style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
                         dropDownContainerStyle={{
                           maxHeight: RFPercentage(24),
@@ -1481,18 +1621,18 @@ const Graph = ({ navigation, route }) => {
                     {/* Dropdown2 */}
                     <View style={styles.dropDownView}>
                       <DropDownPicker
-                        placeholder="All Agent"
+                        placeholder="Agent"
                         placeholderStyle={{ color: COLORS.normalText }}
                         style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
                         dropDownContainerStyle={{ maxHeight: RFPercentage(24), backgroundColor: "#0000", borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1) }}
-                        open={open3}
+                        open={open3l}
                         loading={loading}
                         ActivityIndicatorComponent={({ color, size }) => <ActivityIndicator color={color} size={size} />}
-                        value={value3}
-                        items={agents}
-                        setOpen={setOpen3}
-                        setValue={setValue3}
-                        setItems={setItems3}
+                        value={value3l}
+                        items={items3l}
+                        setOpen={setOpen3l}
+                        setValue={handleAgentValueChangel}
+                        setItems={setItems3l}
                         searchable={true} // Enable search
                         searchPlaceholder="Search agent..."
                         searchablePlaceholderTextColor={COLORS.normalText}
@@ -1508,6 +1648,34 @@ const Graph = ({ navigation, route }) => {
 
                   <View style={{ width: "34%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
                     {/* Dropdown3 */}
+                    <View style={styles.dropDownView}>
+                      <DropDownPicker
+                        placeholder="Days"
+                        placeholderStyle={{ color: COLORS.normalText }}
+                        style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
+                        dropDownContainerStyle={{
+                          maxHeight: RFPercentage(24),
+                          backgroundColor: "#0000",
+                          borderColor: COLORS.boldText,
+                          borderWidth: RFPercentage(0.1),
+                        }}
+                        open={open4flead}
+                        value={value4flead}
+                        items={items4flead}
+                        setOpen={setOpen4flead}
+                        setValue={setValue4flead}
+                        setItems={setItems4flead}
+                        labelStyle={{
+                          fontWeight: "500",
+                          color: COLORS.dark,
+                          fontSize: RFPercentage(1.8),
+                        }}
+                      />
+                    </View>
+                  </View>
+                </View>
+                {/* <View style={{ width: "90%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row", marginTop: open4lead ? RFPercentage(20) : RFPercentage(5) }}>
+                  <View style={{ position: "absolute", left: 0, width: "34%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
                     <View style={styles.dropDownView}>
                       <DropDownPicker
                         placeholder="Source"
@@ -1535,36 +1703,7 @@ const Graph = ({ navigation, route }) => {
                       />
                     </View>
                   </View>
-                </View>
-                <View style={{ width: "90%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row", marginTop: open4lead ? RFPercentage(20) : RFPercentage(5) }}>
-                  <View style={{ position: "absolute", left: 0, width: "34%", justifyContent: "flex-start", alignItems: "center", flexDirection: "row" }}>
-                    {/* Dropdown4 */}
-                    <View style={styles.dropDownView}>
-                      <DropDownPicker
-                        placeholder="Days"
-                        placeholderStyle={{ color: COLORS.normalText }}
-                        style={{ borderColor: COLORS.boldText, borderWidth: RFPercentage(0.1), backgroundColor: "#f2f2f2" }}
-                        dropDownContainerStyle={{
-                          maxHeight: RFPercentage(24),
-                          backgroundColor: "#0000",
-                          borderColor: COLORS.boldText,
-                          borderWidth: RFPercentage(0.1),
-                        }}
-                        open={open4flead}
-                        value={value4flead}
-                        items={items4flead}
-                        setOpen={setOpen4flead}
-                        setValue={setValue4flead}
-                        setItems={setItems4flead}
-                        labelStyle={{
-                          fontWeight: "500",
-                          color: COLORS.dark,
-                          fontSize: RFPercentage(1.8),
-                        }}
-                      />
-                    </View>
-                  </View>
-                </View>
+                </View> */}
               </>
             )}
 
@@ -1688,6 +1827,7 @@ const Graph = ({ navigation, route }) => {
                 marginTop:
                   open ||
                   open3 ||
+                  open3l ||
                   open4 ||
                   openi ||
                   open4i ||
@@ -1799,23 +1939,35 @@ const Graph = ({ navigation, route }) => {
             )}
 
             {title === "Lead" && (
-              <BarChart
-                style={{ marginTop: RFPercentage(2), borderRadius: 16 }}
-                data={leadChartData}
-                width={SCREEN_WIDTH * 0.9}
-                height={300}
-                chartConfig={{
-                  backgroundGradientFrom: "#ffffff",
-                  backgroundGradientTo: "#ffffff",
-                  decimalPlaces: 0,
-                  color: (opacity = 1) => `rgba(10, 150, 44, ${opacity})`,
-                  labelColor: () => `rgba(0, 0, 0, 1)`,
-                }}
-                fromZero={true}
-                showValuesOnTopOfBars={true}
-                verticalLabelRotation={28}
-              />
+              <>
+                {loadingLead ? (
+                  <View style={{ marginTop: RFPercentage(12), flex: 1, justifyContent: "center", alignItems: "center" }}>
+                    <Progress.Circle progress={progress} size={80} thickness={5} color="#001448" showsText formatText={(progress) => `${Math.round(progress * 100)}%`} />
+                    <Text style={{ marginTop: RFPercentage(1), color: COLORS.boldText, fontSize: RFPercentage(2), fontFamily: FONTS.Medium }}>Loading...</Text>
+                  </View>
+                ) : (
+                  title === "Lead" && (
+                    <BarChart
+                      style={{ marginTop: RFPercentage(2), borderRadius: 16 }}
+                      data={leadChartData}
+                      width={SCREEN_WIDTH * 0.9}
+                      height={300}
+                      chartConfig={{
+                        backgroundGradientFrom: "#ffffff",
+                        backgroundGradientTo: "#ffffff",
+                        decimalPlaces: 0,
+                        color: (opacity = 1) => `rgba(10, 150, 44, ${opacity})`,
+                        labelColor: () => `rgba(0, 0, 0, 1)`,
+                      }}
+                      fromZero={true}
+                      showValuesOnTopOfBars={true}
+                      verticalLabelRotation={28}
+                    />
+                  )
+                )}
+              </>
             )}
+
             {title === "Ticket" && (
               <BarChart
                 style={{ marginTop: RFPercentage(2), borderRadius: 16 }}
@@ -1842,21 +1994,7 @@ const Graph = ({ navigation, route }) => {
               <View style={{ marginTop: RFPercentage(3), justifyContent: "center", alignItems: "flex-start", width: "90%", alignSelf: "center" }}>
                 <Text style={{ color: COLORS.boldText, fontSize: RFPercentage(2.1), fontFamily: FONTS.Medium }}>Sale Values</Text>
               </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  marginTop: RFPercentage(1.4),
-                  justifyContent: "flex-start",
-                  alignItems: "center",
-                  width: "90%",
-                  alignSelf: "center",
-                }}
-              >
-                <Text style={{ color: COLORS.normalText, fontSize: RFPercentage(2), fontFamily: FONTS.Medium }}>Total Sales :</Text>
-                <Text style={{ marginLeft: RFPercentage(1), color: COLORS.normalText, fontSize: RFPercentage(2.1), fontFamily: FONTS.Bold }}>
-                  {Number(totalSalesValue).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </Text>
-              </View>
+
               {lastFiveResponses && lastFiveResponses.length > 0 ? (
                 <>
                   {salesData.labels.map((label, index) => {
@@ -1885,7 +2023,6 @@ const Graph = ({ navigation, route }) => {
                         </View>
                       );
                     }
-
                     return null;
                   })}
                 </>
@@ -1898,7 +2035,7 @@ const Graph = ({ navigation, route }) => {
           {title === "Inventory" && (
             <>
               <View style={{ marginTop: RFPercentage(3), justifyContent: "center", alignItems: "flex-start", width: "90%", alignSelf: "center" }}>
-                <Text style={{ color: COLORS.boldText, fontSize: RFPercentage(2.1), fontFamily: FONTS.Medium }}>Sale Values</Text>
+                <Text style={{ color: COLORS.boldText, fontSize: RFPercentage(2.1), fontFamily: FONTS.Medium }}>Inventory Values</Text>
               </View>
 
               <View
@@ -1911,7 +2048,7 @@ const Graph = ({ navigation, route }) => {
                   alignSelf: "center",
                 }}
               >
-                <Text style={{ color: COLORS.boldText, fontSize: RFPercentage(2), fontFamily: FONTS.Medium }}>Total Inventory :</Text>
+                <Text style={{ color: COLORS.boldText, fontSize: RFPercentage(2), fontFamily: FONTS.Medium }}>All</Text>
                 <Text style={{ marginLeft: RFPercentage(1), color: COLORS.normalText, fontSize: RFPercentage(2.1), fontFamily: FONTS.Bold }}>
                   {Number(totalInventoryValue).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </Text>
@@ -1947,14 +2084,18 @@ const Graph = ({ navigation, route }) => {
                 </Text>
               </View>
 
-              {duesData.labels.map((label, index) => (
-                <View key={index} style={{ marginTop: RFPercentage(1.2), width: "90%", justifyContent: "flex-start", alignItems: "center", alignSelf: "center", flexDirection: "row" }}>
-                  <Text style={{ color: COLORS.boldText, fontSize: RFPercentage(2), fontFamily: FONTS.Medium }}>{label} :</Text>
-                  <Text style={{ marginLeft: RFPercentage(1), color: COLORS.normalText, fontSize: RFPercentage(2.1), fontFamily: FONTS.Bold }}>
-                    {duesData.datasets[0].data[index]} ({calculateSaleValueForCategory(label, result)})
-                  </Text>
-                </View>
-              ))}
+              {duesData.labels.map((label, index) => {
+                const count = duesData.datasets[0].data[index];
+                const saleValue = calculateSaleValueForCategory(label, result);
+
+                return (
+                  <View key={index} style={{ marginTop: RFPercentage(1.2), width: "90%", justifyContent: "flex-start", alignItems: "center", alignSelf: "center", flexDirection: "row" }}>
+                    <Text style={{ color: COLORS.boldText, fontSize: RFPercentage(2), fontFamily: FONTS.Medium }}>{label} :</Text>
+                    <Text style={{ marginLeft: RFPercentage(1), color: COLORS.normalText, fontSize: RFPercentage(2.1), fontFamily: FONTS.Bold }}>{count}</Text>
+                    {count > 0 && <Text style={{ marginLeft: RFPercentage(1), color: COLORS.normalText, fontSize: RFPercentage(2.1), fontFamily: FONTS.Bold }}>({saleValue})</Text>}
+                  </View>
+                );
+              })}
             </>
           )}
 
@@ -1963,21 +2104,7 @@ const Graph = ({ navigation, route }) => {
               <View style={{ marginTop: RFPercentage(3), justifyContent: "center", alignItems: "flex-start", width: "90%", alignSelf: "center" }}>
                 <Text style={{ color: COLORS.boldText, fontSize: RFPercentage(2.1), fontFamily: FONTS.Medium }}>Collection Values</Text>
               </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  marginTop: RFPercentage(1.4),
-                  justifyContent: "flex-start",
-                  alignItems: "center",
-                  width: "90%",
-                  alignSelf: "center",
-                }}
-              >
-                <Text style={{ color: COLORS.normalText, fontSize: RFPercentage(2), fontFamily: FONTS.Medium }}>Total Collection :</Text>
-                <Text style={{ marginLeft: RFPercentage(1), color: COLORS.normalText, fontSize: RFPercentage(2), fontFamily: FONTS.Bold }}>
-                  {Number(totalCollectionValue).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </Text>
-              </View>
+
               {collectionData.labels.map((label, index) => {
                 const { REPORT_DATE, COLLECTION, MONTHS, DAYS, WEEK_START } = lastFiveResponsesc[index];
 

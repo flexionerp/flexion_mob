@@ -130,6 +130,7 @@ export const MyAccount = ({ navigation, route }) => {
             <Text style={{ color: COLORS.normalText, fontSize: RFPercentage(1.8), fontFamily: FONTS.Bold }}>Delete Account</Text>
           </TouchableOpacity>
         </View>
+
         <View style={{ width: "85%", alignItems: "center", position: "absolute", bottom: Platform.OS == "ios" ? 70 : 90, flexDirection: "row", justifyContent: "space-between", flexWrap: "wrap" }}>
           {/* <RegularBtn
                         label={"Reset Password"}

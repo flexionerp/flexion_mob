@@ -3,6 +3,7 @@ import React from "react";
 import { COLORS, FONTS, ICONS, SCREENS, SCREEN_HEIGHT, SCREEN_WIDTH } from "../../../../constants";
 import moment from "moment";
 import Icon from "react-native-vector-icons/Feather";
+import { RFPercentage } from "react-native-responsive-fontsize";
 
 export const Item = ({ navigation, data }) => {
   const { UNIT_CODE, CUSTOMER_NAME, PRE_RESERVE_NO, AGENT_NAME, GROSS_AREA, UNIT_SPECS_NAME, SALE_VALUE, PRICE_VALUE, BOOKING_DATE, STATUS_NAME, AGEING } = data;
@@ -77,15 +78,16 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     padding: SCREEN_HEIGHT * 0.01,
-    height: Platform.OS == "ios" ? SCREEN_HEIGHT * 0.23 : SCREEN_HEIGHT * 0.33,
+    height: RFPercentage(30),
   },
   left: {
     width: "53%",
     // backgroundColor:'red'
+    height: "90%",
   },
   right: {
     width: "45%",
-    height: "100%",
+    height: "90%",
     alignItems: "flex-end",
     justifyContent: "space-between",
     // backgroundColor: 'green'
@@ -139,6 +141,7 @@ const styles = StyleSheet.create({
     height: 130,
     justifyContent: "center",
     alignItems: "center",
+    top: RFPercentage(-2),
   },
   salePrice: {
     color: COLORS.green,

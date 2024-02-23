@@ -206,9 +206,8 @@ const PieChart = ({ navigation, route }) => {
     const fetchInventoryData = async () => {
       try {
         const response = await axios.get(`${Url}get_inventory?tower=all&unit=all&APIKey=216bb413-8022-416e-83cf-aad38748d724`);
-        setInventoryData(response.data); // Assuming the response is an array, adjust accordingly
+        setInventoryData(response.data);
 
-        // Filter data where UNIT_STATUS is "Available"
         const availableData = response.data.filter((item) => item.UNIT_STATUS === "Available");
         setAvailableInventoryData(availableData);
 
@@ -227,10 +226,8 @@ const PieChart = ({ navigation, route }) => {
 
     availableInventoryData.forEach((unit) => {
       if (unit.SALE_VALUE && typeof unit.SALE_VALUE === "number") {
-        // Check if SALE_VALUE is present and is a number
         totalSaleValue += unit.SALE_VALUE;
       } else if (unit.SALE_VALUE && typeof unit.SALE_VALUE === "string") {
-        // If SALE_VALUE is a string, convert it to a number
         const saleValue = Number(unit.SALE_VALUE.replace(/,/g, ""));
         if (!isNaN(saleValue)) {
           totalSaleValue += saleValue;
@@ -247,23 +244,25 @@ const PieChart = ({ navigation, route }) => {
   };
 
   const [totalLeadCount, setTotalLeadCount] = useState(0);
+
   const makeApiRequest = async () => {
     try {
       const response = await axios.get(`${Url}leads_list_api?userid=${token}`);
 
-      const firstObject = response.data.data[0];
-      const leadCount = firstObject ? firstObject.length : 0;
-      console.log("Latest count", leadCount);
+      const filteredData = response.data.data[0].filter((item) => !["JUNK", "LOST", "DEAL"].includes(item.LEAD_STATUS));
 
-      // console.log("\n\n\n\n\n\n\n\n\n\n\n\n\nLead List API firstObject", firstObject);
+      const firstObject = filteredData;
+      const leadCount = firstObject ? filteredData.length : 0;
+      console.log("Latest count", leadCount);
 
       setTotalLeadCount(leadCount);
 
-      // setApiResponse(response.data.data);
+      // setApiResponse(filteredData);
     } catch (error) {
       console.error("API Error:", error);
     }
   };
+
   useEffect(() => {
     makeApiRequest();
   }, []);
@@ -272,14 +271,11 @@ const PieChart = ({ navigation, route }) => {
   const [dues2, setDues2] = useState(0);
 
   useEffect(() => {
-    // Make the API request
     fetch(`${Url}get_due_list_api?property=all&customer=all&unit=all&document=all&APIKey=216bb413-8022-416e-83cf-aad38748d724`)
       .then((response) => response.json())
       .then((data) => {
-        // Assuming the API response is an array of objects and each object has an INV_BALANCE field
         const totalBalance = data.reduce((sum, item) => sum + parseFloat(item.INV_BALANCE), 0);
 
-        // Update the state with the total balance
         setDues2(totalBalance);
       })
       .catch((error) => {
@@ -291,14 +287,11 @@ const PieChart = ({ navigation, route }) => {
   const [totalTickets, setTotalTickets] = useState(0);
 
   useEffect(() => {
-    // Make the API request
-    fetch("http://tvh.flexion.ae:9091/get_ticket_list_api?dt=days&ts=1&assign=all&source=all&APIKey=216bb413-8022-416e-83cf-aad38748d724")
+    fetch("http://tvh.flexion.ae:9095/get_ticket_list_api?dt=days&ts=1&assign=all&source=all&APIKey=216bb413-8022-416e-83cf-aad38748d724")
       .then((response) => response.json())
       .then((data) => {
-        // Assuming the API response is an array of objects and each object has a TOTAL_TICKETS field
         const totalTicketsSum = data.reduce((sum, item) => sum + parseFloat(item.TOTAL_TICKETS), 0);
 
-        // Update the state with the total tickets sum
         setTotalTickets(totalTicketsSum);
       })
       .catch((error) => {
@@ -329,6 +322,32 @@ const PieChart = ({ navigation, route }) => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+  }, []);
+
+  // Sale API
+  const [saleSummery2, setSaleSummary2] = useState(null);
+  const [totalSales, setTotalSales] = useState(null);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "http://tvh.flexion.ae:9095/get_sales_data_by_date_api?date_type=days&unit_type=all&USER_INFO_ID=5231&building_type=all&agent_type=all&APIKey=216bb413-8022-416e-83cf-aad38748d724",
+        );
+        const data = await response.json();
+
+        const targetDateEntry = data.find((entry) => entry.REPORT_DATE === "2040-12-30T20:00:00.000Z");
+
+        if (targetDateEntry) {
+          setSaleSummary2(targetDateEntry.TOTAL_SALE_VALUE);
+          setTotalSales(targetDateEntry.TOTAL_SALES);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    // Call the fetch function
+    fetchData();
   }, []);
 
   return (
@@ -373,12 +392,10 @@ const PieChart = ({ navigation, route }) => {
                     backgroundColor: "#DCDCDC",
                   }}
                 >
-                  <Text style={{ marginTop: RFPercentage(6), color: COLORS.boldText, fontSize: RFPercentage(3), fontFamily: FONTS.Medium }}>
-                    {saleCount && saleCount.toFixed(0).replace(/\d(?=(\d{3})+\.)/g, "$&,")}
-                  </Text>
+                  <Text style={{ marginTop: RFPercentage(6), color: COLORS.boldText, fontSize: RFPercentage(3), fontFamily: FONTS.Medium }}>{totalSales}</Text>
                   <Text style={{ marginTop: RFPercentage(2), color: COLORS.boldText, fontSize: RFPercentage(2.5), fontFamily: FONTS.Medium }}>
-                    {saleSummery &&
-                      Math.abs(saleSummery)
+                    {saleSummery2 !== null &&
+                      Math.abs(saleSummery2)
                         .toFixed(1)
                         .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                   </Text>
@@ -526,7 +543,7 @@ const PieChart = ({ navigation, route }) => {
                 }}
               >
                 <TouchableOpacity
-                  onPress={() => navigation.navigate(SCREENS.GRAPH, { title: "Cancellations" })}
+                  // onPress={() => navigation.navigate(SCREENS.GRAPH, { title: "Cancellations" })}
                   activeOpacity={0.6}
                   style={{
                     width: RFPercentage(25),

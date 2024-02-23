@@ -144,10 +144,10 @@ android {
         applicationId "com.flexion"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-            // multiDexEnabled true
+        // multiDexEnabled true
 
-        versionCode 23
-        versionName "1.23"
+        versionCode 25
+        versionName "1.25"
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
         if (isNewArchitectureEnabled()) {
